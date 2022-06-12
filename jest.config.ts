@@ -6,6 +6,7 @@ const config = {
     "^#utils(.*)$": "<rootDir>/src/utils$1",
   },
   modulePathIgnorePatterns: ["<rootDir>/dist"],
+  testEnvironment: "jsdom",
 }
 
 export default config
