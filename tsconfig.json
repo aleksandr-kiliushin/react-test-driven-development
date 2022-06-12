@@ -33,7 +33,7 @@
     "target": "es6",
     "types": ["jest"]
   },
-  "exclude": [".vscode", "dist", "node_modules", "rollup.config.js", "storybook-static"],
+  "exclude": [".vscode", "dist", "node_modules" ],
   "files": ["declarations.d.ts"],
   "include": ["src/**/*.ts", "src/**/*.tsx"]
 }
