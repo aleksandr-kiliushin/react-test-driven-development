@@ -18,6 +18,12 @@ const Appointment: React.FC<Props> = ({ appointment }) => {
       <p>
         Customer phone: <strong>{appointment.customer.phoneNumber}</strong>
       </p>
+      <p>
+        Service: <strong>{appointment.serviceName}</strong>
+      </p>
+      <p>
+        Notes: <strong>{appointment.notes}</strong>
+      </p>
     </>
   )
 }

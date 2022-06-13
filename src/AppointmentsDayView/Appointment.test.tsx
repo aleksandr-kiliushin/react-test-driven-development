@@ -51,4 +51,28 @@ describe("Appointment", () => {
     await wait()
     expect(container.textContent).toMatch(`Customer phone: ${appointment2.customer.phoneNumber}`)
   })
+
+  it("renders a service name", async () => {
+    render(<Appointment appointment={appointment1} />)
+    await wait()
+    expect(container.textContent).toMatch(`Service: ${appointment1.serviceName}`)
+  })
+
+  it("renders another appointment service name", async () => {
+    render(<Appointment appointment={appointment2} />)
+    await wait()
+    expect(container.textContent).toMatch(`Service: ${appointment2.serviceName}`)
+  })
+
+  it("renders an appointment notes", async () => {
+    render(<Appointment appointment={appointment1} />)
+    await wait()
+    expect(container.textContent).toMatch(`Notes: ${appointment1.notes}`)
+  })
+
+  it("renders another appointment notes", async () => {
+    render(<Appointment appointment={appointment2} />)
+    await wait()
+    expect(container.textContent).toMatch(`Notes: ${appointment2.notes}`)
+  })
 })
