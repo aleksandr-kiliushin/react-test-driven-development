@@ -1,8 +1,8 @@
 import React from "react"
 import ReactDOM from "react-dom/client"
 
-import { AppointmentsDayView } from "./Appointment"
-import { sampleAppointments } from "./sampleData"
+import { AppointmentsDayView } from "./AppointmentsDayView"
+import { sampleAppointments } from "./AppointmentsDayView/sampleData"
 
 let container = document.querySelector("#root")
 if (container === null) {

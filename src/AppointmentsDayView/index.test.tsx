@@ -3,7 +3,7 @@ import React from "react"
 import ReactDom from "react-dom/client"
 import ReactDomTestUtils from "react-dom/test-utils"
 
-import { Appointment, AppointmentsDayView } from "./Appointment"
+import { Appointment, AppointmentsDayView } from "./index"
 
 const wait = (): Promise<void> => {
   return new Promise((resolve) => {
