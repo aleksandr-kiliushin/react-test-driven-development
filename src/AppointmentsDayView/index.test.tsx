@@ -47,7 +47,7 @@ describe("AppointmentsDayView", () => {
     const appointmentsList = container.querySelector("ol.appointmentsDayView")
 
     assert(appointmentsList !== null, "appointmentsList is `null`")
-    expect(appointmentsList.children).toHaveLength(2)
+    expect(appointmentsList.querySelectorAll("li")).toHaveLength(2)
   })
 
   it("renders multiple `li` with time childrend in an `ol` element.", async () => {
@@ -58,7 +58,6 @@ describe("AppointmentsDayView", () => {
     const appointmentsList = container.querySelector("ol.appointmentsDayView")
 
     assert(appointmentsList !== null, "appointmentsList is `null`")
-    expect(appointmentsList.children).toHaveLength(2)
 
     const appointmentsNodes = appointmentsList.querySelectorAll("li")
     expect(appointmentsNodes[0].textContent).toMatch("09:00")

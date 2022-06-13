@@ -27,12 +27,36 @@ describe("Appointment", () => {
   it("renders a customer first name", async () => {
     render(<Appointment appointment={appointment1} />)
     await wait()
-    expect(container.textContent).toMatch(appointment1.customer.firstName)
+    expect(container.textContent).toMatch(`Customer first name: ${appointment1.customer.firstName}`)
   })
 
   it("renders another customer first name", async () => {
     render(<Appointment appointment={appointment2} />)
     await wait()
-    expect(container.textContent).toMatch(appointment2.customer.firstName)
+    expect(container.textContent).toMatch(`Customer first name: ${appointment2.customer.firstName}`)
+  })
+
+  it("renders a customer last name", async () => {
+    render(<Appointment appointment={appointment1} />)
+    await wait()
+    expect(container.textContent).toMatch(`Customer last name: ${appointment1.customer.lastName}`)
+  })
+
+  it("renders another customer last name", async () => {
+    render(<Appointment appointment={appointment2} />)
+    await wait()
+    expect(container.textContent).toMatch(`Customer last name: ${appointment2.customer.lastName}`)
+  })
+
+  it("renders a customer phone number", async () => {
+    render(<Appointment appointment={appointment1} />)
+    await wait()
+    expect(container.textContent).toMatch(`Customer last name: ${appointment1.customer.phoneNumber}`)
+  })
+
+  it("renders another customer phone number", async () => {
+    render(<Appointment appointment={appointment2} />)
+    await wait()
+    expect(container.textContent).toMatch(`Customer last name: ${appointment2.customer.phoneNumber}`)
   })
 })
