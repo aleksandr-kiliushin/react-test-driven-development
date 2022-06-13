@@ -3,6 +3,8 @@ import React from "react"
 import ReactDom from "react-dom/client"
 import ReactDomTestUtils from "react-dom/test-utils"
 
+import createContainer from "#utils/testing/createContainer"
+
 import AppointmentsDayView from "./index"
 import { appointment1, appointment2 } from "./sampleData"
 import { Appointment } from "./types"
@@ -20,28 +22,19 @@ describe("AppointmentsDayView", () => {
   today.setMinutes(0)
   const appointments: Appointment[] = [appointment1, appointment2]
 
-  let container: HTMLDivElement
-
-  beforeEach(() => {
-    container = document.createElement("div")
-  })
-
-  const render = (component: React.ReactElement) => {
-    const root = ReactDom.createRoot(container)
-    root.render(component)
-  }
-
   it("renders a ol with the right className.", async () => {
-    render(<AppointmentsDayView appointments={[]} />)
+    const { container, render } = createContainer()
 
+    render(<AppointmentsDayView appointments={[]} />)
     await wait()
 
     expect(container.querySelector("ol.appointmentsDayView")).not.toEqual(null)
   })
 
   it("renders multiple appointments in an `ol` element.", async () => {
-    render(<AppointmentsDayView appointments={appointments} />)
+    const { container, render } = createContainer()
 
+    render(<AppointmentsDayView appointments={appointments} />)
     await wait()
 
     const appointmentsList = container.querySelector("ol.appointmentsDayView")
@@ -51,8 +44,9 @@ describe("AppointmentsDayView", () => {
   })
 
   it("renders multiple `li` with time childrend in an `ol` element.", async () => {
-    render(<AppointmentsDayView appointments={appointments} />)
+    const { container, render } = createContainer()
 
+    render(<AppointmentsDayView appointments={appointments} />)
     await wait()
 
     const appointmentsList = container.querySelector("ol.appointmentsDayView")
@@ -65,8 +59,9 @@ describe("AppointmentsDayView", () => {
   })
 
   it("renders a ol with the right className.", async () => {
-    render(<AppointmentsDayView appointments={[]} />)
+    const { container, render } = createContainer()
 
+    render(<AppointmentsDayView appointments={[]} />)
     await wait()
 
     const appointmentsList = container.querySelector("ol.appointmentsDayView")
@@ -75,8 +70,9 @@ describe("AppointmentsDayView", () => {
   })
 
   it("selects the first appointment by default.", async () => {
-    render(<AppointmentsDayView appointments={appointments} />)
+    const { container, render } = createContainer()
 
+    render(<AppointmentsDayView appointments={appointments} />)
     await wait()
 
     const appointmentsList = container.querySelector("ol.appointmentsDayView")
@@ -85,8 +81,9 @@ describe("AppointmentsDayView", () => {
   })
 
   it("has a button element in each li.", async () => {
-    render(<AppointmentsDayView appointments={appointments} />)
+    const { container, render } = createContainer()
 
+    render(<AppointmentsDayView appointments={appointments} />)
     await wait()
 
     const appointmentsList = container.querySelector("ol.appointmentsDayView")
@@ -97,6 +94,8 @@ describe("AppointmentsDayView", () => {
   })
 
   it("renders another appointment when selected", async () => {
+    const { container, render } = createContainer()
+
     render(<AppointmentsDayView appointments={appointments} />)
     await wait()
 
