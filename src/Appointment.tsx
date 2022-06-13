@@ -9,6 +9,7 @@ type AppointmentProps = {
   customer: {
     firstName: string
   }
+  startsAt: number
 }
 
 export const Appointment: React.FC<AppointmentProps> = ({ customer }) => {
@@ -17,6 +18,7 @@ export const Appointment: React.FC<AppointmentProps> = ({ customer }) => {
 
 type AppointmentsDayViewProps = {
   appointments: {
+    customer: { firstName: string }
     startsAt: number
   }[]
 }
@@ -24,11 +26,15 @@ type AppointmentsDayViewProps = {
 export const AppointmentsDayView: React.FC<AppointmentsDayViewProps> = ({ appointments }) => {
   return (
     <ol className="appointmentsDayView">
-      {appointments.length === 0 && <p>There are no appointments scheduled for today.</p>}
-
       {appointments.map((anAppointment) => {
         return <li key={anAppointment.startsAt}>{getAppointmentTimeOfDay({ aTimestamp: anAppointment.startsAt })}</li>
       })}
+
+      {appointments.length === 0 ? (
+        <p>There are no appointments scheduled for today.</p>
+      ) : (
+        <Appointment {...appointments[0]} />
+      )}
     </ol>
   )
 }

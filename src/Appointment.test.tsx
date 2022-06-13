@@ -25,7 +25,7 @@ describe("Appointment", () => {
   }
 
   it("renders a customer first name", async () => {
-    render(<Appointment customer={{ firstName: "Ashley" }} />)
+    render(<Appointment customer={{ firstName: "Ashley" }} startsAt={100} />)
 
     await wait()
 
@@ -33,7 +33,7 @@ describe("Appointment", () => {
   })
 
   it("renders another customer first name", async () => {
-    render(<Appointment customer={{ firstName: "Jordan" }} />)
+    render(<Appointment customer={{ firstName: "Jordan" }} startsAt={100} />)
 
     await wait()
 
@@ -44,7 +44,10 @@ describe("Appointment", () => {
 describe("AppointmentsDayView", () => {
   const today = new Date()
   today.setMinutes(0)
-  const appointments = [{ startsAt: today.setHours(12) }, { startsAt: today.setHours(13) }]
+  const appointments = [
+    { customer: { firstName: "Ashley" }, startsAt: today.setHours(12) },
+    { customer: { firstName: "Jordan" }, startsAt: today.setHours(13) },
+  ]
 
   let container: HTMLDivElement
 
@@ -99,5 +102,15 @@ describe("AppointmentsDayView", () => {
     const appointmentsList = container.querySelector("ol.appointmentsDayView")
     assert(appointmentsList !== null, "appointmentsList is `null`")
     expect(appointmentsList.textContent).toMatch("There are no appointments scheduled for today.")
+  })
+
+  it("selects the first appointment by default.", async () => {
+    render(<AppointmentsDayView appointments={appointments} />)
+
+    await wait()
+
+    const appointmentsList = container.querySelector("ol.appointmentsDayView")
+    assert(appointmentsList !== null, "appointmentsList is `null`")
+    expect(appointmentsList.textContent).toMatch("Ashley")
   })
 })
