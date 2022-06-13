@@ -1,11 +1,13 @@
 import React from "react"
 
-type Props = {}
+type Props = {
+  firstName: string
+}
 
-const CustomerForm: React.FC<Props> = () => {
+const CustomerForm: React.FC<Props> = ({ firstName }) => {
   return (
     <form id="customer">
-      <input name="firstName" type="text" />
+      <input name="firstName" readOnly type="text" value={firstName} />
     </form>
   )
 }

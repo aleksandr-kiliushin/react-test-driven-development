@@ -5,6 +5,7 @@ import ReactDom from "react-dom/client"
 import createContainer from "#utils/testing/createContainer"
 import wait from "#utils/testing/wait"
 
+import { appointment1 } from "../AppointmentsDayView/sampleData"
 import CustomerForm from "./index"
 
 describe("CustomerForm", () => {
@@ -22,14 +23,14 @@ describe("CustomerForm", () => {
   }
 
   it("renders a form.", async () => {
-    render(<CustomerForm />)
+    render(<CustomerForm firstName={appointment1.customer.firstName} />)
     await wait()
 
     expect(findForm({ id: "customer" })).not.toBeNull()
   })
 
-  it("renders the first name field as a text box", async () => {
-    render(<CustomerForm />)
+  it("renders the first name field as a text box.", async () => {
+    render(<CustomerForm firstName={appointment1.customer.firstName} />)
     await wait()
 
     const form = findForm({ id: "customer" })
@@ -38,5 +39,18 @@ describe("CustomerForm", () => {
 
     assert(firstNameField instanceof HTMLInputElement, "firstNameField is not an input")
     expect(firstNameField.type).toEqual("text")
+  })
+
+  it("includes the existing value for the first name.", async () => {
+    render(<CustomerForm firstName={appointment1.customer.firstName} />)
+    await wait()
+
+    const form = findForm({ id: "customer" })
+
+    const firstNameField = form.elements.namedItem("firstName")
+
+    assert(firstNameField instanceof HTMLInputElement, "firstNameField is not an input")
+
+    expect(firstNameField.value).toEqual(appointment1.customer.firstName)
   })
 })
