@@ -9,6 +9,8 @@ import wait from "#utils/testing/wait"
 import { appointment1 } from "../AppointmentsDayView/sampleData"
 import CustomerForm from "./index"
 
+type FieldName = "firstName" | "lastName"
+
 describe("CustomerForm", () => {
   let container: HTMLDivElement
   let render: ReactDom.Root["render"]
@@ -23,84 +25,99 @@ describe("CustomerForm", () => {
     return form
   }
 
-  const findField = ({ fieldName }: { fieldName: "firstName" | "lastName" }): HTMLInputElement => {
+  const findField = ({ fieldName }: { fieldName: FieldName }): HTMLInputElement => {
     const field = findForm({ id: "customer" }).elements.namedItem(fieldName)
     assert(field instanceof HTMLInputElement, "firstNameField is not an input")
     return field
   }
 
-  const findLabelFor = ({ fieldName }: { fieldName: string }): HTMLLabelElement => {
+  const findLabelFor = ({ fieldName }: { fieldName: FieldName }): HTMLLabelElement => {
     const label = container.querySelector(`label[for="${fieldName}"]`)
     assert(label instanceof HTMLLabelElement, `label for ${fieldName} field not found.`)
     return label
   }
 
-  it("renders a form.", async () => {
-    render(<CustomerForm firstName={appointment1.customer.firstName} onSubmit={() => {}} />)
-    await wait()
-
-    expect(findForm({ id: "customer" })).not.toBeNull()
-  })
-
-  describe("first name field", () => {
+  const itRendersAsATextBox = ({ fieldName }: { fieldName: FieldName }) => {
     it("renders as a text box.", async () => {
       render(<CustomerForm firstName={appointment1.customer.firstName} onSubmit={() => {}} />)
       await wait()
-
-      expect(findField({ fieldName: "firstName" }).type).toEqual("text")
+      expect(findField({ fieldName }).type).toEqual("text")
     })
+  }
 
-    it("includes the existing value.", async () => {
+  const itIncludesTheExistingValue = ({ fieldName }: { fieldName: FieldName }) => {
+    it("includes the existing value", async () => {
       render(<CustomerForm firstName={appointment1.customer.firstName} onSubmit={() => {}} />)
       await wait()
-
-      expect(findField({ fieldName: "firstName" }).value).toEqual(appointment1.customer.firstName)
+      expect(findField({ fieldName }).value).toEqual(appointment1.customer.firstName)
     })
+  }
 
+  const itRendersALabel = ({ fieldName, labelText }: { fieldName: FieldName; labelText: string }) => {
     it("renders a label.", async () => {
       render(<CustomerForm firstName={appointment1.customer.firstName} onSubmit={() => {}} />)
       await wait()
-
-      expect(findField({ fieldName: "firstName" }).value).toEqual(appointment1.customer.firstName)
-      expect(findLabelFor({ fieldName: "firstName" }).textContent).toEqual("First name")
+      expect(findLabelFor({ fieldName }).textContent).toEqual(labelText)
     })
+  }
 
+  const itAssignsAnIdThatMatchesTheLabelId = ({ fieldName }: { fieldName: FieldName }) => {
     it("assigns an id that matches the label id.", async () => {
       render(<CustomerForm firstName={appointment1.customer.firstName} onSubmit={() => {}} />)
       await wait()
-
-      expect(findLabelFor({ fieldName: "firstName" }).htmlFor).toEqual(findField({ fieldName: "firstName" }).id)
+      expect(findLabelFor({ fieldName }).htmlFor).toEqual(findField({ fieldName }).id)
     })
+  }
 
-    it("saves existing when submitted.", async () => {
-      // It seems to be useless because async assertions (i. e. in `onSubmit`) completes anyway.
-      expect.hasAssertions()
+  const itSubmitsExistingValue = ({ fieldName }: { fieldName: FieldName }) => {
+    it("submits existing value.", async () => {
+      expect.hasAssertions() // It seems to be useless because async assertions (i. e. in `onSubmit`) completes anyway.
 
       render(
         <CustomerForm
-          firstName={appointment1.customer.firstName}
-          onSubmit={({ firstName }) => expect(firstName).toEqual(appointment1.customer.firstName)}
+          firstName={appointment1.customer[fieldName]}
+          onSubmit={(formValues) => expect(formValues[fieldName]).toEqual(appointment1.customer[fieldName])}
         />
       )
       await wait()
 
       await ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
     })
+  }
 
+  const itSubmitsANewValue = ({ fieldName, newValue }: { fieldName: FieldName; newValue: string }) => {
     it("saves new value when submitted.", async () => {
-      // It seems to be useless because async assertions (i. e. in `onSubmit`) completes anyway.
-      expect.hasAssertions()
+      expect.hasAssertions() // It seems to be useless because async assertions (i. e. in `onSubmit`) completes anyway.
 
-      render(<CustomerForm firstName="Ashley" onSubmit={({ firstName }) => expect(firstName).toEqual("Jamie")} />)
+      render(
+        <CustomerForm firstName="Ashley" onSubmit={(formValues) => expect(formValues[fieldName]).toEqual(newValue)} />
+      )
       await wait()
 
-      await ReactDomTestUtils.Simulate.change(findField({ fieldName: "firstName" }), {
+      await ReactDomTestUtils.Simulate.change(findField({ fieldName }), {
         // @ts-ignore
-        target: { value: "Jamie" },
+        target: { value: newValue },
       })
       await wait()
 
       await ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
     })
+  }
+
+  it("renders a form.", async () => {
+    render(<CustomerForm firstName={appointment1.customer.firstName} onSubmit={() => {}} />)
+    await wait()
+    expect(findForm({ id: "customer" })).not.toBeNull()
+  })
+
+  describe("first name field", () => {
+    const fieldName: FieldName = "firstName"
+
+    itRendersAsATextBox({ fieldName })
+    itIncludesTheExistingValue({ fieldName })
+    itRendersALabel({ fieldName, labelText: "First name" })
+    itAssignsAnIdThatMatchesTheLabelId({ fieldName })
+    itSubmitsExistingValue({ fieldName })
+    itSubmitsANewValue({ fieldName, newValue: "Sara" })
   })
 })
