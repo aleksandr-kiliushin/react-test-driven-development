@@ -24,12 +24,16 @@ type AppointmentsDayViewProps = {
 }
 
 export const AppointmentsDayView: React.FC<AppointmentsDayViewProps> = ({ appointments }) => {
+  const [selectedAppointmentIndex, setSelectedAppointmentIndex] = React.useState<number>(0)
+
   return (
     <ol className="appointmentsDayView">
-      {appointments.map((anAppointment) => {
+      {appointments.map((anAppointment, index) => {
         return (
           <li key={anAppointment.startsAt}>
-            <button type="button">{getAppointmentTimeOfDay({ aTimestamp: anAppointment.startsAt })}</button>
+            <button onClick={() => setSelectedAppointmentIndex(index)} type="button">
+              {getAppointmentTimeOfDay({ aTimestamp: anAppointment.startsAt })}
+            </button>
           </li>
         )
       })}
@@ -37,7 +41,7 @@ export const AppointmentsDayView: React.FC<AppointmentsDayViewProps> = ({ appoin
       {appointments.length === 0 ? (
         <p>There are no appointments scheduled for today.</p>
       ) : (
-        <Appointment {...appointments[0]} />
+        <Appointment {...appointments[selectedAppointmentIndex]} />
       )}
     </ol>
   )

@@ -1,6 +1,7 @@
 import assert from "assert"
 import React from "react"
-import ReactDOM from "react-dom/client"
+import ReactDom from "react-dom/client"
+import ReactDomTestUtils from "react-dom/test-utils"
 
 import { Appointment, AppointmentsDayView } from "./Appointment"
 
@@ -20,7 +21,7 @@ describe("Appointment", () => {
   })
 
   const render = (component: React.ReactElement) => {
-    const root = ReactDOM.createRoot(container)
+    const root = ReactDom.createRoot(container)
     root.render(component)
   }
 
@@ -56,7 +57,7 @@ describe("AppointmentsDayView", () => {
   })
 
   const render = (component: React.ReactElement) => {
-    const root = ReactDOM.createRoot(container)
+    const root = ReactDom.createRoot(container)
     root.render(component)
   }
 
@@ -124,5 +125,17 @@ describe("AppointmentsDayView", () => {
 
     const buttons = container.querySelectorAll("li > button[type='button']")
     expect(buttons).toHaveLength(2)
+  })
+
+  it("renders another appointment when selected", async () => {
+    render(<AppointmentsDayView appointments={appointments} />)
+    await wait()
+
+    const anotherAppointmentButton = container.querySelectorAll("li > button[type='button']")[1]
+    ReactDomTestUtils.Simulate.click(anotherAppointmentButton)
+
+    await wait()
+
+    expect(container.textContent).toMatch("Jordan")
   })
 })
