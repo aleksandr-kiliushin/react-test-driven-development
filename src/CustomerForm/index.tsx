@@ -3,14 +3,16 @@ import React from "react"
 import { Customer } from "../AppointmentsDayView/types"
 
 type Props = {
-  customer: Customer
+  firstName: Customer["firstName"]
+  lastName: Customer["lastName"]
+  phoneNumber: Customer["phoneNumber"]
   onSubmit(formValues: { firstName: string; lastName: string; phoneNumber: string }): void
 }
 
-const CustomerForm: React.FC<Props> = ({ customer, onSubmit }) => {
-  const [customerFirstName, setCustomerFirstName] = React.useState<string>(customer.firstName)
-  const [customerLastName, setCustomerLastName] = React.useState<string>(customer.lastName)
-  const [customerPhoneNumber, setCustomerPhoneNumber] = React.useState<string>(customer.phoneNumber)
+const CustomerForm: React.FC<Props> = ({ firstName, lastName, onSubmit, phoneNumber }) => {
+  const [customerFirstName, setCustomerFirstName] = React.useState<string>(firstName)
+  const [customerLastName, setCustomerLastName] = React.useState<string>(lastName)
+  const [customerPhoneNumber, setCustomerPhoneNumber] = React.useState<string>(phoneNumber)
 
   return (
     <form
