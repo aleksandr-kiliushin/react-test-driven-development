@@ -1,3 +1,4 @@
+import assert from "assert"
 import React from "react"
 import ReactDom from "react-dom/client"
 
@@ -23,6 +24,24 @@ describe("Appointment", () => {
     const root = ReactDom.createRoot(container)
     root.render(component)
   }
+
+  it("renders an appointment heading", async () => {
+    render(<Appointment appointment={appointment1} />)
+    await wait()
+
+    const appointmentHeading = container.querySelector("h2")
+    assert(appointmentHeading !== null, "appointmentHeading should not be null")
+    expect(appointmentHeading.textContent).toMatch(`Todays appointment at 09:00`)
+  })
+
+  it("renders an appointment heading", async () => {
+    render(<Appointment appointment={appointment2} />)
+    await wait()
+
+    const appointmentHeading = container.querySelector("h2")
+    assert(appointmentHeading !== null, "appointmentHeading should not be null")
+    expect(appointmentHeading.textContent).toMatch(`Todays appointment at 10:00`)
+  })
 
   it("renders a customer name", async () => {
     render(<Appointment appointment={appointment1} />)

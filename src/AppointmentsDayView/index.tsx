@@ -1,12 +1,8 @@
 import React from "react"
 
 import Appointment from "./Appointment"
+import getAppointmentTimeOfDay from "./getAppointmentTimeOfDay"
 import { Appointment as IAppointment } from "./types"
-
-const getAppointmentTimeOfDay = ({ aTimestamp }: { aTimestamp: number }) => {
-  const [h, m] = new Date(aTimestamp).toTimeString().split(":")
-  return `${h}:${m}`
-}
 
 type AppointmentsDayViewProps = {
   appointments: IAppointment[]
