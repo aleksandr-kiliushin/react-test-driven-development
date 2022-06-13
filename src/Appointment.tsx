@@ -24,6 +24,8 @@ type AppointmentsDayViewProps = {
 export const AppointmentsDayView: React.FC<AppointmentsDayViewProps> = ({ appointments }) => {
   return (
     <ol className="appointmentsDayView">
+      {appointments.length === 0 && <p>There are no appointments scheduled for today.</p>}
+
       {appointments.map((anAppointment) => {
         return <li key={anAppointment.startsAt}>{getAppointmentTimeOfDay({ aTimestamp: anAppointment.startsAt })}</li>
       })}
