@@ -1,3 +1,4 @@
+import assert from "assert"
 import React from "react"
 import ReactDOM from "react-dom/client"
 
@@ -78,8 +79,9 @@ describe("AppointmentsDayView", () => {
 
     await wait()
 
-    expect(container.querySelector("ol.appointmentsDayView")).not.toEqual(null)
+    const appointmentsList = container.querySelector("ol.appointmentsDayView")
 
-    expect(container.querySelector("ol.appointmentsDayView")?.children).toHaveLength(2)
+    assert(appointmentsList !== null, "appointmentsList is `null`")
+    expect(appointmentsList.children).toHaveLength(2)
   })
 })
