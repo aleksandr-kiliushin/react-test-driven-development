@@ -43,66 +43,65 @@ describe("CustomerForm", () => {
     expect(findForm({ id: "customer" })).not.toBeNull()
   })
 
-  it("renders the first name field as a text box.", async () => {
-    render(<CustomerForm firstName={appointment1.customer.firstName} onSubmit={() => {}} />)
-    await wait()
+  describe("first name field", () => {
+    it("renders as a text box.", async () => {
+      render(<CustomerForm firstName={appointment1.customer.firstName} onSubmit={() => {}} />)
+      await wait()
 
-    expect(findFirstNameField().type).toEqual("text")
-  })
-
-  it("includes the existing value for the first name.", async () => {
-    render(<CustomerForm firstName={appointment1.customer.firstName} onSubmit={() => {}} />)
-    await wait()
-
-    expect(findFirstNameField().value).toEqual(appointment1.customer.firstName)
-  })
-
-  it("renders a label for the first name field.", async () => {
-    render(<CustomerForm firstName={appointment1.customer.firstName} onSubmit={() => {}} />)
-    await wait()
-
-    expect(findFirstNameField().value).toEqual(appointment1.customer.firstName)
-    expect(findLabelFor({ fieldName: "firstName" }).textContent).toEqual("First name")
-  })
-
-  it("assigns an id that matches the label id to the first name field.", async () => {
-    render(<CustomerForm firstName={appointment1.customer.firstName} onSubmit={() => {}} />)
-    await wait()
-
-    expect(findLabelFor({ fieldName: "firstName" }).htmlFor).toEqual(findFirstNameField().id)
-  })
-
-  it("saves existing first name when submitted.", async () => {
-    // It seems to be useless because async assertions (i. e. in `onSubmit`) completes anyway.
-    expect.hasAssertions()
-
-    render(
-      <CustomerForm
-        firstName={appointment1.customer.firstName}
-        onSubmit={({ firstName }) => expect(firstName).toEqual(appointment1.customer.firstName)}
-      />
-    )
-
-    await wait()
-
-    await ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
-  })
-
-  it("saves new first name when submitted.", async () => {
-    // It seems to be useless because async assertions (i. e. in `onSubmit`) completes anyway.
-    expect.hasAssertions()
-
-    render(<CustomerForm firstName="Ashley" onSubmit={({ firstName }) => expect(firstName).toEqual("Jamie")} />)
-
-    await wait()
-
-    await ReactDomTestUtils.Simulate.change(findFirstNameField(), {
-      // @ts-ignore
-      target: { value: "Jamie" },
+      expect(findFirstNameField().type).toEqual("text")
     })
 
-    await wait()
+    it("includes the existing value.", async () => {
+      render(<CustomerForm firstName={appointment1.customer.firstName} onSubmit={() => {}} />)
+      await wait()
 
-    await ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
+      expect(findFirstNameField().value).toEqual(appointment1.customer.firstName)
+    })
+
+    it("renders a label.", async () => {
+      render(<CustomerForm firstName={appointment1.customer.firstName} onSubmit={() => {}} />)
+      await wait()
+
+      expect(findFirstNameField().value).toEqual(appointment1.customer.firstName)
+      expect(findLabelFor({ fieldName: "firstName" }).textContent).toEqual("First name")
+    })
+
+    it("assigns an id that matches the label id.", async () => {
+      render(<CustomerForm firstName={appointment1.customer.firstName} onSubmit={() => {}} />)
+      await wait()
+
+      expect(findLabelFor({ fieldName: "firstName" }).htmlFor).toEqual(findFirstNameField().id)
+    })
+
+    it("saves existing when submitted.", async () => {
+      // It seems to be useless because async assertions (i. e. in `onSubmit`) completes anyway.
+      expect.hasAssertions()
+
+      render(
+        <CustomerForm
+          firstName={appointment1.customer.firstName}
+          onSubmit={({ firstName }) => expect(firstName).toEqual(appointment1.customer.firstName)}
+        />
+      )
+      await wait()
+
+      await ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
+    })
+
+    it("saves new value when submitted.", async () => {
+      // It seems to be useless because async assertions (i. e. in `onSubmit`) completes anyway.
+      expect.hasAssertions()
+
+      render(<CustomerForm firstName="Ashley" onSubmit={({ firstName }) => expect(firstName).toEqual("Jamie")} />)
+      await wait()
+
+      await ReactDomTestUtils.Simulate.change(findFirstNameField(), {
+        // @ts-ignore
+        target: { value: "Jamie" },
+      })
+      await wait()
+
+      await ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
+    })
   })
 })
