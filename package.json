@@ -48,7 +48,8 @@
     "lint": "eslint src",
     "prepare": "husky install",
     "prettier": "prettier --write 'src/**/*.{css,ts,tsx}'",
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watchAll"
   },
   "version": "1.0.0"
 }
