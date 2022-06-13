@@ -3,17 +3,10 @@ import React from "react"
 import ReactDom from "react-dom/client"
 
 import createContainer from "#utils/testing/createContainer"
+import wait from "#utils/testing/wait"
 
 import Appointment from "./Appointment"
 import { appointment1, appointment2 } from "./sampleData"
-
-const wait = (): Promise<void> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve()
-    }, 0)
-  })
-}
 
 describe("Appointment", () => {
   let container: HTMLDivElement
