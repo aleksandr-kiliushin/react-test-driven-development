@@ -64,18 +64,7 @@ describe("AppointmentsDayView", () => {
   it("renders multiple appointments in an `ol` element.", async () => {
     const today = new Date()
 
-    render(
-      <AppointmentsDayView
-        appointments={[
-          {
-            startsAt: today.setHours(12),
-          },
-          {
-            startsAt: today.setHours(13),
-          },
-        ]}
-      />
-    )
+    render(<AppointmentsDayView appointments={[{ startsAt: today.setHours(12) }, { startsAt: today.setHours(13) }]} />)
 
     await wait()
 
@@ -83,5 +72,23 @@ describe("AppointmentsDayView", () => {
 
     assert(appointmentsList !== null, "appointmentsList is `null`")
     expect(appointmentsList.children).toHaveLength(2)
+  })
+
+  it("renders multiple `li` with time childrend in an `ol` element.", async () => {
+    const today = new Date()
+    today.setMinutes(0)
+
+    render(<AppointmentsDayView appointments={[{ startsAt: today.setHours(12) }, { startsAt: today.setHours(13) }]} />)
+
+    await wait()
+
+    const appointmentsList = container.querySelector("ol.appointmentsDayView")
+
+    assert(appointmentsList !== null, "appointmentsList is `null`")
+    expect(appointmentsList.children).toHaveLength(2)
+
+    const appointments = appointmentsList.querySelectorAll("li")
+    expect(appointments[0].textContent).toMatch("12:00")
+    expect(appointments[1].textContent).toMatch("13:00")
   })
 })
