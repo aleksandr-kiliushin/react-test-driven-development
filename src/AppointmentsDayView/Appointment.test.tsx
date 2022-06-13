@@ -1,5 +1,6 @@
 import assert from "assert"
 import React from "react"
+import ReactDom from "react-dom/client"
 
 import createContainer from "#utils/testing/createContainer"
 
@@ -15,9 +16,14 @@ const wait = (): Promise<void> => {
 }
 
 describe("Appointment", () => {
-  it("renders an appointment heading", async () => {
-    const { container, render } = createContainer()
+  let container: HTMLDivElement
+  let render: ReactDom.Root["render"]
 
+  beforeEach(() => {
+    ;({ container, render } = createContainer())
+  })
+
+  it("renders an appointment heading", async () => {
     render(<Appointment appointment={appointment1} />)
     await wait()
 
@@ -27,8 +33,6 @@ describe("Appointment", () => {
   })
 
   it("renders an appointment heading", async () => {
-    const { container, render } = createContainer()
-
     render(<Appointment appointment={appointment2} />)
     await wait()
 
@@ -38,8 +42,6 @@ describe("Appointment", () => {
   })
 
   it("renders a customer name", async () => {
-    const { container, render } = createContainer()
-
     render(<Appointment appointment={appointment1} />)
     await wait()
 
@@ -49,8 +51,6 @@ describe("Appointment", () => {
   })
 
   it("renders another customer name", async () => {
-    const { container, render } = createContainer()
-
     render(<Appointment appointment={appointment2} />)
     await wait()
 
@@ -60,8 +60,6 @@ describe("Appointment", () => {
   })
 
   it("renders a customer phone number", async () => {
-    const { container, render } = createContainer()
-
     render(<Appointment appointment={appointment1} />)
     await wait()
 
@@ -69,8 +67,6 @@ describe("Appointment", () => {
   })
 
   it("renders another customer phone number", async () => {
-    const { container, render } = createContainer()
-
     render(<Appointment appointment={appointment2} />)
     await wait()
 
@@ -78,8 +74,6 @@ describe("Appointment", () => {
   })
 
   it("renders a service name", async () => {
-    const { container, render } = createContainer()
-
     render(<Appointment appointment={appointment1} />)
     await wait()
 
@@ -87,8 +81,6 @@ describe("Appointment", () => {
   })
 
   it("renders another appointment service name", async () => {
-    const { container, render } = createContainer()
-
     render(<Appointment appointment={appointment2} />)
     await wait()
 
@@ -96,8 +88,6 @@ describe("Appointment", () => {
   })
 
   it("renders an appointment notes", async () => {
-    const { container, render } = createContainer()
-
     render(<Appointment appointment={appointment1} />)
     await wait()
 
@@ -105,8 +95,6 @@ describe("Appointment", () => {
   })
 
   it("renders another appointment notes", async () => {
-    const { container, render } = createContainer()
-
     render(<Appointment appointment={appointment2} />)
     await wait()
 

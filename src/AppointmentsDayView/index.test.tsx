@@ -18,13 +18,18 @@ const wait = (): Promise<void> => {
 }
 
 describe("AppointmentsDayView", () => {
+  let container: HTMLDivElement
+  let render: ReactDom.Root["render"]
+
+  beforeEach(() => {
+    ;({ container, render } = createContainer())
+  })
+
   const today = new Date()
   today.setMinutes(0)
   const appointments: Appointment[] = [appointment1, appointment2]
 
   it("renders a ol with the right className.", async () => {
-    const { container, render } = createContainer()
-
     render(<AppointmentsDayView appointments={[]} />)
     await wait()
 
@@ -32,8 +37,6 @@ describe("AppointmentsDayView", () => {
   })
 
   it("renders multiple appointments in an `ol` element.", async () => {
-    const { container, render } = createContainer()
-
     render(<AppointmentsDayView appointments={appointments} />)
     await wait()
 
@@ -44,8 +47,6 @@ describe("AppointmentsDayView", () => {
   })
 
   it("renders multiple `li` with time childrend in an `ol` element.", async () => {
-    const { container, render } = createContainer()
-
     render(<AppointmentsDayView appointments={appointments} />)
     await wait()
 
@@ -59,8 +60,6 @@ describe("AppointmentsDayView", () => {
   })
 
   it("renders a ol with the right className.", async () => {
-    const { container, render } = createContainer()
-
     render(<AppointmentsDayView appointments={[]} />)
     await wait()
 
@@ -70,8 +69,6 @@ describe("AppointmentsDayView", () => {
   })
 
   it("selects the first appointment by default.", async () => {
-    const { container, render } = createContainer()
-
     render(<AppointmentsDayView appointments={appointments} />)
     await wait()
 
@@ -81,8 +78,6 @@ describe("AppointmentsDayView", () => {
   })
 
   it("has a button element in each li.", async () => {
-    const { container, render } = createContainer()
-
     render(<AppointmentsDayView appointments={appointments} />)
     await wait()
 
@@ -94,8 +89,6 @@ describe("AppointmentsDayView", () => {
   })
 
   it("renders another appointment when selected", async () => {
-    const { container, render } = createContainer()
-
     render(<AppointmentsDayView appointments={appointments} />)
     await wait()
 
