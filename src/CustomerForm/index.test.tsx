@@ -22,6 +22,12 @@ describe("CustomerForm", () => {
     return form
   }
 
+  const findFirstNameField = (): HTMLInputElement => {
+    const field = findForm({ id: "customer" }).elements.namedItem("firstName")
+    assert(field instanceof HTMLInputElement, "firstNameField is not an input")
+    return field
+  }
+
   it("renders a form.", async () => {
     render(<CustomerForm firstName={appointment1.customer.firstName} />)
     await wait()
@@ -33,24 +39,13 @@ describe("CustomerForm", () => {
     render(<CustomerForm firstName={appointment1.customer.firstName} />)
     await wait()
 
-    const form = findForm({ id: "customer" })
-
-    const firstNameField = form.elements.namedItem("firstName")
-
-    assert(firstNameField instanceof HTMLInputElement, "firstNameField is not an input")
-    expect(firstNameField.type).toEqual("text")
+    expect(findFirstNameField().type).toEqual("text")
   })
 
   it("includes the existing value for the first name.", async () => {
     render(<CustomerForm firstName={appointment1.customer.firstName} />)
     await wait()
 
-    const form = findForm({ id: "customer" })
-
-    const firstNameField = form.elements.namedItem("firstName")
-
-    assert(firstNameField instanceof HTMLInputElement, "firstNameField is not an input")
-
-    expect(firstNameField.value).toEqual(appointment1.customer.firstName)
+    expect(findFirstNameField().value).toEqual(appointment1.customer.firstName)
   })
 })
