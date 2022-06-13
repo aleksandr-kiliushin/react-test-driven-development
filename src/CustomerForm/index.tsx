@@ -43,6 +43,7 @@ const CustomerForm: React.FC<Props> = ({ customer, onSubmit }) => {
         type="text"
         value={customerPhoneNumber}
       />
+      <input type="submit" value="Add" />
     </form>
   )
 }

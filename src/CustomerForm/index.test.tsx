@@ -143,4 +143,11 @@ describe("CustomerForm", () => {
     itSubmitsExistingValue({ fieldName })
     itSubmitsANewValue({ fieldName, newValue: "123-456-789" })
   })
+
+  it("has a submit button", async () => {
+    render(<CustomerForm customer={appointment1.customer} onSubmit={() => {}} />)
+    await wait()
+    const submitButton = container.querySelector('input[type="submit"]')
+    expect(submitButton).not.toBeNull()
+  })
 })
