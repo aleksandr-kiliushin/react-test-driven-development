@@ -7,6 +7,7 @@
   },
   "description": "",
   "devDependencies": {
+    "@babel/core": "7.18.5",
     "@babel/preset-env": "7.18.2",
     "@babel/preset-react": "7.17.12",
     "@babel/preset-typescript": "7.17.12",
@@ -21,16 +22,23 @@
     "@types/react-dom": "18.0.5",
     "@typescript-eslint/eslint-plugin": "5.27.1",
     "@typescript-eslint/parser": "5.27.1",
+    "babel-loader": "8.2.5",
+    "css-loader": "6.7.1",
     "eslint": "8.17.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-prettier": "4.0.0",
     "eslint-plugin-react": "7.30.0",
+    "html-webpack-plugin": "5.5.0",
     "husky": "8.0.1",
     "jest": "28.1.1",
     "jest-environment-jsdom": "28.1.1",
     "prettier": "2.6.2",
+    "style-loader": "3.3.1",
     "ts-node": "10.8.1",
-    "typescript": "4.7.3"
+    "typescript": "4.7.3",
+    "webpack": "5.73.0",
+    "webpack-cli": "4.10.0",
+    "webpack-dev-server": "4.9.2"
   },
   "files": [
     "dist"
@@ -45,7 +53,9 @@
     "url": "git+https://github.com/aleksandr-kiliushin/react-test-driven-development.git"
   },
   "scripts": {
+    "build": "rm -rf dist && MODE=production webpack",
     "check-types": "tsc --noEmit",
+    "dev": "MODE=development npx webpack serve",
     "lint": "eslint src",
     "prepare": "husky install",
     "prettier": "prettier --write 'src/**/*.{css,ts,tsx}'",

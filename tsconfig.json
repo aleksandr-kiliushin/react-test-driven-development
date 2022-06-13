@@ -18,9 +18,6 @@
     "noUnusedLocals": true,
     "noUnusedParameters": false,
     "paths": {
-      "#mocks/*": ["src/mocks/*"],
-      "#styles/*": ["src/styles/*"],
-      "#types/*": ["src/types/*"],
       "#utils/*": ["src/utils/*"]
     },
     "removeComments": true,
