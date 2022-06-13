@@ -1,29 +1,18 @@
 import React from "react"
 
+import Appointment from "./Appointment"
+import { Appointment as IAppointment } from "./types"
+
 const getAppointmentTimeOfDay = ({ aTimestamp }: { aTimestamp: number }) => {
   const [h, m] = new Date(aTimestamp).toTimeString().split(":")
   return `${h}:${m}`
 }
 
-type AppointmentProps = {
-  customer: {
-    firstName: string
-  }
-  startsAt: number
-}
-
-export const Appointment: React.FC<AppointmentProps> = ({ customer }) => {
-  return <>{customer.firstName}</>
-}
-
 type AppointmentsDayViewProps = {
-  appointments: {
-    customer: { firstName: string }
-    startsAt: number
-  }[]
+  appointments: IAppointment[]
 }
 
-export const AppointmentsDayView: React.FC<AppointmentsDayViewProps> = ({ appointments }) => {
+const AppointmentsDayView: React.FC<AppointmentsDayViewProps> = ({ appointments }) => {
   const [selectedAppointmentIndex, setSelectedAppointmentIndex] = React.useState<number>(0)
 
   return (
@@ -41,8 +30,10 @@ export const AppointmentsDayView: React.FC<AppointmentsDayViewProps> = ({ appoin
       {appointments.length === 0 ? (
         <p>There are no appointments scheduled for today.</p>
       ) : (
-        <Appointment {...appointments[selectedAppointmentIndex]} />
+        <Appointment appointment={appointments[selectedAppointmentIndex]} />
       )}
     </ol>
   )
 }
+
+export default AppointmentsDayView

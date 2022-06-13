@@ -3,7 +3,8 @@ import React from "react"
 import ReactDom from "react-dom/client"
 import ReactDomTestUtils from "react-dom/test-utils"
 
-import { Appointment, AppointmentsDayView } from "./index"
+import Appointment from "./Appointment"
+import AppointmentsDayView from "./index"
 
 const wait = (): Promise<void> => {
   return new Promise((resolve) => {
@@ -26,7 +27,14 @@ describe("Appointment", () => {
   }
 
   it("renders a customer first name", async () => {
-    render(<Appointment customer={{ firstName: "Ashley" }} startsAt={100} />)
+    render(
+      <Appointment
+        appointment={{
+          customer: { firstName: "Ashley" },
+          startsAt: 100,
+        }}
+      />
+    )
 
     await wait()
 
@@ -34,7 +42,14 @@ describe("Appointment", () => {
   })
 
   it("renders another customer first name", async () => {
-    render(<Appointment customer={{ firstName: "Jordan" }} startsAt={100} />)
+    render(
+      <Appointment
+        appointment={{
+          customer: { firstName: "Jordan" },
+          startsAt: 100,
+        }}
+      />
+    )
 
     await wait()
 
