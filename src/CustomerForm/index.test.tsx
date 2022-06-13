@@ -87,4 +87,22 @@ describe("CustomerForm", () => {
 
     await ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
   })
+
+  it("saves new first name when submitted.", async () => {
+    // It seems to be useless because async assertions (i. e. in `onSubmit`) completes anyway.
+    expect.hasAssertions()
+
+    render(<CustomerForm firstName="Ashley" onSubmit={({ firstName }) => expect(firstName).toEqual("Jamie")} />)
+
+    await wait()
+
+    await ReactDomTestUtils.Simulate.change(findFirstNameField(), {
+      // @ts-ignore
+      target: { value: "Jamie" },
+    })
+
+    await wait()
+
+    await ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
+  })
 })
