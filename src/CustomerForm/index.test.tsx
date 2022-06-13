@@ -27,4 +27,16 @@ describe("CustomerForm", () => {
 
     expect(findForm({ id: "customer" })).not.toBeNull()
   })
+
+  it("renders the first name field as a text box", async () => {
+    render(<CustomerForm />)
+    await wait()
+
+    const form = findForm({ id: "customer" })
+
+    const firstNameField = form.elements.namedItem("firstName")
+
+    assert(firstNameField instanceof HTMLInputElement, "firstNameField is not an input")
+    expect(firstNameField.type).toEqual("text")
+  })
 })
