@@ -27,7 +27,11 @@ export const AppointmentsDayView: React.FC<AppointmentsDayViewProps> = ({ appoin
   return (
     <ol className="appointmentsDayView">
       {appointments.map((anAppointment) => {
-        return <li key={anAppointment.startsAt}>{getAppointmentTimeOfDay({ aTimestamp: anAppointment.startsAt })}</li>
+        return (
+          <li key={anAppointment.startsAt}>
+            <button type="button">{getAppointmentTimeOfDay({ aTimestamp: anAppointment.startsAt })}</button>
+          </li>
+        )
       })}
 
       {appointments.length === 0 ? (

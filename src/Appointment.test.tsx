@@ -113,4 +113,16 @@ describe("AppointmentsDayView", () => {
     assert(appointmentsList !== null, "appointmentsList is `null`")
     expect(appointmentsList.textContent).toMatch("Ashley")
   })
+
+  it("has a button element in each li.", async () => {
+    render(<AppointmentsDayView appointments={appointments} />)
+
+    await wait()
+
+    const appointmentsList = container.querySelector("ol.appointmentsDayView")
+    assert(appointmentsList !== null, "appointmentsList is `null`")
+
+    const buttons = container.querySelectorAll("li > button[type='button']")
+    expect(buttons).toHaveLength(2)
+  })
 })
