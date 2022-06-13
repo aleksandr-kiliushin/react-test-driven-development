@@ -1,7 +1,7 @@
 import React from "react"
 import ReactDOM from "react-dom/client"
 
-import { Appointment } from "./Appointment"
+import { Appointment, AppointmentsDayView } from "./Appointment"
 
 const wait = (): Promise<void> => {
   return new Promise((resolve) => {
@@ -37,5 +37,49 @@ describe("Appointment", () => {
     await wait()
 
     expect(container.textContent).toMatch("Jordan")
+  })
+})
+
+describe("AppointmentsDayView", () => {
+  let container: HTMLDivElement
+
+  beforeEach(() => {
+    container = document.createElement("div")
+  })
+
+  const render = (component: React.ReactElement) => {
+    const root = ReactDOM.createRoot(container)
+    root.render(component)
+  }
+
+  it("renders a ol with the right className.", async () => {
+    render(<AppointmentsDayView appointments={[]} />)
+
+    await wait()
+
+    expect(container.querySelector("ol.appointmentsDayView")).not.toEqual(null)
+  })
+
+  it("renders multiple appointments in an `ol` element.", async () => {
+    const today = new Date()
+
+    render(
+      <AppointmentsDayView
+        appointments={[
+          {
+            startsAt: today.setHours(12),
+          },
+          {
+            startsAt: today.setHours(13),
+          },
+        ]}
+      />
+    )
+
+    await wait()
+
+    expect(container.querySelector("ol.appointmentsDayView")).not.toEqual(null)
+
+    expect(container.querySelector("ol.appointmentsDayView")?.children).toHaveLength(2)
   })
 })
