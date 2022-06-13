@@ -22,6 +22,7 @@ describe("CustomerForm", () => {
     return form
   }
 
+  // findFormField({ fieldName: "firstName" })
   const findFirstNameField = (): HTMLInputElement => {
     const field = findForm({ id: "customer" }).elements.namedItem("firstName")
     assert(field instanceof HTMLInputElement, "firstNameField is not an input")
@@ -61,5 +62,12 @@ describe("CustomerForm", () => {
 
     expect(findFirstNameField().value).toEqual(appointment1.customer.firstName)
     expect(findLabelFor({ fieldName: "firstName" }).textContent).toEqual("First name")
+  })
+
+  it("assigns an id that matches the label id to the first name field.", async () => {
+    render(<CustomerForm firstName={appointment1.customer.firstName} />)
+    await wait()
+
+    expect(findLabelFor({ fieldName: "firstName" }).htmlFor).toEqual(findFirstNameField().id)
   })
 })
