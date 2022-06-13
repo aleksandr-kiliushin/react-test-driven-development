@@ -9,9 +9,15 @@ type Props = {
 const Appointment: React.FC<Props> = ({ appointment }) => {
   return (
     <>
-      <p>Customer first name: {appointment.customer.firstName}</p>
-      <p>Customer last name: {appointment.customer.lastName}</p>
-      <p>Customer last name: {appointment.customer.phoneNumber}</p>
+      <p>
+        Customer name:{" "}
+        <strong>
+          {appointment.customer.firstName} {appointment.customer.lastName}
+        </strong>
+      </p>
+      <p>
+        Customer phone: <strong>{appointment.customer.phoneNumber}</strong>
+      </p>
     </>
   )
 }

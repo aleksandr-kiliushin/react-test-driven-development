@@ -24,39 +24,31 @@ describe("Appointment", () => {
     root.render(component)
   }
 
-  it("renders a customer first name", async () => {
+  it("renders a customer name", async () => {
     render(<Appointment appointment={appointment1} />)
     await wait()
-    expect(container.textContent).toMatch(`Customer first name: ${appointment1.customer.firstName}`)
+    expect(container.textContent).toMatch(
+      `Customer name: ${appointment1.customer.firstName} ${appointment1.customer.lastName}`
+    )
   })
 
-  it("renders another customer first name", async () => {
+  it("renders another customer name", async () => {
     render(<Appointment appointment={appointment2} />)
     await wait()
-    expect(container.textContent).toMatch(`Customer first name: ${appointment2.customer.firstName}`)
-  })
-
-  it("renders a customer last name", async () => {
-    render(<Appointment appointment={appointment1} />)
-    await wait()
-    expect(container.textContent).toMatch(`Customer last name: ${appointment1.customer.lastName}`)
-  })
-
-  it("renders another customer last name", async () => {
-    render(<Appointment appointment={appointment2} />)
-    await wait()
-    expect(container.textContent).toMatch(`Customer last name: ${appointment2.customer.lastName}`)
+    expect(container.textContent).toMatch(
+      `Customer name: ${appointment2.customer.firstName} ${appointment2.customer.lastName}`
+    )
   })
 
   it("renders a customer phone number", async () => {
     render(<Appointment appointment={appointment1} />)
     await wait()
-    expect(container.textContent).toMatch(`Customer last name: ${appointment1.customer.phoneNumber}`)
+    expect(container.textContent).toMatch(`Customer phone: ${appointment1.customer.phoneNumber}`)
   })
 
   it("renders another customer phone number", async () => {
     render(<Appointment appointment={appointment2} />)
     await wait()
-    expect(container.textContent).toMatch(`Customer last name: ${appointment2.customer.phoneNumber}`)
+    expect(container.textContent).toMatch(`Customer phone: ${appointment2.customer.phoneNumber}`)
   })
 })
