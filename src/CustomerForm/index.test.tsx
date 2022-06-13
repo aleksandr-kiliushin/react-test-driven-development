@@ -1,3 +1,4 @@
+import assert from "assert"
 import React from "react"
 import ReactDom from "react-dom/client"
 
@@ -14,10 +15,16 @@ describe("CustomerForm", () => {
     ;({ container, render } = createContainer())
   })
 
+  const findForm = ({ id }: { id: string }): HTMLFormElement => {
+    const form = container.querySelector(`form#${id}`)
+    assert(form instanceof HTMLFormElement, "Found element is not a form.")
+    return form
+  }
+
   it("renders a form.", async () => {
     render(<CustomerForm />)
     await wait()
 
-    expect(container.querySelector("form[id='customer']")).not.toBeNull
+    expect(findForm({ id: "customer" })).not.toBeNull()
   })
 })
