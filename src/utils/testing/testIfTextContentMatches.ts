@@ -1,7 +1,7 @@
 // ToDo: Refactor and add types.
 
 // @ts-ignore
-const textContentMatcher = (text: string) => (_content, node) => {
+const testIfTextContentMatches = (text: string) => (_content, node) => {
   // @ts-ignore
   const hasText = (node) => node.textContent === text
   const nodeHasText = hasText(node)
@@ -9,4 +9,4 @@ const textContentMatcher = (text: string) => (_content, node) => {
   return nodeHasText && childrenDontHaveText
 }
 
-export default textContentMatcher
+export default testIfTextContentMatches
