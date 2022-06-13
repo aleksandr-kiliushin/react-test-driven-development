@@ -23,9 +23,8 @@ describe("CustomerForm", () => {
     return form
   }
 
-  // findFormField({ fieldName: "firstName" })
-  const findFirstNameField = (): HTMLInputElement => {
-    const field = findForm({ id: "customer" }).elements.namedItem("firstName")
+  const findField = ({ fieldName }: { fieldName: "firstName" | "lastName" }): HTMLInputElement => {
+    const field = findForm({ id: "customer" }).elements.namedItem(fieldName)
     assert(field instanceof HTMLInputElement, "firstNameField is not an input")
     return field
   }
@@ -48,21 +47,21 @@ describe("CustomerForm", () => {
       render(<CustomerForm firstName={appointment1.customer.firstName} onSubmit={() => {}} />)
       await wait()
 
-      expect(findFirstNameField().type).toEqual("text")
+      expect(findField({ fieldName: "firstName" }).type).toEqual("text")
     })
 
     it("includes the existing value.", async () => {
       render(<CustomerForm firstName={appointment1.customer.firstName} onSubmit={() => {}} />)
       await wait()
 
-      expect(findFirstNameField().value).toEqual(appointment1.customer.firstName)
+      expect(findField({ fieldName: "firstName" }).value).toEqual(appointment1.customer.firstName)
     })
 
     it("renders a label.", async () => {
       render(<CustomerForm firstName={appointment1.customer.firstName} onSubmit={() => {}} />)
       await wait()
 
-      expect(findFirstNameField().value).toEqual(appointment1.customer.firstName)
+      expect(findField({ fieldName: "firstName" }).value).toEqual(appointment1.customer.firstName)
       expect(findLabelFor({ fieldName: "firstName" }).textContent).toEqual("First name")
     })
 
@@ -70,7 +69,7 @@ describe("CustomerForm", () => {
       render(<CustomerForm firstName={appointment1.customer.firstName} onSubmit={() => {}} />)
       await wait()
 
-      expect(findLabelFor({ fieldName: "firstName" }).htmlFor).toEqual(findFirstNameField().id)
+      expect(findLabelFor({ fieldName: "firstName" }).htmlFor).toEqual(findField({ fieldName: "firstName" }).id)
     })
 
     it("saves existing when submitted.", async () => {
@@ -95,7 +94,7 @@ describe("CustomerForm", () => {
       render(<CustomerForm firstName="Ashley" onSubmit={({ firstName }) => expect(firstName).toEqual("Jamie")} />)
       await wait()
 
-      await ReactDomTestUtils.Simulate.change(findFirstNameField(), {
+      await ReactDomTestUtils.Simulate.change(findField({ fieldName: "firstName" }), {
         // @ts-ignore
         target: { value: "Jamie" },
       })
