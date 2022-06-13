@@ -12,9 +12,15 @@ const wait = (): Promise<void> => {
 }
 
 describe("Appointment", () => {
+  let container: HTMLDivElement
+  let root: ReactDOM.Root
+
+  beforeEach(() => {
+    container = document.createElement("div")
+    root = ReactDOM.createRoot(container)
+  })
+
   it("renders a customer first name", async () => {
-    const container = document.createElement("div")
-    const root = ReactDOM.createRoot(container)
     root.render(<Appointment customer={{ firstName: "Ashley" }} />)
 
     await wait()
@@ -23,8 +29,6 @@ describe("Appointment", () => {
   })
 
   it("renders another customer first name", async () => {
-    const container = document.createElement("div")
-    const root = ReactDOM.createRoot(container)
     root.render(<Appointment customer={{ firstName: "Jordan" }} />)
 
     await wait()
