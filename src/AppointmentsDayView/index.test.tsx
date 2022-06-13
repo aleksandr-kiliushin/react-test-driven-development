@@ -4,6 +4,8 @@ import ReactDom from "react-dom/client"
 import ReactDomTestUtils from "react-dom/test-utils"
 
 import AppointmentsDayView from "./index"
+import { appointment1, appointment2 } from "./sampleData"
+import { Appointment } from "./types"
 
 const wait = (): Promise<void> => {
   return new Promise((resolve) => {
@@ -16,10 +18,7 @@ const wait = (): Promise<void> => {
 describe("AppointmentsDayView", () => {
   const today = new Date()
   today.setMinutes(0)
-  const appointments = [
-    { customer: { firstName: "Ashley" }, startsAt: today.setHours(12) },
-    { customer: { firstName: "Jordan" }, startsAt: today.setHours(13) },
-  ]
+  const appointments: Appointment[] = [appointment1, appointment2]
 
   let container: HTMLDivElement
 
@@ -62,8 +61,8 @@ describe("AppointmentsDayView", () => {
     expect(appointmentsList.children).toHaveLength(2)
 
     const appointmentsNodes = appointmentsList.querySelectorAll("li")
-    expect(appointmentsNodes[0].textContent).toMatch("12:00")
-    expect(appointmentsNodes[1].textContent).toMatch("13:00")
+    expect(appointmentsNodes[0].textContent).toMatch("09:00")
+    expect(appointmentsNodes[1].textContent).toMatch("10:00")
   })
 
   it("renders a ol with the right className.", async () => {
@@ -83,7 +82,7 @@ describe("AppointmentsDayView", () => {
 
     const appointmentsList = container.querySelector("ol.appointmentsDayView")
     assert(appointmentsList !== null, "appointmentsList is `null`")
-    expect(appointmentsList.textContent).toMatch("Ashley")
+    expect(appointmentsList.textContent).toMatch("Roscoe")
   })
 
   it("has a button element in each li.", async () => {
@@ -107,6 +106,6 @@ describe("AppointmentsDayView", () => {
 
     await wait()
 
-    expect(container.textContent).toMatch("Jordan")
+    expect(container.textContent).toMatch("Cara")
   })
 })
