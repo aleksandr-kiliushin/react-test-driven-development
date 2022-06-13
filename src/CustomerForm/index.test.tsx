@@ -28,6 +28,12 @@ describe("CustomerForm", () => {
     return field
   }
 
+  const findLabelFor = ({ fieldName }: { fieldName: string }): HTMLLabelElement => {
+    const label = container.querySelector(`label[for="${fieldName}"]`)
+    assert(label instanceof HTMLLabelElement, `label for ${fieldName} field not found.`)
+    return label
+  }
+
   it("renders a form.", async () => {
     render(<CustomerForm firstName={appointment1.customer.firstName} />)
     await wait()
@@ -47,5 +53,13 @@ describe("CustomerForm", () => {
     await wait()
 
     expect(findFirstNameField().value).toEqual(appointment1.customer.firstName)
+  })
+
+  it("renders a label for the first name field.", async () => {
+    render(<CustomerForm firstName={appointment1.customer.firstName} />)
+    await wait()
+
+    expect(findFirstNameField().value).toEqual(appointment1.customer.firstName)
+    expect(findLabelFor({ fieldName: "firstName" }).textContent).toEqual("First name")
   })
 })
