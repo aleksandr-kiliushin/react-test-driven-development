@@ -1,6 +1,7 @@
 import React from "react"
 
-import TimeSlotTable, { TimeSlot } from "./TimeSlotTable"
+import { TimeSlot } from "./RadioButtonIfAvailable"
+import TimeSlotTable from "./TimeSlotTable"
 
 export type FieldName = "serviceName"
 

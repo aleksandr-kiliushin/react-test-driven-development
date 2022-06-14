@@ -1,5 +1,7 @@
 import React from "react"
 
+import RadioButtonIfAvailable, { TimeSlot } from "./RadioButtonIfAvailable"
+
 const getDailyTimeSlots = ({
   salonClosesAt,
   salonOpensAt,
@@ -32,10 +34,6 @@ const shortenDate = ({ timestamp }: { timestamp: number }) => {
   return `${day} ${dayOfMonth}`
 }
 
-export type TimeSlot = {
-  startsAt: number
-}
-
 type Props = {
   availableTimeSlots: TimeSlot[]
   salonClosesAt: number
@@ -62,19 +60,14 @@ const TimeSlotTable: React.FC<Props> = ({ availableTimeSlots, salonClosesAt, sal
           <tr key={aTimestamp}>
             <th>{timestampToTimeString(aTimestamp)}</th>
             {theFollowingWeekDatesTimestamps.map((date) => {
-              const anAppointmenTimestamp = new Date(date)
-              anAppointmenTimestamp.setHours(new Date(aTimestamp).getHours())
-              anAppointmenTimestamp.setMinutes(new Date(aTimestamp).getMinutes())
-
-              if (availableTimeSlots.some((aSlot) => aSlot.startsAt === anAppointmenTimestamp.valueOf())) {
-                return (
-                  <td key={date}>
-                    <input name="startsAt" type="radio" value={anAppointmenTimestamp.valueOf().toString()} />
-                  </td>
-                )
-              }
-
-              return null
+              return (
+                <RadioButtonIfAvailable
+                  availableTimeSlots={availableTimeSlots}
+                  date={date}
+                  key={date.toString()}
+                  slotTimestamp={aTimestamp}
+                />
+              )
             })}
           </tr>
         ))}
