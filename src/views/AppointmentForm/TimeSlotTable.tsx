@@ -61,11 +61,25 @@ const TimeSlotTable: React.FC<Props> = ({ availableTimeSlots, salonClosesAt, sal
         {timeSlotsTimestamps.map((aTimestamp) => (
           <tr key={aTimestamp}>
             <th>{timestampToTimeString(aTimestamp)}</th>
-            {theFollowingWeekDatesTimestamps.map((date) => (
-              <td key={date}>
-                <input type="radio" />
-              </td>
-            ))}
+            {theFollowingWeekDatesTimestamps.map((date) => {
+              const anAppointmenTimestamp = new Date(date)
+              anAppointmenTimestamp.setHours(new Date(aTimestamp).getHours())
+              anAppointmenTimestamp.setMinutes(new Date(aTimestamp).getMinutes())
+
+              if (
+                availableTimeSlots.some(
+                  (anAvailableTimeSlot) => anAvailableTimeSlot.startsAt === anAppointmenTimestamp.valueOf()
+                )
+              ) {
+                return (
+                  <td key={date}>
+                    <input type="radio" />
+                  </td>
+                )
+              }
+
+              return null
+            })}
           </tr>
         ))}
       </tbody>
