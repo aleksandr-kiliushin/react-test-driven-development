@@ -1,8 +1,8 @@
 import React from "react"
 import ReactDOM from "react-dom/client"
+import { BrowserRouter } from "react-router-dom"
 
-import AppointmentsDayView from "./AppointmentsDayView"
-import { sampleAppointments } from "./AppointmentsDayView/sampleData"
+import App from "./views/App"
 
 let container = document.querySelector("#root")
 if (container === null) {
@@ -12,4 +12,8 @@ if (container === null) {
 }
 
 const root = ReactDOM.createRoot(container)
-root.render(<AppointmentsDayView appointments={sampleAppointments} />)
+root.render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
+)

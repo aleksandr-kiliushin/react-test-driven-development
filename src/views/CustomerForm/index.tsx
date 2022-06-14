@@ -17,7 +17,8 @@ const CustomerForm: React.FC<Props> = ({ firstName, lastName, onSubmit, phoneNum
   return (
     <form
       id="customer"
-      onSubmit={() => {
+      onSubmit={(event) => {
+        event.preventDefault()
         onSubmit({ firstName: customerFirstName, lastName: customerLastName, phoneNumber: customerPhoneNumber })
       }}
     >
