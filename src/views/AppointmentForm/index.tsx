@@ -23,16 +23,25 @@ const AppointmentForm: React.FC<Props> = ({
   salonOpensAt,
   today,
 }) => {
+  const [selectedServiceName, setSelectedServiceName] = React.useState<string>(defaultServiceName)
+
   return (
     <form
       id="appointment"
       onSubmit={(event) => {
         event.preventDefault()
-        onSubmit({ serviceName: defaultServiceName })
+        onSubmit({ serviceName: selectedServiceName })
       }}
     >
       <label htmlFor="serviceName">Service</label>
-      <select id="serviceName" name="serviceName" onChange={() => {}} value={defaultServiceName}>
+      <select
+        id="serviceName"
+        name="serviceName"
+        onChange={(event) => {
+          setSelectedServiceName(event.target.value)
+        }}
+        value={selectedServiceName}
+      >
         {availableServiceNames.map((aServiceName) => (
           <option key={aServiceName}>{aServiceName}</option>
         ))}

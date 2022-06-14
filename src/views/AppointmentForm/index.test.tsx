@@ -182,5 +182,30 @@ describe("AppointmentForm", () => {
 
       ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
     })
+
+    it("saves the new entered service name when the form is submitted", async () => {
+      const defaultServiceName = "Blow-dry"
+      const aNewEnteredServiceName = "Cut"
+      render(
+        <AppointmentForm
+          availableServiceNames={availableServiceNames}
+          availableTimeSlots={[]}
+          defaultServiceName={defaultServiceName}
+          onSubmit={(formValues) => {
+            expect(formValues.serviceName).toEqual(aNewEnteredServiceName)
+          }}
+          salonOpensAt={9}
+          salonClosesAt={11}
+          today={new Date()}
+        />
+      )
+      await wait()
+      ReactDomTestUtils.Simulate.change(findSelectField({ fieldName: "serviceName" }), {
+        // @ts-ignore
+        target: { value: aNewEnteredServiceName },
+      })
+      await wait()
+      ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
+    })
   })
 })
