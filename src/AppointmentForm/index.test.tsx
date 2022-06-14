@@ -49,20 +49,27 @@ describe("AppointmentForm", () => {
   }
 
   it("renders a form.", async () => {
-    render(<AppointmentForm availableServiceNames={[]} defaultServiceName="" />)
+    render(<AppointmentForm availableServiceNames={[]} defaultServiceName="" salonOpensAt={9} salonClosesAt={11} />)
     await wait()
     expect(findForm({ id: "appointment" })).not.toBeNull()
   })
 
   describe("service field", () => {
     it("renders as a select box", async () => {
-      render(<AppointmentForm availableServiceNames={[]} defaultServiceName="" />)
+      render(<AppointmentForm availableServiceNames={[]} defaultServiceName="" salonOpensAt={9} salonClosesAt={11} />)
       await wait()
       expect(findSelectField({ fieldName: "serviceName" })).not.toBeNull()
     })
 
     it("lists all salon services", async () => {
-      render(<AppointmentForm availableServiceNames={availableServiceNames} defaultServiceName="" />)
+      render(
+        <AppointmentForm
+          availableServiceNames={availableServiceNames}
+          defaultServiceName=""
+          salonOpensAt={9}
+          salonClosesAt={11}
+        />
+      )
       await wait()
       const optionNodes = Array.from(findSelectField({ fieldName: "serviceName" }).childNodes)
       const renderedServices = optionNodes.map((node) => node.textContent)
@@ -71,7 +78,14 @@ describe("AppointmentForm", () => {
 
     it("pre-selects the existing value", async () => {
       const defaultServiceName = "Blow-dry"
-      render(<AppointmentForm availableServiceNames={availableServiceNames} defaultServiceName={defaultServiceName} />)
+      render(
+        <AppointmentForm
+          availableServiceNames={availableServiceNames}
+          defaultServiceName={defaultServiceName}
+          salonOpensAt={9}
+          salonClosesAt={11}
+        />
+      )
       await wait()
       const selectOption = findSelectOption({ optionTextContent: "Blow-dry", selectFieldName: "serviceName" })
       expect(selectOption.textContent).toEqual(defaultServiceName)

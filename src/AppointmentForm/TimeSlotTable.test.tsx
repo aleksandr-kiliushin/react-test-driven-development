@@ -6,6 +6,7 @@ import createContainer from "#utils/testing/createContainer"
 import wait from "#utils/testing/wait"
 
 import TimeSlotTable from "./TimeSlotTable"
+import AppointmentForm from "./index"
 
 describe("time slot table", () => {
   let container: HTMLDivElement
@@ -23,8 +24,18 @@ describe("time slot table", () => {
   }
 
   it("renders a table for time slots", async () => {
-    render(<TimeSlotTable />)
+    render(<TimeSlotTable salonOpensAt={9} salonClosesAt={11} />)
     await wait()
     expect(findTimeSlotTable()).not.toBeNull()
+  })
+
+  it("renders a time slot for every half an hour between open and close times", async () => {
+    render(<AppointmentForm availableServiceNames={[]} defaultServiceName="" salonClosesAt={11} salonOpensAt={9} />)
+    await wait()
+    const timesOfDay = findTimeSlotTable().querySelectorAll("tbody >* th")
+    expect(timesOfDay).toHaveLength(4)
+    expect(timesOfDay[0].textContent).toEqual("09:00")
+    expect(timesOfDay[1].textContent).toEqual("09:30")
+    expect(timesOfDay[3].textContent).toEqual("10:30")
   })
 })
