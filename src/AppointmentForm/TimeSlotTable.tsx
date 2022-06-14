@@ -29,6 +29,11 @@ const TimeSlotTable: React.FC<Props> = ({ salonClosesAt, salonOpensAt }) => {
 
   return (
     <table id="time-slots">
+      <thead>
+        <tr>
+          <th />
+        </tr>
+      </thead>
       <tbody>
         {timeSlots.map((aTimeSlot) => (
           <tr key={aTimeSlot}>

@@ -38,4 +38,15 @@ describe("time slot table", () => {
     expect(timesOfDay[1].textContent).toEqual("09:30")
     expect(timesOfDay[3].textContent).toEqual("10:30")
   })
+
+  it("renders an empty cell at the start of the header row", async () => {
+    render(<AppointmentForm availableServiceNames={[]} defaultServiceName="" salonClosesAt={11} salonOpensAt={9} />)
+    await wait()
+    const headerRow = findTimeSlotTable().querySelector("thead > tr")
+    assert(headerRow instanceof HTMLTableRowElement)
+    assert(headerRow.firstChild instanceof HTMLTableCellElement)
+
+    expect(headerRow.firstChild.tagName).toEqual("TH")
+    expect(headerRow.firstChild.textContent).toEqual("")
+  })
 })
