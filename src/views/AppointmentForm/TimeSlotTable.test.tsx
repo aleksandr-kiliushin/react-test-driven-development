@@ -73,7 +73,7 @@ describe("time slot table", () => {
       <AppointmentForm
         availableServiceNames={[]}
         availableTimeSlots={[]}
-        defaultServiceName={""}
+        defaultServiceName=""
         salonClosesAt={11}
         salonOpensAt={9}
         today={new Date(2018, 11, 1)}
@@ -93,7 +93,7 @@ describe("time slot table", () => {
       <AppointmentForm
         availableServiceNames={[]}
         availableTimeSlots={[{ startsAt: today.setHours(9, 0, 0, 0) }, { startsAt: today.setHours(9, 30, 0, 0) }]}
-        defaultServiceName={""}
+        defaultServiceName=""
         salonClosesAt={11}
         salonOpensAt={9}
         today={today}
