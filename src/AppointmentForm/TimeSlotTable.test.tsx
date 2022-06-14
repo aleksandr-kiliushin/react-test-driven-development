@@ -24,13 +24,21 @@ describe("time slot table", () => {
   }
 
   it("renders a table for time slots", async () => {
-    render(<TimeSlotTable salonOpensAt={9} salonClosesAt={11} />)
+    render(<TimeSlotTable salonOpensAt={9} salonClosesAt={11} today={new Date()} />)
     await wait()
     expect(findTimeSlotTable()).not.toBeNull()
   })
 
   it("renders a time slot for every half an hour between open and close times", async () => {
-    render(<AppointmentForm availableServiceNames={[]} defaultServiceName="" salonClosesAt={11} salonOpensAt={9} />)
+    render(
+      <AppointmentForm
+        availableServiceNames={[]}
+        defaultServiceName=""
+        salonClosesAt={11}
+        salonOpensAt={9}
+        today={new Date()}
+      />
+    )
     await wait()
     const timesOfDay = findTimeSlotTable().querySelectorAll("tbody >* th")
     expect(timesOfDay).toHaveLength(4)
@@ -40,7 +48,15 @@ describe("time slot table", () => {
   })
 
   it("renders an empty cell at the start of the header row", async () => {
-    render(<AppointmentForm availableServiceNames={[]} defaultServiceName="" salonClosesAt={11} salonOpensAt={9} />)
+    render(
+      <AppointmentForm
+        availableServiceNames={[]}
+        defaultServiceName=""
+        salonClosesAt={11}
+        salonOpensAt={9}
+        today={new Date()}
+      />
+    )
     await wait()
     const headerRow = findTimeSlotTable().querySelector("thead > tr")
     assert(headerRow instanceof HTMLTableRowElement)
@@ -48,5 +64,23 @@ describe("time slot table", () => {
 
     expect(headerRow.firstChild.tagName).toEqual("TH")
     expect(headerRow.firstChild.textContent).toEqual("")
+  })
+
+  it("renders a week of available dates", async () => {
+    render(
+      <AppointmentForm
+        availableServiceNames={[]}
+        defaultServiceName={""}
+        salonClosesAt={11}
+        salonOpensAt={9}
+        today={new Date(2018, 11, 1)}
+      />
+    )
+    await wait()
+    const dates = findTimeSlotTable().querySelectorAll("thead >* th:not(:first-child)")
+    expect(dates).toHaveLength(7)
+    expect(dates[0].textContent).toEqual("Sat 01")
+    expect(dates[1].textContent).toEqual("Sun 02")
+    expect(dates[6].textContent).toEqual("Fri 07")
   })
 })

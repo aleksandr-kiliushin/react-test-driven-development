@@ -49,14 +49,30 @@ describe("AppointmentForm", () => {
   }
 
   it("renders a form.", async () => {
-    render(<AppointmentForm availableServiceNames={[]} defaultServiceName="" salonOpensAt={9} salonClosesAt={11} />)
+    render(
+      <AppointmentForm
+        availableServiceNames={[]}
+        defaultServiceName=""
+        salonOpensAt={9}
+        salonClosesAt={11}
+        today={new Date()}
+      />
+    )
     await wait()
     expect(findForm({ id: "appointment" })).not.toBeNull()
   })
 
   describe("service field", () => {
     it("renders as a select box", async () => {
-      render(<AppointmentForm availableServiceNames={[]} defaultServiceName="" salonOpensAt={9} salonClosesAt={11} />)
+      render(
+        <AppointmentForm
+          availableServiceNames={[]}
+          defaultServiceName=""
+          salonOpensAt={9}
+          salonClosesAt={11}
+          today={new Date()}
+        />
+      )
       await wait()
       expect(findSelectField({ fieldName: "serviceName" })).not.toBeNull()
     })
@@ -68,6 +84,7 @@ describe("AppointmentForm", () => {
           defaultServiceName=""
           salonOpensAt={9}
           salonClosesAt={11}
+          today={new Date()}
         />
       )
       await wait()
@@ -84,6 +101,7 @@ describe("AppointmentForm", () => {
           defaultServiceName={defaultServiceName}
           salonOpensAt={9}
           salonClosesAt={11}
+          today={new Date()}
         />
       )
       await wait()

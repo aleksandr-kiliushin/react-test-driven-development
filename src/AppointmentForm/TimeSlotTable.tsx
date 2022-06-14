@@ -15,16 +15,31 @@ const getDailyTimeSlots = ({
     .reduce((acc, _, i) => acc.concat([startTime + i * increment]))
 }
 
+const getWeeklyDateValues = ({ startDate }: { startDate: Date }): number[] => {
+  const midnight = new Date(startDate).setHours(0, 0, 0, 0)
+  const increment = 24 * 60 * 60 * 1000
+  return Array(7)
+    .fill([midnight])
+    .reduce((acc, _, i) => acc.concat([midnight + i * increment]))
+}
+
 const timestampToTimeString = (timestamp: number) => {
   return new Date(timestamp).toTimeString().substring(0, 5)
+}
+
+const shortenDate = ({ timestamp }: { timestamp: number }) => {
+  const [day, , dayOfMonth] = new Date(timestamp).toDateString().split(" ")
+  return `${day} ${dayOfMonth}`
 }
 
 type Props = {
   salonClosesAt: number
   salonOpensAt: number
+  today: Date
 }
 
-const TimeSlotTable: React.FC<Props> = ({ salonClosesAt, salonOpensAt }) => {
+const TimeSlotTable: React.FC<Props> = ({ salonClosesAt, salonOpensAt, today }) => {
+  const dates = getWeeklyDateValues({ startDate: today })
   const timeSlots = getDailyTimeSlots({ salonClosesAt, salonOpensAt })
 
   return (
@@ -32,6 +47,9 @@ const TimeSlotTable: React.FC<Props> = ({ salonClosesAt, salonOpensAt }) => {
       <thead>
         <tr>
           <th />
+          {dates.map((aDateTimestamp) => {
+            return <th key={aDateTimestamp}>{shortenDate({ timestamp: aDateTimestamp })}</th>
+          })}
         </tr>
       </thead>
       <tbody>

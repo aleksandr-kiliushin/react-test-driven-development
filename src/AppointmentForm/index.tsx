@@ -9,6 +9,7 @@ type Props = {
   defaultServiceName: string
   salonClosesAt: number
   salonOpensAt: number
+  today: Date
 }
 
 const AppointmentForm: React.FC<Props> = ({
@@ -16,6 +17,7 @@ const AppointmentForm: React.FC<Props> = ({
   defaultServiceName,
   salonClosesAt,
   salonOpensAt,
+  today,
 }) => {
   return (
     <form id="appointment">
@@ -24,7 +26,7 @@ const AppointmentForm: React.FC<Props> = ({
           <option key={aServiceName}>{aServiceName}</option>
         ))}
       </select>
-      <TimeSlotTable salonClosesAt={salonClosesAt} salonOpensAt={salonOpensAt} />
+      <TimeSlotTable salonClosesAt={salonClosesAt} salonOpensAt={salonOpensAt} today={today} />
     </form>
   )
 }
