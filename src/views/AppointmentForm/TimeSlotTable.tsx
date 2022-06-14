@@ -66,11 +66,7 @@ const TimeSlotTable: React.FC<Props> = ({ availableTimeSlots, salonClosesAt, sal
               anAppointmenTimestamp.setHours(new Date(aTimestamp).getHours())
               anAppointmenTimestamp.setMinutes(new Date(aTimestamp).getMinutes())
 
-              if (
-                availableTimeSlots.some(
-                  (anAvailableTimeSlot) => anAvailableTimeSlot.startsAt === anAppointmenTimestamp.valueOf()
-                )
-              ) {
+              if (availableTimeSlots.some((aSlot) => aSlot.startsAt === anAppointmenTimestamp.valueOf())) {
                 return (
                   <td key={date}>
                     <input type="radio" />
