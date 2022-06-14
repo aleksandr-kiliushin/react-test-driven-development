@@ -23,6 +23,12 @@ describe("time slot table", () => {
     return table
   }
 
+  const findStartsAtFieldInput = ({ inputIndex }: { inputIndex: number }) => {
+    const anInput = container.querySelectorAll("input[name='startsAt']")[inputIndex]
+    assert(anInput instanceof HTMLInputElement, "found element is not an input element")
+    return anInput
+  }
+
   it("renders a table for time slots", async () => {
     render(<TimeSlotTable availableTimeSlots={[]} salonOpensAt={9} salonClosesAt={11} today={new Date()} />)
     await wait()
@@ -125,5 +131,34 @@ describe("time slot table", () => {
     await wait()
     const timesOfDay = findTimeSlotTable().querySelectorAll("input")
     expect(timesOfDay).toHaveLength(2)
+  })
+
+  it("sets radio button values to the index of the corresponding appointment", async () => {
+    const availableTimeSlots = [
+      { startsAt: new Date().setHours(9, 0, 0, 0) },
+      { startsAt: new Date().setHours(9, 30, 0, 0) },
+    ]
+
+    render(
+      <AppointmentForm
+        availableServiceNames={[]}
+        availableTimeSlots={[
+          { startsAt: new Date().setHours(9, 0, 0, 0) },
+          { startsAt: new Date().setHours(9, 30, 0, 0) },
+        ]}
+        defaultServiceName=""
+        onSubmit={() => {}}
+        salonClosesAt={11}
+        salonOpensAt={9}
+        today={new Date()}
+      />
+    )
+    await wait()
+    expect(findStartsAtFieldInput({ inputIndex: 0 }).value).toEqual(
+      new Date(availableTimeSlots[0].startsAt).valueOf().toString()
+    )
+    expect(findStartsAtFieldInput({ inputIndex: 1 }).value).toEqual(
+      new Date(availableTimeSlots[1].startsAt).valueOf().toString()
+    )
   })
 })
