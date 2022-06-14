@@ -108,4 +108,21 @@ describe("time slot table", () => {
     expect(cells[0].querySelector('input[type="radio"]')).not.toBeNull()
     expect(cells[6].querySelector('input[type="radio"]')).not.toBeNull()
   })
+
+  it.skip("does not render radio buttons for unavailable time slots", async () => {
+    render(
+      <AppointmentForm
+        availableServiceNames={[]}
+        availableTimeSlots={[]}
+        defaultServiceName=""
+        onSubmit={() => {}}
+        salonClosesAt={11}
+        salonOpensAt={9}
+        today={new Date()}
+      />
+    )
+    await wait()
+    const timesOfDay = findTimeSlotTable().querySelectorAll("input")
+    expect(timesOfDay).toHaveLength(0)
+  })
 })

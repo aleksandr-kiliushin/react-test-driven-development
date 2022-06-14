@@ -44,24 +44,24 @@ type Props = {
 }
 
 const TimeSlotTable: React.FC<Props> = ({ availableTimeSlots, salonClosesAt, salonOpensAt, today }) => {
-  const dates = getWeeklyDateValues({ startDate: today })
-  const timeSlots = getDailyTimeSlots({ salonClosesAt, salonOpensAt })
+  const theFollowingWeekDatesTimestamps = getWeeklyDateValues({ startDate: today })
+  const timeSlotsTimestamps = getDailyTimeSlots({ salonClosesAt, salonOpensAt })
 
   return (
     <table id="time-slots">
       <thead>
         <tr>
           <th />
-          {dates.map((aDateTimestamp) => {
+          {theFollowingWeekDatesTimestamps.map((aDateTimestamp) => {
             return <th key={aDateTimestamp}>{shortenDate({ timestamp: aDateTimestamp })}</th>
           })}
         </tr>
       </thead>
       <tbody>
-        {timeSlots.map((aTimeSlot) => (
-          <tr key={aTimeSlot}>
-            <th>{timestampToTimeString(aTimeSlot)}</th>
-            {dates.map((date) => (
+        {timeSlotsTimestamps.map((aTimestamp) => (
+          <tr key={aTimestamp}>
+            <th>{timestampToTimeString(aTimestamp)}</th>
+            {theFollowingWeekDatesTimestamps.map((date) => (
               <td key={date}>
                 <input type="radio" />
               </td>
