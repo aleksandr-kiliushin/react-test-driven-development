@@ -2,12 +2,19 @@ import React from "react"
 
 export type FieldName = "serviceName"
 
-type Props = {}
+type Props = {
+  availableServiceNames: string[]
+  defaultServiceName: string
+}
 
-const AppointmentForm: React.FC<Props> = () => {
+const AppointmentForm: React.FC<Props> = ({ availableServiceNames, defaultServiceName }) => {
   return (
     <form id="appointment">
-      <select name="serviceName"></select>
+      <select name="serviceName" onChange={() => {}} value={defaultServiceName}>
+        {availableServiceNames.map((aServiceName) => (
+          <option key={aServiceName}>{aServiceName}</option>
+        ))}
+      </select>
     </form>
   )
 }
