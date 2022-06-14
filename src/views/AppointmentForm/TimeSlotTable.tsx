@@ -55,17 +55,17 @@ const TimeSlotTable: React.FC<Props> = ({ availableTimeSlots, salonClosesAt, sal
           {dates.map((aDateTimestamp) => {
             return <th key={aDateTimestamp}>{shortenDate({ timestamp: aDateTimestamp })}</th>
           })}
-          {dates.map((date) => (
-            <td key={date}>
-              <input type="radio" />
-            </td>
-          ))}
         </tr>
       </thead>
       <tbody>
         {timeSlots.map((aTimeSlot) => (
           <tr key={aTimeSlot}>
             <th>{timestampToTimeString(aTimeSlot)}</th>
+            {dates.map((date) => (
+              <td key={date}>
+                <input type="radio" />
+              </td>
+            ))}
           </tr>
         ))}
       </tbody>
