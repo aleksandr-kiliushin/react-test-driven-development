@@ -24,7 +24,7 @@ describe("time slot table", () => {
   }
 
   it("renders a table for time slots", async () => {
-    render(<TimeSlotTable salonOpensAt={9} salonClosesAt={11} today={new Date()} />)
+    render(<TimeSlotTable availableTimeSlots={[]} salonOpensAt={9} salonClosesAt={11} today={new Date()} />)
     await wait()
     expect(findTimeSlotTable()).not.toBeNull()
   })
@@ -33,6 +33,7 @@ describe("time slot table", () => {
     render(
       <AppointmentForm
         availableServiceNames={[]}
+        availableTimeSlots={[]}
         defaultServiceName=""
         salonClosesAt={11}
         salonOpensAt={9}
@@ -51,6 +52,7 @@ describe("time slot table", () => {
     render(
       <AppointmentForm
         availableServiceNames={[]}
+        availableTimeSlots={[]}
         defaultServiceName=""
         salonClosesAt={11}
         salonOpensAt={9}
@@ -70,6 +72,7 @@ describe("time slot table", () => {
     render(
       <AppointmentForm
         availableServiceNames={[]}
+        availableTimeSlots={[]}
         defaultServiceName={""}
         salonClosesAt={11}
         salonOpensAt={9}
@@ -82,5 +85,23 @@ describe("time slot table", () => {
     expect(dates[0].textContent).toEqual("Sat 01")
     expect(dates[1].textContent).toEqual("Sun 02")
     expect(dates[6].textContent).toEqual("Fri 07")
+  })
+
+  it("renders a radio button for each time slot", async () => {
+    const today = new Date()
+    render(
+      <AppointmentForm
+        availableServiceNames={[]}
+        availableTimeSlots={[{ startsAt: today.setHours(9, 0, 0, 0) }, { startsAt: today.setHours(9, 30, 0, 0) }]}
+        defaultServiceName={""}
+        salonClosesAt={11}
+        salonOpensAt={9}
+        today={today}
+      />
+    )
+    await wait()
+    const cells = findTimeSlotTable().querySelectorAll("td")
+    expect(cells[0].querySelector('input[type="radio"]')).not.toBeNull()
+    expect(cells[6].querySelector('input[type="radio"]')).not.toBeNull()
   })
 })

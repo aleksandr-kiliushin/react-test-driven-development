@@ -52,6 +52,7 @@ describe("AppointmentForm", () => {
     render(
       <AppointmentForm
         availableServiceNames={[]}
+        availableTimeSlots={[]}
         defaultServiceName=""
         salonOpensAt={9}
         salonClosesAt={11}
@@ -67,6 +68,7 @@ describe("AppointmentForm", () => {
       render(
         <AppointmentForm
           availableServiceNames={[]}
+          availableTimeSlots={[]}
           defaultServiceName=""
           salonOpensAt={9}
           salonClosesAt={11}
@@ -81,6 +83,7 @@ describe("AppointmentForm", () => {
       render(
         <AppointmentForm
           availableServiceNames={availableServiceNames}
+          availableTimeSlots={[]}
           defaultServiceName=""
           salonOpensAt={9}
           salonClosesAt={11}
@@ -98,6 +101,7 @@ describe("AppointmentForm", () => {
       render(
         <AppointmentForm
           availableServiceNames={availableServiceNames}
+          availableTimeSlots={[]}
           defaultServiceName={defaultServiceName}
           salonOpensAt={9}
           salonClosesAt={11}

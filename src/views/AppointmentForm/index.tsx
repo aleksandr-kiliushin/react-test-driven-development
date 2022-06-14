@@ -1,10 +1,11 @@
 import React from "react"
 
-import TimeSlotTable from "./TimeSlotTable"
+import TimeSlotTable, { TimeSlot } from "./TimeSlotTable"
 
 export type FieldName = "serviceName"
 
 type Props = {
+  availableTimeSlots: TimeSlot[]
   availableServiceNames: string[]
   defaultServiceName: string
   salonClosesAt: number
@@ -13,6 +14,7 @@ type Props = {
 }
 
 const AppointmentForm: React.FC<Props> = ({
+  availableTimeSlots,
   availableServiceNames,
   defaultServiceName,
   salonClosesAt,
@@ -26,7 +28,12 @@ const AppointmentForm: React.FC<Props> = ({
           <option key={aServiceName}>{aServiceName}</option>
         ))}
       </select>
-      <TimeSlotTable salonClosesAt={salonClosesAt} salonOpensAt={salonOpensAt} today={today} />
+      <TimeSlotTable
+        availableTimeSlots={availableTimeSlots}
+        salonClosesAt={salonClosesAt}
+        salonOpensAt={salonOpensAt}
+        today={today}
+      />
     </form>
   )
 }

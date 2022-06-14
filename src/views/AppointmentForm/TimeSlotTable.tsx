@@ -32,13 +32,18 @@ const shortenDate = ({ timestamp }: { timestamp: number }) => {
   return `${day} ${dayOfMonth}`
 }
 
+export type TimeSlot = {
+  startsAt: number
+}
+
 type Props = {
+  availableTimeSlots: TimeSlot[]
   salonClosesAt: number
   salonOpensAt: number
   today: Date
 }
 
-const TimeSlotTable: React.FC<Props> = ({ salonClosesAt, salonOpensAt, today }) => {
+const TimeSlotTable: React.FC<Props> = ({ availableTimeSlots, salonClosesAt, salonOpensAt, today }) => {
   const dates = getWeeklyDateValues({ startDate: today })
   const timeSlots = getDailyTimeSlots({ salonClosesAt, salonOpensAt })
 
@@ -50,6 +55,11 @@ const TimeSlotTable: React.FC<Props> = ({ salonClosesAt, salonOpensAt, today }) 
           {dates.map((aDateTimestamp) => {
             return <th key={aDateTimestamp}>{shortenDate({ timestamp: aDateTimestamp })}</th>
           })}
+          {dates.map((date) => (
+            <td key={date}>
+              <input type="radio" />
+            </td>
+          ))}
         </tr>
       </thead>
       <tbody>

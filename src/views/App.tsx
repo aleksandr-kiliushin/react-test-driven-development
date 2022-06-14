@@ -37,6 +37,10 @@ const App: React.FC = () => {
           element={
             <AppointmentForm
               availableServiceNames={["Cut", "Blow-dry", "Cut & color", "Beard trim", "Cut & beard trim", "Extensions"]}
+              availableTimeSlots={[
+                { startsAt: new Date().setHours(9, 0, 0, 0) },
+                { startsAt: new Date().setHours(9, 30, 0, 0) },
+              ]}
               defaultServiceName="Cut"
               salonClosesAt={19}
               salonOpensAt={12}
