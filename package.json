@@ -48,7 +48,7 @@
   "license": "ISC",
   "main": "dist",
   "module": "dist",
-  "name": "portal-frontend-sdk",
+  "name": "react-test-driven-development",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/aleksandr-kiliushin/react-test-driven-development.git"
