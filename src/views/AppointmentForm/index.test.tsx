@@ -1,6 +1,7 @@
 import assert from "assert"
 import React from "react"
 import ReactDom from "react-dom/client"
+import ReactDomTestUtils from "react-dom/test-utils"
 
 import createContainer from "#utils/testing/createContainer"
 import wait from "#utils/testing/wait"
@@ -60,6 +61,7 @@ describe("AppointmentForm", () => {
         availableServiceNames={[]}
         availableTimeSlots={[]}
         defaultServiceName=""
+        onSubmit={() => {}}
         salonOpensAt={9}
         salonClosesAt={11}
         today={new Date()}
@@ -76,6 +78,7 @@ describe("AppointmentForm", () => {
           availableServiceNames={[]}
           availableTimeSlots={[]}
           defaultServiceName=""
+          onSubmit={() => {}}
           salonOpensAt={9}
           salonClosesAt={11}
           today={new Date()}
@@ -91,6 +94,7 @@ describe("AppointmentForm", () => {
           availableServiceNames={availableServiceNames}
           availableTimeSlots={[]}
           defaultServiceName=""
+          onSubmit={() => {}}
           salonOpensAt={9}
           salonClosesAt={11}
           today={new Date()}
@@ -109,6 +113,7 @@ describe("AppointmentForm", () => {
           availableServiceNames={availableServiceNames}
           availableTimeSlots={[]}
           defaultServiceName={defaultServiceName}
+          onSubmit={() => {}}
           salonOpensAt={9}
           salonClosesAt={11}
           today={new Date()}
@@ -127,6 +132,7 @@ describe("AppointmentForm", () => {
           availableServiceNames={availableServiceNames}
           availableTimeSlots={[]}
           defaultServiceName={defaultServiceName}
+          onSubmit={() => {}}
           salonOpensAt={9}
           salonClosesAt={11}
           today={new Date()}
@@ -144,6 +150,7 @@ describe("AppointmentForm", () => {
           availableServiceNames={availableServiceNames}
           availableTimeSlots={[]}
           defaultServiceName={defaultServiceName}
+          onSubmit={() => {}}
           salonOpensAt={9}
           salonClosesAt={11}
           today={new Date()}
@@ -154,6 +161,26 @@ describe("AppointmentForm", () => {
       const field = findSelectField({ fieldName: "serviceName" })
       const label = findLabelFor({ fieldName: "serviceName" })
       expect(label.htmlFor).toEqual(field.id)
+    })
+
+    it("saves the default service name when the form is submitted", async () => {
+      const defaultServiceName = "Blow-dry"
+      render(
+        <AppointmentForm
+          availableServiceNames={availableServiceNames}
+          availableTimeSlots={[]}
+          defaultServiceName={defaultServiceName}
+          onSubmit={(formValues) => {
+            expect(formValues.serviceName).toEqual(defaultServiceName)
+          }}
+          salonOpensAt={9}
+          salonClosesAt={11}
+          today={new Date()}
+        />
+      )
+      await wait()
+
+      ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
     })
   })
 })

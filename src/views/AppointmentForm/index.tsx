@@ -8,6 +8,7 @@ type Props = {
   availableTimeSlots: TimeSlot[]
   availableServiceNames: string[]
   defaultServiceName: string
+  onSubmit(formValues: { serviceName: string }): void
   salonClosesAt: number
   salonOpensAt: number
   today: Date
@@ -17,12 +18,19 @@ const AppointmentForm: React.FC<Props> = ({
   availableTimeSlots,
   availableServiceNames,
   defaultServiceName,
+  onSubmit,
   salonClosesAt,
   salonOpensAt,
   today,
 }) => {
   return (
-    <form id="appointment">
+    <form
+      id="appointment"
+      onSubmit={(event) => {
+        event.preventDefault()
+        onSubmit({ serviceName: defaultServiceName })
+      }}
+    >
       <label htmlFor="serviceName">Service</label>
       <select id="serviceName" name="serviceName" onChange={() => {}} value={defaultServiceName}>
         {availableServiceNames.map((aServiceName) => (
