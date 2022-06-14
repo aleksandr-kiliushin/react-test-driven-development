@@ -13,7 +13,11 @@ const App: React.FC = () => {
         <ul>
           <li>
             <Link to="/appointments-day-view">AppointmentsDayView</Link>
+          </li>
+          <li>
             <Link to="/customer-form">CustomerForm</Link>
+          </li>
+          <li>
             <Link to="/appointment-form">AppointmentForm</Link>
           </li>
         </ul>
