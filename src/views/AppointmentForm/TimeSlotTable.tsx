@@ -38,10 +38,19 @@ type Props = {
   availableTimeSlots: TimeSlot[]
   salonClosesAt: number
   salonOpensAt: number
+  selectedSlotTimestamp: number | null
+  setSelectedSlotTimestamp: React.Dispatch<React.SetStateAction<number | null>>
   today: Date
 }
 
-const TimeSlotTable: React.FC<Props> = ({ availableTimeSlots, salonClosesAt, salonOpensAt, today }) => {
+const TimeSlotTable: React.FC<Props> = ({
+  availableTimeSlots,
+  salonClosesAt,
+  salonOpensAt,
+  selectedSlotTimestamp,
+  setSelectedSlotTimestamp,
+  today,
+}) => {
   const theFollowingWeekDatesTimestamps = getWeeklyDateValues({ startDate: today })
   const timeSlotsTimestamps = getDailyTimeSlots({ salonClosesAt, salonOpensAt })
 
@@ -65,6 +74,8 @@ const TimeSlotTable: React.FC<Props> = ({ availableTimeSlots, salonClosesAt, sal
                   availableTimeSlots={availableTimeSlots}
                   date={date}
                   key={date.toString()}
+                  selectedSlotTimestamp={selectedSlotTimestamp}
+                  setSelectedSlotTimestamp={setSelectedSlotTimestamp}
                   slotTimestamp={aTimestamp}
                 />
               )

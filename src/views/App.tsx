@@ -46,7 +46,9 @@ const App: React.FC = () => {
                 { startsAt: new Date().setHours(14, 30, 0, 0) },
                 { startsAt: new Date().setHours(17, 30, 0, 0) },
               ]}
-              onSubmit={() => {}}
+              onSubmit={(formValues) => {
+                console.log(JSON.stringify(formValues, null, 2))
+              }}
               defaultServiceName="Cut"
               salonClosesAt={19}
               salonOpensAt={12}

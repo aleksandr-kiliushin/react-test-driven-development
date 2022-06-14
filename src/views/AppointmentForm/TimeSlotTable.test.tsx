@@ -30,7 +30,16 @@ describe("time slot table", () => {
   }
 
   it("renders a table for time slots", async () => {
-    render(<TimeSlotTable availableTimeSlots={[]} salonOpensAt={9} salonClosesAt={11} today={new Date()} />)
+    render(
+      <TimeSlotTable
+        availableTimeSlots={[]}
+        salonOpensAt={9}
+        salonClosesAt={11}
+        today={new Date()}
+        selectedSlotTimestamp={null}
+        setSelectedSlotTimestamp={() => {}}
+      />
+    )
     await wait()
     expect(findTimeSlotTable()).not.toBeNull()
   })

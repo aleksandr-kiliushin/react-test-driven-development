@@ -9,7 +9,7 @@ type Props = {
   availableTimeSlots: TimeSlot[]
   availableServiceNames: string[]
   defaultServiceName: string
-  onSubmit(formValues: { serviceName: string }): void
+  onSubmit(formValues: { serviceName: string; slotTimestamp: number }): void
   salonClosesAt: number
   salonOpensAt: number
   today: Date
@@ -25,13 +25,17 @@ const AppointmentForm: React.FC<Props> = ({
   today,
 }) => {
   const [selectedServiceName, setSelectedServiceName] = React.useState<string>(defaultServiceName)
+  const [selectedSlotTimestamp, setSelectedSlotTimestamp] = React.useState<number | null>(
+    availableTimeSlots[0]?.startsAt || null
+  )
 
   return (
     <form
       id="appointment"
       onSubmit={(event) => {
         event.preventDefault()
-        onSubmit({ serviceName: selectedServiceName })
+        if (selectedSlotTimestamp === null) return
+        onSubmit({ serviceName: selectedServiceName, slotTimestamp: new Date(selectedSlotTimestamp).toString() })
       }}
     >
       <label htmlFor="serviceName">Service</label>
@@ -51,8 +55,11 @@ const AppointmentForm: React.FC<Props> = ({
         availableTimeSlots={availableTimeSlots}
         salonClosesAt={salonClosesAt}
         salonOpensAt={salonOpensAt}
+        selectedSlotTimestamp={selectedSlotTimestamp}
+        setSelectedSlotTimestamp={setSelectedSlotTimestamp}
         today={today}
       />
+      <input type="submit" />
     </form>
   )
 }
