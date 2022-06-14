@@ -1,5 +1,7 @@
 import React from "react"
 
+import TimeSlotTable from "./TimeSlotTable"
+
 export type FieldName = "serviceName"
 
 type Props = {
@@ -15,6 +17,7 @@ const AppointmentForm: React.FC<Props> = ({ availableServiceNames, defaultServic
           <option key={aServiceName}>{aServiceName}</option>
         ))}
       </select>
+      <TimeSlotTable />
     </form>
   )
 }

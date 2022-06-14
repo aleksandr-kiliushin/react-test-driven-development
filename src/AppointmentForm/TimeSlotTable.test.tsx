@@ -1,3 +1,4 @@
+import assert from "assert"
 import React from "react"
 import ReactDom from "react-dom/client"
 
@@ -14,9 +15,16 @@ describe("time slot table", () => {
     ;({ container, render } = createContainer())
   })
 
+  const findTimeSlotTable = (): HTMLTableElement => {
+    const table = container.querySelector("table#time-slots")
+    assert(table !== null, "Time slots table not found.")
+    assert(table instanceof HTMLTableElement, "Found element is not an instance of HTMLTableElement.")
+    return table
+  }
+
   it("renders a table for time slots", async () => {
     render(<TimeSlotTable />)
     await wait()
-    expect(container.querySelector("table#time-slots")).not.toBeNull()
+    expect(findTimeSlotTable()).not.toBeNull()
   })
 })
