@@ -48,6 +48,12 @@ describe("AppointmentForm", () => {
     return foundOption
   }
 
+  const findLabelFor = ({ fieldName }: { fieldName: FieldName }): HTMLLabelElement => {
+    const label = container.querySelector(`label[for="${fieldName}"]`)
+    assert(label instanceof HTMLLabelElement, `label for ${fieldName} field not found.`)
+    return label
+  }
+
   it("renders a form.", async () => {
     render(
       <AppointmentForm
@@ -112,6 +118,42 @@ describe("AppointmentForm", () => {
       const selectOption = findSelectOption({ optionTextContent: "Blow-dry", selectFieldName: "serviceName" })
       expect(selectOption.textContent).toEqual(defaultServiceName)
       expect(selectOption.selected).toEqual(true)
+    })
+
+    it("renders a field label with an appropriate htmlFor attribute", async () => {
+      const defaultServiceName = "Blow-dry"
+      render(
+        <AppointmentForm
+          availableServiceNames={availableServiceNames}
+          availableTimeSlots={[]}
+          defaultServiceName={defaultServiceName}
+          salonOpensAt={9}
+          salonClosesAt={11}
+          today={new Date()}
+        />
+      )
+      await wait()
+
+      expect(findLabelFor({ fieldName: "serviceName" })).not.toBeNull()
+    })
+
+    it("assign label htmlFor matching to the select field ID", async () => {
+      const defaultServiceName = "Blow-dry"
+      render(
+        <AppointmentForm
+          availableServiceNames={availableServiceNames}
+          availableTimeSlots={[]}
+          defaultServiceName={defaultServiceName}
+          salonOpensAt={9}
+          salonClosesAt={11}
+          today={new Date()}
+        />
+      )
+      await wait()
+
+      const field = findSelectField({ fieldName: "serviceName" })
+      const label = findLabelFor({ fieldName: "serviceName" })
+      expect(label.htmlFor).toEqual(field.id)
     })
   })
 })

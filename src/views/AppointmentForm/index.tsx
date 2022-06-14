@@ -23,7 +23,8 @@ const AppointmentForm: React.FC<Props> = ({
 }) => {
   return (
     <form id="appointment">
-      <select name="serviceName" onChange={() => {}} value={defaultServiceName}>
+      <label htmlFor="serviceName">Service</label>
+      <select id="serviceName" name="serviceName" onChange={() => {}} value={defaultServiceName}>
         {availableServiceNames.map((aServiceName) => (
           <option key={aServiceName}>{aServiceName}</option>
         ))}
