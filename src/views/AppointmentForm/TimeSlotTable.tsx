@@ -34,7 +34,7 @@ const shortenDate = ({ timestamp }: { timestamp: number }) => {
   return `${day} ${dayOfMonth}`
 }
 
-type Props = {
+interface IProps {
   availableTimeSlots: TimeSlot[]
   salonClosesAt: number
   salonOpensAt: number
@@ -43,7 +43,7 @@ type Props = {
   today: Date
 }
 
-export const TimeSlotTable: React.FC<Props> = ({
+export const TimeSlotTable: React.FC<IProps> = ({
   availableTimeSlots,
   salonClosesAt,
   salonOpensAt,

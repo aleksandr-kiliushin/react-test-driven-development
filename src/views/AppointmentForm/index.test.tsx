@@ -6,7 +6,7 @@ import ReactDomTestUtils from "react-dom/test-utils"
 import { createContainer } from "#utils/testing/createContainer"
 import { wait } from "#utils/testing/wait"
 
-import { AppointmentForm, FieldName } from "./index"
+import { AppointmentForm, IFieldName } from "./index"
 
 const availableServiceNames = ["Cut", "Blow-dry"]
 
@@ -25,7 +25,7 @@ describe("AppointmentForm", () => {
     return form
   }
 
-  const findSelectField = ({ fieldName }: { fieldName: FieldName }): HTMLSelectElement => {
+  const findSelectField = ({ fieldName }: { fieldName: IFieldName }): HTMLSelectElement => {
     const field = findForm({ id: "appointment" }).elements.namedItem(fieldName)
     assert(field instanceof HTMLSelectElement, "firstNameField is not a select")
     return field
@@ -36,7 +36,7 @@ describe("AppointmentForm", () => {
     selectFieldName,
   }: {
     optionTextContent: string
-    selectFieldName: FieldName
+    selectFieldName: IFieldName
   }): HTMLOptionElement => {
     const selectField = findSelectField({ fieldName: selectFieldName })
     const options = Array.from(selectField.children)
@@ -49,7 +49,7 @@ describe("AppointmentForm", () => {
     return foundOption
   }
 
-  const findLabelFor = ({ fieldName }: { fieldName: FieldName }): HTMLLabelElement => {
+  const findLabelFor = ({ fieldName }: { fieldName: IFieldName }): HTMLLabelElement => {
     const label = container.querySelector(`label[for="${fieldName}"]`)
     assert(label instanceof HTMLLabelElement, `label for ${fieldName} field not found.`)
     return label

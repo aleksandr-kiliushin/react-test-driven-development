@@ -3,11 +3,11 @@ import React from "react"
 import { IAppointment } from "#types/IAppointment"
 import { getAppointmentTimeOfDayPrettified } from "#utils/getAppointmentTimeOfDayPrettified"
 
-type Props = {
+interface IProps {
   appointment: IAppointment
 }
 
-export const Appointment: React.FC<Props> = ({ appointment }) => {
+export const Appointment: React.FC<IProps> = ({ appointment }) => {
   return (
     <>
       <h2>Todays appointment at {getAppointmentTimeOfDayPrettified({ aDate: appointment.timeSlot })}</h2>

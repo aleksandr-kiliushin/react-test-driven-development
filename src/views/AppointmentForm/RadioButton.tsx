@@ -4,7 +4,7 @@ export type TimeSlot = {
   startsAt: number
 }
 
-type Props = {
+interface IProps {
   availableTimeSlots: TimeSlot[]
   date: number
   selectedSlotTimestamp: number | null
@@ -12,7 +12,7 @@ type Props = {
   slotTimestamp: TimeSlot["startsAt"]
 }
 
-export const RadioButton: React.FC<Props> = ({
+export const RadioButton: React.FC<IProps> = ({
   availableTimeSlots,
   date,
   selectedSlotTimestamp,

@@ -3,9 +3,9 @@ import React from "react"
 import { TimeSlot } from "./RadioButton"
 import { TimeSlotTable } from "./TimeSlotTable"
 
-export type FieldName = "serviceName"
+export type IFieldName = "serviceName"
 
-type Props = {
+interface IProps {
   availableTimeSlots: TimeSlot[]
   availableServiceNames: string[]
   defaultServiceName: string
@@ -15,7 +15,7 @@ type Props = {
   today: Date
 }
 
-export const AppointmentForm: React.FC<Props> = ({
+export const AppointmentForm: React.FC<IProps> = ({
   availableTimeSlots,
   availableServiceNames,
   defaultServiceName,

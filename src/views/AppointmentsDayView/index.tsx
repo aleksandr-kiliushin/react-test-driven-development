@@ -5,11 +5,11 @@ import { getAppointmentTimeOfDayPrettified } from "#utils/getAppointmentTimeOfDa
 
 import { Appointment } from "./Appointment"
 
-type AppointmentsDayViewProps = {
+interface IProps {
   appointments: IAppointment[]
 }
 
-export const AppointmentsDayView: React.FC<AppointmentsDayViewProps> = ({ appointments }) => {
+export const AppointmentsDayView: React.FC<IProps> = ({ appointments }) => {
   const [selectedAppointmentIndex, setSelectedAppointmentIndex] = React.useState<number>(0)
 
   return (
