@@ -58,6 +58,7 @@ module.exports = {
   ],
   resolve: {
     alias: {
+      "#sampleData": path.resolve(process.cwd(), "src/sampleData"),
       "#utils": path.resolve(process.cwd(), "src/utils"),
     },
     extensions: [".css", ".js", ".ts", ".tsx"],
