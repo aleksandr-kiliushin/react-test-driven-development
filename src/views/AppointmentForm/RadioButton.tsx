@@ -1,39 +1,39 @@
 import React from "react"
 
-export type TimeSlot = {
-  startsAt: number
-}
+import { IAppointment } from "#types/IAppointment"
 
 interface IProps {
-  availableTimeSlots: TimeSlot[]
-  date: number
-  selectedSlotTimestamp: number | null
-  setSelectedSlotTimestamp: React.Dispatch<React.SetStateAction<number | null>>
-  slotTimestamp: TimeSlot["startsAt"]
+  availableTimeSlots: IAppointment["timeSlot"][]
+  date: Date
+  selectedTimeSlot: Date | null
+  setSelectedTimeSlot: React.Dispatch<React.SetStateAction<Date | null>>
+  slotTimestamp: IAppointment["timeSlot"]
 }
 
 export const RadioButton: React.FC<IProps> = ({
   availableTimeSlots,
   date,
-  selectedSlotTimestamp,
-  setSelectedSlotTimestamp,
+  selectedTimeSlot,
+  setSelectedTimeSlot,
   slotTimestamp,
 }) => {
   const anAppointmenTimestamp = new Date(date)
   anAppointmenTimestamp.setHours(new Date(slotTimestamp).getHours())
   anAppointmenTimestamp.setMinutes(new Date(slotTimestamp).getMinutes())
 
-  const isChecked = selectedSlotTimestamp === slotTimestamp
+  if (selectedTimeSlot === null) return null
 
-  if (availableTimeSlots.some((aSlot) => aSlot.startsAt === anAppointmenTimestamp.valueOf())) {
+  const isChecked = selectedTimeSlot.toString() === slotTimestamp.toString()
+
+  if (availableTimeSlots.some((aSlot) => aSlot.toString() === anAppointmenTimestamp.toString())) {
     return (
       <td>
         <input
           checked={isChecked}
           name="startsAt"
-          onChange={(event) => setSelectedSlotTimestamp(parseInt(event.target.value))}
+          onChange={(event) => setSelectedTimeSlot(new Date(parseInt(event.target.value)))}
           type="radio"
-          value={anAppointmenTimestamp.valueOf().toString()}
+          value={anAppointmenTimestamp.toString()}
         />
       </td>
     )

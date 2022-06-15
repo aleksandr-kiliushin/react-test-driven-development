@@ -1,6 +1,8 @@
 import React from "react"
 
-import { RadioButton, TimeSlot } from "./RadioButton"
+import { IAppointment } from "#types/IAppointment"
+
+import { RadioButton } from "./RadioButton"
 
 const getDailyTimeSlots = ({
   salonClosesAt,
@@ -8,38 +10,38 @@ const getDailyTimeSlots = ({
 }: {
   salonClosesAt: number
   salonOpensAt: number
-}): number[] => {
+}): Date[] => {
   const totalSlots = (salonClosesAt - salonOpensAt) * 2
   const startTime = new Date().setHours(salonOpensAt, 0, 0, 0)
   const increment = 30 * 60 * 1000
   return Array(totalSlots)
-    .fill([startTime])
-    .reduce((acc, _, i) => acc.concat([startTime + i * increment]))
+    .fill([new Date(startTime)])
+    .reduce((acc, _, i) => acc.concat([new Date(startTime + i * increment)]))
 }
 
-const getWeeklyDateValues = ({ startDate }: { startDate: Date }): number[] => {
+const getWeeklyDateValues = ({ startDate }: { startDate: Date }): Date[] => {
   const midnight = new Date(startDate).setHours(0, 0, 0, 0)
   const increment = 24 * 60 * 60 * 1000
   return Array(7)
-    .fill([midnight])
-    .reduce((acc, _, i) => acc.concat([midnight + i * increment]))
+    .fill([new Date(midnight)])
+    .reduce((acc, _, i) => acc.concat([new Date(midnight + i * increment)]))
 }
 
-const timestampToTimeString = (timestamp: number) => {
-  return new Date(timestamp).toTimeString().substring(0, 5)
+const timestampToTimeString = (timestamp: Date) => {
+  return timestamp.toTimeString().substring(0, 5)
 }
 
-const shortenDate = ({ timestamp }: { timestamp: number }) => {
-  const [day, , dayOfMonth] = new Date(timestamp).toDateString().split(" ")
+const shortenDate = ({ aDate }: { aDate: Date }) => {
+  const [day, , dayOfMonth] = aDate.toDateString().split(" ")
   return `${day} ${dayOfMonth}`
 }
 
 interface IProps {
-  availableTimeSlots: TimeSlot[]
+  availableTimeSlots: IAppointment["timeSlot"][]
   salonClosesAt: number
   salonOpensAt: number
-  selectedSlotTimestamp: number | null
-  setSelectedSlotTimestamp: React.Dispatch<React.SetStateAction<number | null>>
+  selectedTimeSlot: Date | null
+  setSelectedTimeSlot: React.Dispatch<React.SetStateAction<Date | null>>
   today: Date
 }
 
@@ -47,8 +49,8 @@ export const TimeSlotTable: React.FC<IProps> = ({
   availableTimeSlots,
   salonClosesAt,
   salonOpensAt,
-  selectedSlotTimestamp,
-  setSelectedSlotTimestamp,
+  selectedTimeSlot,
+  setSelectedTimeSlot,
   today,
 }) => {
   const theFollowingWeekDatesTimestamps = getWeeklyDateValues({ startDate: today })
@@ -59,23 +61,23 @@ export const TimeSlotTable: React.FC<IProps> = ({
       <thead>
         <tr>
           <th />
-          {theFollowingWeekDatesTimestamps.map((aDateTimestamp) => {
-            return <th key={aDateTimestamp}>{shortenDate({ timestamp: aDateTimestamp })}</th>
+          {theFollowingWeekDatesTimestamps.map((aDate) => {
+            return <th key={aDate.toString()}>{shortenDate({ aDate })}</th>
           })}
         </tr>
       </thead>
       <tbody>
         {timeSlotsTimestamps.map((aTimestamp) => (
-          <tr key={aTimestamp}>
+          <tr key={aTimestamp.toString()}>
             <th>{timestampToTimeString(aTimestamp)}</th>
-            {theFollowingWeekDatesTimestamps.map((date) => {
+            {theFollowingWeekDatesTimestamps.map((aDate) => {
               return (
                 <RadioButton
                   availableTimeSlots={availableTimeSlots}
-                  date={date}
-                  key={date.toString()}
-                  selectedSlotTimestamp={selectedSlotTimestamp}
-                  setSelectedSlotTimestamp={setSelectedSlotTimestamp}
+                  date={aDate}
+                  key={aDate.toString()}
+                  selectedTimeSlot={selectedTimeSlot}
+                  setSelectedTimeSlot={setSelectedTimeSlot}
                   slotTimestamp={aTimestamp}
                 />
               )

@@ -1,4 +1,5 @@
 import assert from "assert"
+import { noop } from "lodash"
 import React from "react"
 import ReactDom from "react-dom/client"
 import ReactDomTestUtils from "react-dom/test-utils"
@@ -61,9 +62,9 @@ describe("AppointmentForm", () => {
         availableServiceNames={[]}
         availableTimeSlots={[]}
         defaultServiceName=""
-        onSubmit={() => {}}
+        onSubmit={noop}
         salonOpensAt={9}
-        salonClosesAt={11}
+        salonClosesAt={19}
         today={new Date()}
       />
     )
@@ -78,9 +79,9 @@ describe("AppointmentForm", () => {
           availableServiceNames={[]}
           availableTimeSlots={[]}
           defaultServiceName=""
-          onSubmit={() => {}}
+          onSubmit={noop}
           salonOpensAt={9}
-          salonClosesAt={11}
+          salonClosesAt={19}
           today={new Date()}
         />
       )
@@ -94,9 +95,9 @@ describe("AppointmentForm", () => {
           availableServiceNames={availableServiceNames}
           availableTimeSlots={[]}
           defaultServiceName=""
-          onSubmit={() => {}}
+          onSubmit={noop}
           salonOpensAt={9}
-          salonClosesAt={11}
+          salonClosesAt={19}
           today={new Date()}
         />
       )
@@ -113,9 +114,9 @@ describe("AppointmentForm", () => {
           availableServiceNames={availableServiceNames}
           availableTimeSlots={[]}
           defaultServiceName={defaultServiceName}
-          onSubmit={() => {}}
+          onSubmit={noop}
           salonOpensAt={9}
-          salonClosesAt={11}
+          salonClosesAt={19}
           today={new Date()}
         />
       )
@@ -132,9 +133,9 @@ describe("AppointmentForm", () => {
           availableServiceNames={availableServiceNames}
           availableTimeSlots={[]}
           defaultServiceName={defaultServiceName}
-          onSubmit={() => {}}
+          onSubmit={noop}
           salonOpensAt={9}
-          salonClosesAt={11}
+          salonClosesAt={19}
           today={new Date()}
         />
       )
@@ -150,9 +151,9 @@ describe("AppointmentForm", () => {
           availableServiceNames={availableServiceNames}
           availableTimeSlots={[]}
           defaultServiceName={defaultServiceName}
-          onSubmit={() => {}}
+          onSubmit={noop}
           salonOpensAt={9}
-          salonClosesAt={11}
+          salonClosesAt={19}
           today={new Date()}
         />
       )
@@ -174,7 +175,7 @@ describe("AppointmentForm", () => {
             expect(formValues.serviceName).toEqual(defaultServiceName)
           }}
           salonOpensAt={9}
-          salonClosesAt={11}
+          salonClosesAt={19}
           today={new Date()}
         />
       )
@@ -195,7 +196,7 @@ describe("AppointmentForm", () => {
             expect(formValues.serviceName).toEqual(aNewEnteredServiceName)
           }}
           salonOpensAt={9}
-          salonClosesAt={11}
+          salonClosesAt={19}
           today={new Date()}
         />
       )

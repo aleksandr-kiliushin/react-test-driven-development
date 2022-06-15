@@ -1,15 +1,16 @@
 import React from "react"
 
-import { TimeSlot } from "./RadioButton"
+import { IAppointment } from "#types/IAppointment"
+
 import { TimeSlotTable } from "./TimeSlotTable"
 
 export type IFieldName = "serviceName"
 
 interface IProps {
-  availableTimeSlots: TimeSlot[]
+  availableTimeSlots: IAppointment["timeSlot"][]
   availableServiceNames: string[]
   defaultServiceName: string
-  onSubmit(formValues: { serviceName: string; slotTimestamp: string }): void
+  onSubmit(formValues: { serviceName: string; timeSlot: string }): void
   salonClosesAt: number
   salonOpensAt: number
   today: Date
@@ -25,17 +26,15 @@ export const AppointmentForm: React.FC<IProps> = ({
   today,
 }) => {
   const [selectedServiceName, setSelectedServiceName] = React.useState<string>(defaultServiceName)
-  const [selectedSlotTimestamp, setSelectedSlotTimestamp] = React.useState<number | null>(
-    availableTimeSlots[0]?.startsAt || null
-  )
+  const [selectedTimeSlot, setSelectedTimeSlot] = React.useState<Date | null>(availableTimeSlots[0] || null)
 
   return (
     <form
       id="appointment"
       onSubmit={(event) => {
         event.preventDefault()
-        if (selectedSlotTimestamp === null) return
-        onSubmit({ serviceName: selectedServiceName, slotTimestamp: new Date(selectedSlotTimestamp).toString() })
+        if (selectedTimeSlot === null) return
+        onSubmit({ serviceName: selectedServiceName, timeSlot: selectedTimeSlot.toString() })
       }}
     >
       <label htmlFor="serviceName">Service</label>
@@ -55,8 +54,8 @@ export const AppointmentForm: React.FC<IProps> = ({
         availableTimeSlots={availableTimeSlots}
         salonClosesAt={salonClosesAt}
         salonOpensAt={salonOpensAt}
-        selectedSlotTimestamp={selectedSlotTimestamp}
-        setSelectedSlotTimestamp={setSelectedSlotTimestamp}
+        selectedTimeSlot={selectedTimeSlot}
+        setSelectedTimeSlot={setSelectedTimeSlot}
         today={today}
       />
       <input type="submit" />
