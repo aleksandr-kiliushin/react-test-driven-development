@@ -4,6 +4,8 @@ import { BrowserRouter } from "react-router-dom"
 
 import { App } from "./views/App"
 
+import "./index.css"
+
 let container = document.querySelector("#root")
 if (container === null) {
   container = document.createElement("div")
