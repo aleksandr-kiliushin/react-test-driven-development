@@ -2,12 +2,12 @@ import React from "react"
 
 import { ICustomer } from "#types/ICustomer"
 
-interface Props {
+interface IProps {
   initialCustomerData: ICustomer
   onSubmit(formValues: ICustomer): void
 }
 
-export const CustomerForm: React.FC<Props> = ({ initialCustomerData, onSubmit }) => {
+export const CustomerForm: React.FC<IProps> = ({ initialCustomerData, onSubmit }) => {
   const [firstName, setFirstName] = React.useState<string>(initialCustomerData.firstName)
   const [lastName, setLastName] = React.useState<string>(initialCustomerData.lastName)
   const [phoneNumber, setPhoneNumber] = React.useState<string>(initialCustomerData.phoneNumber)

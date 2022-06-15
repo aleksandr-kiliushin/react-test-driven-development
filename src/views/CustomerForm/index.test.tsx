@@ -11,7 +11,7 @@ import { wait } from "#utils/testing/wait"
 
 import { CustomerForm } from "./index"
 
-type FieldName = keyof ICustomer
+type IFieldName = keyof ICustomer
 
 describe("CustomerForm", () => {
   let container: HTMLDivElement
@@ -27,19 +27,19 @@ describe("CustomerForm", () => {
     return form
   }
 
-  const findField = ({ fieldName }: { fieldName: FieldName }): HTMLInputElement => {
+  const findField = ({ fieldName }: { fieldName: IFieldName }): HTMLInputElement => {
     const field = findForm({ id: "customer" }).elements.namedItem(fieldName)
     assert(field instanceof HTMLInputElement, `Cannot find a field with fieldName of [${fieldName}].`)
     return field
   }
 
-  const findLabelFor = ({ fieldName }: { fieldName: FieldName }): HTMLLabelElement => {
+  const findLabelFor = ({ fieldName }: { fieldName: IFieldName }): HTMLLabelElement => {
     const label = container.querySelector(`label[for="${fieldName}"]`)
     assert(label instanceof HTMLLabelElement, `Cannot find a label with a [for] attribute of [${fieldName}].`)
     return label
   }
 
-  const itRendersAsATextBox = ({ fieldName }: { fieldName: FieldName }) => {
+  const itRendersAsATextBox = ({ fieldName }: { fieldName: IFieldName }) => {
     it("renders as a text box.", async () => {
       render(<CustomerForm initialCustomerData={aCustomer1} onSubmit={noop} />)
       await wait()
@@ -47,7 +47,7 @@ describe("CustomerForm", () => {
     })
   }
 
-  const itHasThePassedInitialValueAtStart = ({ fieldName }: { fieldName: FieldName }) => {
+  const itHasThePassedInitialValueAtStart = ({ fieldName }: { fieldName: IFieldName }) => {
     it("includes the existing value", async () => {
       render(<CustomerForm initialCustomerData={aCustomer1} onSubmit={noop} />)
       await wait()
@@ -59,7 +59,7 @@ describe("CustomerForm", () => {
     fieldName,
     labelText,
   }: {
-    fieldName: FieldName
+    fieldName: IFieldName
     labelText: string
   }) => {
     it("renders a label.", async () => {
@@ -69,7 +69,7 @@ describe("CustomerForm", () => {
     })
   }
 
-  const itAssignsAFieldAnIdThatMatchesTheCorrespondingLabelId = ({ fieldName }: { fieldName: FieldName }) => {
+  const itAssignsAFieldAnIdThatMatchesTheCorrespondingLabelId = ({ fieldName }: { fieldName: IFieldName }) => {
     it("assigns an id that matches the label id.", async () => {
       render(<CustomerForm initialCustomerData={aCustomer1} onSubmit={noop} />)
       await wait()
@@ -77,7 +77,7 @@ describe("CustomerForm", () => {
     })
   }
 
-  const itSubmitsWithThePassedInitialValueAtStart = ({ fieldName }: { fieldName: FieldName }) => {
+  const itSubmitsWithThePassedInitialValueAtStart = ({ fieldName }: { fieldName: IFieldName }) => {
     it("submits existing value.", async () => {
       expect.hasAssertions() // It seems to be useless because async assertions (i. e. in `onSubmit`) complete anyway.
 
@@ -98,7 +98,7 @@ describe("CustomerForm", () => {
     fieldName,
     newValue,
   }: {
-    fieldName: FieldName
+    fieldName: IFieldName
     newValue: string
   }) => {
     it("saves new value when submitted.", async () => {
@@ -127,7 +127,7 @@ describe("CustomerForm", () => {
   })
 
   describe("first name field", () => {
-    const fieldName: FieldName = "firstName"
+    const fieldName: IFieldName = "firstName"
     itRendersAsATextBox({ fieldName })
     itHasThePassedInitialValueAtStart({ fieldName })
     itRendersAFieldLabelWithSpecifiedText({ fieldName, labelText: "First name" })
@@ -137,7 +137,7 @@ describe("CustomerForm", () => {
   })
 
   describe("last name field", () => {
-    const fieldName: FieldName = "lastName"
+    const fieldName: IFieldName = "lastName"
     itRendersAsATextBox({ fieldName })
     itHasThePassedInitialValueAtStart({ fieldName })
     itRendersAFieldLabelWithSpecifiedText({ fieldName, labelText: "Last name" })
@@ -147,7 +147,7 @@ describe("CustomerForm", () => {
   })
 
   describe("phone number field", () => {
-    const fieldName: FieldName = "phoneNumber"
+    const fieldName: IFieldName = "phoneNumber"
     itRendersAsATextBox({ fieldName })
     itHasThePassedInitialValueAtStart({ fieldName })
     itRendersAFieldLabelWithSpecifiedText({ fieldName, labelText: "Phone number" })
