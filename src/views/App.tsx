@@ -3,7 +3,7 @@ import { Link, Route, Routes } from "react-router-dom"
 
 import { TODO_MAKE_DATE_RANDOM_TOO_randomAppointments } from "#sampleData/randomAppointments"
 import { aCustomer1 } from "#sampleData/someCustomers"
-import { aTimeSlotTodayAt_14_00, aTimeSlotTodayAt_16_30, aTimeSlotTomorrowAt_12_00 } from "#sampleData/someTimeSlots"
+import { aTimeSlotTodayAt_13_30, aTimeSlotTodayAt_14_00, aTimeSlotTomorrowAt_12_00 } from "#sampleData/someTimeSlots"
 
 import { AppointmentForm } from "./AppointmentForm"
 import { AppointmentsDayView } from "./AppointmentsDayView"
@@ -51,7 +51,7 @@ export const App: React.FC = () => {
           element={
             <AppointmentForm
               availableServiceNames={["Cut", "Blow-dry", "Cut & color", "Beard trim", "Cut & beard trim", "Extensions"]}
-              availableTimeSlots={[aTimeSlotTodayAt_14_00, aTimeSlotTodayAt_16_30, aTimeSlotTomorrowAt_12_00]}
+              availableTimeSlots={[aTimeSlotTodayAt_14_00, aTimeSlotTodayAt_13_30, aTimeSlotTomorrowAt_12_00]}
               onSubmit={(formValues) => {
                 console.log(JSON.stringify(formValues, null, 2))
               }}

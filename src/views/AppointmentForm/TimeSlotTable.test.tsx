@@ -3,7 +3,7 @@ import noop from "lodash/noop"
 import React from "react"
 import ReactDom from "react-dom/client"
 
-import { aTimeSlotTodayAt_14_00, aTimeSlotTodayAt_16_30 } from "#sampleData/someTimeSlots"
+import { aTimeSlotTodayAt_13_30, aTimeSlotTodayAt_14_00 } from "#sampleData/someTimeSlots"
 import { createContainer } from "#utils/testing/createContainer"
 import { wait } from "#utils/testing/wait"
 
@@ -128,7 +128,7 @@ describe("time slot table", () => {
     render(
       <AppointmentForm
         availableServiceNames={[]}
-        availableTimeSlots={[aTimeSlotTodayAt_14_00, aTimeSlotTodayAt_16_30]}
+        availableTimeSlots={[aTimeSlotTodayAt_14_00, aTimeSlotTodayAt_13_30]}
         defaultServiceName=""
         onSubmit={noop}
         salonClosesAt={19}
@@ -145,7 +145,7 @@ describe("time slot table", () => {
     render(
       <AppointmentForm
         availableServiceNames={[]}
-        availableTimeSlots={[aTimeSlotTodayAt_14_00, aTimeSlotTodayAt_16_30]}
+        availableTimeSlots={[aTimeSlotTodayAt_14_00, aTimeSlotTodayAt_13_30]}
         defaultServiceName=""
         onSubmit={noop}
         salonClosesAt={19}
@@ -154,7 +154,7 @@ describe("time slot table", () => {
       />
     )
     await wait()
-    expect(findStartsAtFieldInput({ inputIndex: 0 }).value).toEqual(aTimeSlotTodayAt_14_00.toString())
-    expect(findStartsAtFieldInput({ inputIndex: 1 }).value).toEqual(aTimeSlotTodayAt_16_30.toString())
+    expect(findStartsAtFieldInput({ inputIndex: 0 }).value).toEqual(aTimeSlotTodayAt_13_30.toString())
+    expect(findStartsAtFieldInput({ inputIndex: 1 }).value).toEqual(aTimeSlotTodayAt_14_00.toString())
   })
 })
