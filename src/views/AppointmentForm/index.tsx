@@ -9,7 +9,7 @@ type Props = {
   availableTimeSlots: TimeSlot[]
   availableServiceNames: string[]
   defaultServiceName: string
-  onSubmit(formValues: { serviceName: string; slotTimestamp: number }): void
+  onSubmit(formValues: { serviceName: string; slotTimestamp: string }): void
   salonClosesAt: number
   salonOpensAt: number
   today: Date
