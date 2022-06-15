@@ -1,15 +1,15 @@
 import React from "react"
 
-import { Customer } from "../AppointmentsDayView/types"
+import { ICustomer } from "#types/ICustomer"
 
-type Props = {
-  firstName: Customer["firstName"]
-  lastName: Customer["lastName"]
-  phoneNumber: Customer["phoneNumber"]
+interface Props {
+  firstName: ICustomer["firstName"]
+  lastName: ICustomer["lastName"]
   onSubmit(formValues: { firstName: string; lastName: string; phoneNumber: string }): void
+  phoneNumber: ICustomer["phoneNumber"]
 }
 
-const CustomerForm: React.FC<Props> = ({ firstName, lastName, onSubmit, phoneNumber }) => {
+export const CustomerForm: React.FC<Props> = ({ firstName, lastName, onSubmit, phoneNumber }) => {
   const [customerFirstName, setCustomerFirstName] = React.useState<string>(firstName)
   const [customerLastName, setCustomerLastName] = React.useState<string>(lastName)
   const [customerPhoneNumber, setCustomerPhoneNumber] = React.useState<string>(phoneNumber)
@@ -50,5 +50,3 @@ const CustomerForm: React.FC<Props> = ({ firstName, lastName, onSubmit, phoneNum
     </form>
   )
 }
-
-export default CustomerForm

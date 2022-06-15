@@ -8,7 +8,7 @@ import { wait } from "#utils/testing/wait"
 
 import { appointment1 } from "../AppointmentsDayView/sampleData"
 import { Customer } from "../AppointmentsDayView/types"
-import CustomerForm from "./index"
+import { CustomerForm } from "./index"
 
 type FieldName = keyof Customer
 

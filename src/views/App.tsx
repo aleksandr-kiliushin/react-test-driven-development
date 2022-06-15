@@ -4,7 +4,7 @@ import { Link, Route, Routes } from "react-router-dom"
 import AppointmentForm from "./AppointmentForm"
 import AppointmentsDayView from "./AppointmentsDayView"
 import { sampleAppointments } from "./AppointmentsDayView/sampleData"
-import CustomerForm from "./CustomerForm"
+import { CustomerForm } from "./CustomerForm"
 
 const App: React.FC = () => {
   return (
