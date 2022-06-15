@@ -1,5 +1,3 @@
-import { faker } from "@faker-js/faker/locale/en"
-
 import { IAppointment } from "#types/IAppointment"
 
 const today = new Date()
@@ -8,19 +6,7 @@ const todayAt = ({ hours }: { hours: number }) => {
   return today.setHours(hours, 0)
 }
 
-export const sampleAppointments: IAppointment[] = [10, 11, 12, 13, 14, 15, 16].map<IAppointment>((hours) => ({
-  customer: {
-    firstName: faker.name.firstName(),
-    lastName: faker.name.lastName(),
-    phoneNumber: faker.phone.phoneNumber(),
-  },
-  notes: faker.lorem.sentence(10),
-  serviceName: faker.word.noun(),
-  startsAt: new Date(todayAt({ hours })),
-  stylistName: faker.name.firstName(),
-}))
-
-export const appointment1: IAppointment = {
+const anAppointment1: IAppointment = {
   customer: {
     firstName: "Roscoe",
     lastName: "Schmeler",
@@ -32,7 +18,7 @@ export const appointment1: IAppointment = {
   stylistName: "Glenda",
 }
 
-export const appointment2: IAppointment = {
+const anAppointment2: IAppointment = {
   customer: {
     firstName: "Cara",
     lastName: "Schaefer",
@@ -43,3 +29,5 @@ export const appointment2: IAppointment = {
   startsAt: new Date(todayAt({ hours: 10 })),
   stylistName: "Olin",
 }
+
+export const someAppointments = [anAppointment1, anAppointment2]
