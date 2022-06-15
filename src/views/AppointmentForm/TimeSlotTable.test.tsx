@@ -35,7 +35,7 @@ describe("time slot table", () => {
     render(
       <TimeSlotTable
         availableTimeSlots={[]}
-        salonOpensAt={9}
+        salonOpensAt={12}
         salonClosesAt={14}
         today={new Date()}
         selectedTimeSlot={null}
@@ -54,16 +54,16 @@ describe("time slot table", () => {
         defaultServiceName=""
         onSubmit={noop}
         salonClosesAt={14}
-        salonOpensAt={9}
+        salonOpensAt={12}
         today={new Date()}
       />
     )
     await wait()
     const timesOfDay = findTimeSlotTable().querySelectorAll("tbody >* th")
-    expect(timesOfDay).toHaveLength(10)
-    expect(timesOfDay[0].textContent).toEqual("09:00")
-    expect(timesOfDay[1].textContent).toEqual("09:30")
-    expect(timesOfDay[3].textContent).toEqual("10:30")
+    expect(timesOfDay).toHaveLength(4)
+    expect(timesOfDay[0].textContent).toEqual("12:00")
+    expect(timesOfDay[1].textContent).toEqual("12:30")
+    expect(timesOfDay[3].textContent).toEqual("13:30")
   })
 
   it("renders an empty cell at the start of the header row", async () => {
@@ -74,7 +74,7 @@ describe("time slot table", () => {
         defaultServiceName=""
         onSubmit={noop}
         salonClosesAt={14}
-        salonOpensAt={9}
+        salonOpensAt={12}
         today={new Date()}
       />
     )
@@ -95,7 +95,7 @@ describe("time slot table", () => {
         defaultServiceName=""
         onSubmit={noop}
         salonClosesAt={14}
-        salonOpensAt={9}
+        salonOpensAt={12}
         today={new Date(2018, 11, 1)}
       />
     )
@@ -115,7 +115,7 @@ describe("time slot table", () => {
         defaultServiceName=""
         onSubmit={noop}
         salonClosesAt={14}
-        salonOpensAt={9}
+        salonOpensAt={12}
         today={new Date()}
       />
     )
@@ -132,7 +132,7 @@ describe("time slot table", () => {
         defaultServiceName=""
         onSubmit={noop}
         salonClosesAt={14}
-        salonOpensAt={9}
+        salonOpensAt={12}
         today={new Date()}
       />
     )
@@ -149,7 +149,7 @@ describe("time slot table", () => {
         defaultServiceName=""
         onSubmit={noop}
         salonClosesAt={14}
-        salonOpensAt={9}
+        salonOpensAt={12}
         today={new Date()}
       />
     )

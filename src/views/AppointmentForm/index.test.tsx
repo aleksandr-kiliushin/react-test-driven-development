@@ -63,7 +63,7 @@ describe("AppointmentForm", () => {
         availableTimeSlots={[]}
         defaultServiceName=""
         onSubmit={noop}
-        salonOpensAt={9}
+        salonOpensAt={12}
         salonClosesAt={14}
         today={new Date()}
       />
@@ -80,7 +80,7 @@ describe("AppointmentForm", () => {
           availableTimeSlots={[]}
           defaultServiceName=""
           onSubmit={noop}
-          salonOpensAt={9}
+          salonOpensAt={12}
           salonClosesAt={14}
           today={new Date()}
         />
@@ -96,7 +96,7 @@ describe("AppointmentForm", () => {
           availableTimeSlots={[]}
           defaultServiceName=""
           onSubmit={noop}
-          salonOpensAt={9}
+          salonOpensAt={12}
           salonClosesAt={14}
           today={new Date()}
         />
@@ -115,7 +115,7 @@ describe("AppointmentForm", () => {
           availableTimeSlots={[]}
           defaultServiceName={defaultServiceName}
           onSubmit={noop}
-          salonOpensAt={9}
+          salonOpensAt={12}
           salonClosesAt={14}
           today={new Date()}
         />
@@ -134,7 +134,7 @@ describe("AppointmentForm", () => {
           availableTimeSlots={[]}
           defaultServiceName={defaultServiceName}
           onSubmit={noop}
-          salonOpensAt={9}
+          salonOpensAt={12}
           salonClosesAt={14}
           today={new Date()}
         />
@@ -152,7 +152,7 @@ describe("AppointmentForm", () => {
           availableTimeSlots={[]}
           defaultServiceName={defaultServiceName}
           onSubmit={noop}
-          salonOpensAt={9}
+          salonOpensAt={12}
           salonClosesAt={14}
           today={new Date()}
         />
@@ -174,7 +174,7 @@ describe("AppointmentForm", () => {
           onSubmit={(formValues) => {
             expect(formValues.serviceName).toEqual(defaultServiceName)
           }}
-          salonOpensAt={9}
+          salonOpensAt={12}
           salonClosesAt={14}
           today={new Date()}
         />
@@ -195,7 +195,7 @@ describe("AppointmentForm", () => {
           onSubmit={(formValues) => {
             expect(formValues.serviceName).toEqual(aNewEnteredServiceName)
           }}
-          salonOpensAt={9}
+          salonOpensAt={12}
           salonClosesAt={14}
           today={new Date()}
         />
