@@ -6,6 +6,7 @@ label {
   color: gray;
 }
 
-input {
+input,
+select {
   border: 1px solid black;
 }

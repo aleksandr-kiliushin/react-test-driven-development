@@ -2,7 +2,6 @@ import assert from "assert"
 import noop from "lodash/noop"
 import React from "react"
 import ReactDom from "react-dom/client"
-import ReactDomTestUtils from "react-dom/test-utils"
 
 import {
   aTimeSlotIn6DaysAt_13_00,
@@ -184,7 +183,7 @@ describe("time slot table", () => {
     expect(findStartsAtFieldInput({ inputIndex: 1 }).value).toEqual(aTimeSlotTodayAt_13_30.toString())
   })
 
-  it("renders a radio button for every available time slot", async () => {
+  it("renders a radio button amount that corresponds available time slots amount", async () => {
     render(
       <AppointmentForm
         availableServiceNames={[]}
@@ -206,6 +205,32 @@ describe("time slot table", () => {
     expect(radioButtons).toHaveLength(4)
   })
 
+  it("renders a radio button with value of each available time slot", async () => {
+    render(
+      <AppointmentForm
+        availableServiceNames={[]}
+        availableTimeSlots={[
+          aTimeSlotTodayAt_12_00,
+          aTimeSlotTodayAt_13_30,
+          aTimeSlotInTwoDaysAt_12_00,
+          aTimeSlotIn6DaysAt_13_00,
+        ]}
+        defaultServiceName=""
+        onSubmit={noop}
+        salonClosesAt={14}
+        salonOpensAt={12}
+        today={new Date()}
+      />
+    )
+    await wait()
+
+    expect(container.querySelector(`input[type="radio"][value="${aTimeSlotTodayAt_12_00}"]`)).not.toBeNull()
+    expect(container.querySelector(`input[type="radio"][value="${aTimeSlotTodayAt_13_30}"]`)).not.toBeNull()
+    expect(container.querySelector(`input[type="radio"][value="${aTimeSlotInTwoDaysAt_12_00}"]`)).not.toBeNull()
+    expect(container.querySelector(`input[type="radio"][value="${aTimeSlotIn6DaysAt_13_00}"]`)).not.toBeNull()
+  })
+
+  // import ReactDomTestUtils from "react-dom/test-utils"
   // it("submits with a default value if no value was selected", async () => {
   //   render(
   //     <AppointmentForm
