@@ -4,11 +4,11 @@ import { Link, Route, Routes } from "react-router-dom"
 import { TODO_MAKE_DATE_RANDOM_TOO_randomAppointments } from "#sampleData/randomAppointments"
 import { aCustomer1 } from "#sampleData/someCustomers"
 
-import AppointmentForm from "./AppointmentForm"
-import AppointmentsDayView from "./AppointmentsDayView"
+import { AppointmentForm } from "./AppointmentForm"
+import { AppointmentsDayView } from "./AppointmentsDayView"
 import { CustomerForm } from "./CustomerForm"
 
-const App: React.FC = () => {
+export const App: React.FC = () => {
   return (
     <>
       <nav>
@@ -64,5 +64,3 @@ const App: React.FC = () => {
     </>
   )
 }
-
-export default App

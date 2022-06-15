@@ -5,8 +5,8 @@ import ReactDom from "react-dom/client"
 import { createContainer } from "#utils/testing/createContainer"
 import { wait } from "#utils/testing/wait"
 
-import TimeSlotTable from "./TimeSlotTable"
-import AppointmentForm from "./index"
+import { TimeSlotTable } from "./TimeSlotTable"
+import { AppointmentForm } from "./index"
 
 describe("time slot table", () => {
   let container: HTMLDivElement

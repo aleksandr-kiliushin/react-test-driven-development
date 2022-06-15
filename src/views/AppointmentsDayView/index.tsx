@@ -1,15 +1,15 @@
 import React from "react"
 
 import { IAppointment } from "#types/IAppointment"
-import getAppointmentTimeOfDayPrettified from "#utils/getAppointmentTimeOfDayPrettified"
+import { getAppointmentTimeOfDayPrettified } from "#utils/getAppointmentTimeOfDayPrettified"
 
-import Appointment from "./Appointment"
+import { Appointment } from "./Appointment"
 
 type AppointmentsDayViewProps = {
   appointments: IAppointment[]
 }
 
-const AppointmentsDayView: React.FC<AppointmentsDayViewProps> = ({ appointments }) => {
+export const AppointmentsDayView: React.FC<AppointmentsDayViewProps> = ({ appointments }) => {
   const [selectedAppointmentIndex, setSelectedAppointmentIndex] = React.useState<number>(0)
 
   return (
@@ -32,5 +32,3 @@ const AppointmentsDayView: React.FC<AppointmentsDayViewProps> = ({ appointments 
     </ol>
   )
 }
-
-export default AppointmentsDayView

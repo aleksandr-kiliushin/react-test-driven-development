@@ -12,7 +12,7 @@ type Props = {
   slotTimestamp: TimeSlot["startsAt"]
 }
 
-const RadioButtonIfAvailable: React.FC<Props> = ({
+export const RadioButton: React.FC<Props> = ({
   availableTimeSlots,
   date,
   selectedSlotTimestamp,
@@ -41,5 +41,3 @@ const RadioButtonIfAvailable: React.FC<Props> = ({
 
   return null
 }
-
-export default RadioButtonIfAvailable

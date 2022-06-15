@@ -8,7 +8,7 @@ import { IAppointment } from "#types/IAppointment"
 import { createContainer } from "#utils/testing/createContainer"
 import { wait } from "#utils/testing/wait"
 
-import AppointmentsDayView from "./index"
+import { AppointmentsDayView } from "./index"
 
 describe("AppointmentsDayView", () => {
   let container: HTMLDivElement

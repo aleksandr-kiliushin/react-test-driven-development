@@ -1,7 +1,7 @@
 import React from "react"
 
-import { TimeSlot } from "./RadioButtonIfAvailable"
-import TimeSlotTable from "./TimeSlotTable"
+import { TimeSlot } from "./RadioButton"
+import { TimeSlotTable } from "./TimeSlotTable"
 
 export type FieldName = "serviceName"
 
@@ -15,7 +15,7 @@ type Props = {
   today: Date
 }
 
-const AppointmentForm: React.FC<Props> = ({
+export const AppointmentForm: React.FC<Props> = ({
   availableTimeSlots,
   availableServiceNames,
   defaultServiceName,
@@ -63,5 +63,3 @@ const AppointmentForm: React.FC<Props> = ({
     </form>
   )
 }
-
-export default AppointmentForm

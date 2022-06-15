@@ -6,7 +6,7 @@ import { anAppointment1, anAppointment2 } from "#sampleData/someAppointments"
 import { createContainer } from "#utils/testing/createContainer"
 import { wait } from "#utils/testing/wait"
 
-import Appointment from "./Appointment"
+import { Appointment } from "./Appointment"
 
 describe("Appointment", () => {
   let container: HTMLDivElement

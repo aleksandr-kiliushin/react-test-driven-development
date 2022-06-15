@@ -2,7 +2,7 @@ import React from "react"
 import ReactDOM from "react-dom/client"
 import { BrowserRouter } from "react-router-dom"
 
-import App from "./views/App"
+import { App } from "./views/App"
 
 let container = document.querySelector("#root")
 if (container === null) {

@@ -6,7 +6,7 @@ import ReactDomTestUtils from "react-dom/test-utils"
 import { createContainer } from "#utils/testing/createContainer"
 import { wait } from "#utils/testing/wait"
 
-import AppointmentForm, { FieldName } from "./index"
+import { AppointmentForm, FieldName } from "./index"
 
 const availableServiceNames = ["Cut", "Blow-dry"]
 

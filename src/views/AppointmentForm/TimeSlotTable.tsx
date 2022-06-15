@@ -1,6 +1,6 @@
 import React from "react"
 
-import RadioButtonIfAvailable, { TimeSlot } from "./RadioButtonIfAvailable"
+import { RadioButton, TimeSlot } from "./RadioButton"
 
 const getDailyTimeSlots = ({
   salonClosesAt,
@@ -43,7 +43,7 @@ type Props = {
   today: Date
 }
 
-const TimeSlotTable: React.FC<Props> = ({
+export const TimeSlotTable: React.FC<Props> = ({
   availableTimeSlots,
   salonClosesAt,
   salonOpensAt,
@@ -70,7 +70,7 @@ const TimeSlotTable: React.FC<Props> = ({
             <th>{timestampToTimeString(aTimestamp)}</th>
             {theFollowingWeekDatesTimestamps.map((date) => {
               return (
-                <RadioButtonIfAvailable
+                <RadioButton
                   availableTimeSlots={availableTimeSlots}
                   date={date}
                   key={date.toString()}
@@ -86,5 +86,3 @@ const TimeSlotTable: React.FC<Props> = ({
     </table>
   )
 }
-
-export default TimeSlotTable
