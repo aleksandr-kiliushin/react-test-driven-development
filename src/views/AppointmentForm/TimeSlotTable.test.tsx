@@ -2,8 +2,14 @@ import assert from "assert"
 import noop from "lodash/noop"
 import React from "react"
 import ReactDom from "react-dom/client"
+import ReactDomTestUtils from "react-dom/test-utils"
 
-import { aTimeSlotTodayAt_12_00, aTimeSlotTodayAt_13_30 } from "#sampleData/someTimeSlots"
+import {
+  aTimeSlotIn6DaysAt_13_00,
+  aTimeSlotInTwoDaysAt_12_00,
+  aTimeSlotTodayAt_12_00,
+  aTimeSlotTodayAt_13_30,
+} from "#sampleData/someTimeSlots"
 import { createContainer } from "#utils/testing/createContainer"
 import { wait } from "#utils/testing/wait"
 
@@ -177,4 +183,46 @@ describe("time slot table", () => {
     expect(findStartsAtFieldInput({ inputIndex: 0 }).value).toEqual(aTimeSlotTodayAt_12_00.toString())
     expect(findStartsAtFieldInput({ inputIndex: 1 }).value).toEqual(aTimeSlotTodayAt_13_30.toString())
   })
+
+  it("renders a radio button for every available time slot", async () => {
+    render(
+      <AppointmentForm
+        availableServiceNames={[]}
+        availableTimeSlots={[
+          aTimeSlotTodayAt_12_00,
+          aTimeSlotTodayAt_13_30,
+          aTimeSlotInTwoDaysAt_12_00,
+          aTimeSlotIn6DaysAt_13_00,
+        ]}
+        defaultServiceName=""
+        onSubmit={noop}
+        salonClosesAt={14}
+        salonOpensAt={12}
+        today={new Date()}
+      />
+    )
+    await wait()
+    const radioButtons = container.querySelectorAll('input[type="radio"]')
+    expect(radioButtons).toHaveLength(4)
+  })
+
+  // it("submits with a default value if no value was selected", async () => {
+  //   render(
+  //     <AppointmentForm
+  //       availableServiceNames={[]}
+  //       availableTimeSlots={[
+  //         aTimeSlotTodayAt_12_00,
+  //         aTimeSlotTodayAt_13_30,
+  //         aTimeSlotInTwoDaysAt_12_00,
+  //         aTimeSlotIn6DaysAt_13_00,
+  //       ]}
+  //       defaultServiceName=""
+  //       onSubmit={noop}
+  //       salonClosesAt={14}
+  //       salonOpensAt={12}
+  //       today={new Date()}
+  //     />
+  //   )
+  //   await wait()
+  // })
 })

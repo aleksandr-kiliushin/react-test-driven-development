@@ -73,11 +73,10 @@ export const TimeSlotTable: React.FC<IProps> = ({
           <tr key={aTimestamp.toString()}>
             <th className="border border-indigo-900 bg-indigo-300">{timestampToTimeString(aTimestamp)}</th>
             {theFollowingWeekDatesTimestamps.map((aDate) => (
-              <td className="border border-teal-900 bg-teal-100">
+              <td className="border border-teal-900 bg-teal-100" key={aDate.toString()}>
                 <RadioButton
                   availableTimeSlots={availableTimeSlots}
                   date={aDate}
-                  key={aDate.toString()}
                   selectedTimeSlot={selectedTimeSlot}
                   setSelectedTimeSlot={setSelectedTimeSlot}
                   slotTimestamp={aTimestamp}
