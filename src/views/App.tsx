@@ -1,9 +1,11 @@
 import React from "react"
 import { Link, Route, Routes } from "react-router-dom"
 
+import { TODO_MAKE_DATE_RANDOM_TOO_randomAppointments } from "#sampleData/randomAppointments"
+import { aCustomer1 } from "#sampleData/someCustomers"
+
 import AppointmentForm from "./AppointmentForm"
 import AppointmentsDayView from "./AppointmentsDayView"
-import { appointment1, sampleAppointments } from "./AppointmentsDayView/sampleData"
 import { CustomerForm } from "./CustomerForm"
 
 const App: React.FC = () => {
@@ -23,11 +25,14 @@ const App: React.FC = () => {
         </ul>
       </nav>
       <Routes>
-        <Route element={<AppointmentsDayView appointments={sampleAppointments} />} path="/appointments-day-view" />
+        <Route
+          element={<AppointmentsDayView appointments={TODO_MAKE_DATE_RANDOM_TOO_randomAppointments} />}
+          path="/appointments-day-view"
+        />
         <Route
           element={
             <CustomerForm
-              initialCustomerData={appointment1.customer}
+              initialCustomerData={aCustomer1}
               onSubmit={(formValues) => {
                 console.log(JSON.stringify(formValues, null, 2))
               }}

@@ -1,7 +1,7 @@
 import React from "react"
 
-import getAppointmentTimeOfDay from "./getAppointmentTimeOfDay"
-import { Appointment as IAppointment } from "./types"
+import { IAppointment } from "#types/IAppointment"
+import getAppointmentTimeOfDayPrettified from "#utils/getAppointmentTimeOfDayPrettified"
 
 type Props = {
   appointment: IAppointment
@@ -10,7 +10,7 @@ type Props = {
 const Appointment: React.FC<Props> = ({ appointment }) => {
   return (
     <>
-      <h2>Todays appointment at {getAppointmentTimeOfDay({ aTimestamp: appointment.startsAt })}</h2>
+      <h2>Todays appointment at {getAppointmentTimeOfDayPrettified({ aDate: appointment.timeSlot })}</h2>
       <p>
         Customer name:{" "}
         <strong>

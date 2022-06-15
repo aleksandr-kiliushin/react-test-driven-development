@@ -1,8 +1,9 @@
 import React from "react"
 
+import { IAppointment } from "#types/IAppointment"
+import getAppointmentTimeOfDayPrettified from "#utils/getAppointmentTimeOfDayPrettified"
+
 import Appointment from "./Appointment"
-import getAppointmentTimeOfDay from "./getAppointmentTimeOfDay"
-import { Appointment as IAppointment } from "./types"
 
 type AppointmentsDayViewProps = {
   appointments: IAppointment[]
@@ -15,9 +16,9 @@ const AppointmentsDayView: React.FC<AppointmentsDayViewProps> = ({ appointments 
     <ol className="appointmentsDayView">
       {appointments.map((anAppointment, index) => {
         return (
-          <li key={anAppointment.startsAt}>
+          <li key={anAppointment.timeSlot.toString()}>
             <button onClick={() => setSelectedAppointmentIndex(index)} type="button">
-              {getAppointmentTimeOfDay({ aTimestamp: anAppointment.startsAt })}
+              {getAppointmentTimeOfDayPrettified({ aDate: anAppointment.timeSlot })}
             </button>
           </li>
         )
