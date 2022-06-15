@@ -3,7 +3,7 @@ import { Link, Route, Routes } from "react-router-dom"
 
 import AppointmentForm from "./AppointmentForm"
 import AppointmentsDayView from "./AppointmentsDayView"
-import { sampleAppointments } from "./AppointmentsDayView/sampleData"
+import { appointment1, sampleAppointments } from "./AppointmentsDayView/sampleData"
 import { CustomerForm } from "./CustomerForm"
 
 const App: React.FC = () => {
@@ -27,12 +27,10 @@ const App: React.FC = () => {
         <Route
           element={
             <CustomerForm
-              firstName="Jessy"
-              lastName="Peterson"
+              initialCustomerData={appointment1.customer}
               onSubmit={(formValues) => {
                 console.log(JSON.stringify(formValues, null, 2))
               }}
-              phoneNumber="123-456-789"
             />
           }
           path="/customer-form"

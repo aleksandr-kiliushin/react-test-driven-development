@@ -3,14 +3,14 @@ import React from "react"
 import ReactDom from "react-dom/client"
 import ReactDomTestUtils from "react-dom/test-utils"
 
+import { ICustomer } from "#types/ICustomer"
 import { createContainer } from "#utils/testing/createContainer"
 import { wait } from "#utils/testing/wait"
 
 import { appointment1 } from "../AppointmentsDayView/sampleData"
-import { Customer } from "../AppointmentsDayView/types"
 import { CustomerForm } from "./index"
 
-type FieldName = keyof Customer
+type FieldName = keyof ICustomer
 
 describe("CustomerForm", () => {
   let container: HTMLDivElement
@@ -40,14 +40,7 @@ describe("CustomerForm", () => {
 
   const itRendersAsATextBox = ({ fieldName }: { fieldName: FieldName }) => {
     it("renders as a text box.", async () => {
-      render(
-        <CustomerForm
-          firstName={appointment1.customer.firstName}
-          lastName={appointment1.customer.lastName}
-          onSubmit={() => {}}
-          phoneNumber={appointment1.customer.phoneNumber}
-        />
-      )
+      render(<CustomerForm initialCustomerData={appointment1.customer} onSubmit={() => {}} />)
       await wait()
       expect(findField({ fieldName }).type).toEqual("text")
     })
@@ -55,14 +48,7 @@ describe("CustomerForm", () => {
 
   const itIncludesTheExistingValue = ({ fieldName }: { fieldName: FieldName }) => {
     it("includes the existing value", async () => {
-      render(
-        <CustomerForm
-          firstName={appointment1.customer.firstName}
-          lastName={appointment1.customer.lastName}
-          onSubmit={() => {}}
-          phoneNumber={appointment1.customer.phoneNumber}
-        />
-      )
+      render(<CustomerForm initialCustomerData={appointment1.customer} onSubmit={() => {}} />)
       await wait()
       expect(findField({ fieldName }).value).toEqual(appointment1.customer[fieldName])
     })
@@ -70,7 +56,7 @@ describe("CustomerForm", () => {
 
   const itRendersALabel = ({ fieldName, labelText }: { fieldName: FieldName; labelText: string }) => {
     it("renders a label.", async () => {
-      render(<CustomerForm firstName="" lastName="" onSubmit={() => {}} phoneNumber="" />)
+      render(<CustomerForm initialCustomerData={appointment1.customer} onSubmit={() => {}} />)
       await wait()
       expect(findLabelFor({ fieldName }).textContent).toEqual(labelText)
     })
@@ -78,7 +64,7 @@ describe("CustomerForm", () => {
 
   const itAssignsAnIdThatMatchesTheLabelId = ({ fieldName }: { fieldName: FieldName }) => {
     it("assigns an id that matches the label id.", async () => {
-      render(<CustomerForm firstName="" lastName="" onSubmit={() => {}} phoneNumber="" />)
+      render(<CustomerForm initialCustomerData={appointment1.customer} onSubmit={() => {}} />)
       await wait()
       expect(findLabelFor({ fieldName }).htmlFor).toEqual(findField({ fieldName }).id)
     })
@@ -90,10 +76,8 @@ describe("CustomerForm", () => {
 
       render(
         <CustomerForm
-          firstName={appointment1.customer.firstName}
-          lastName={appointment1.customer.lastName}
+          initialCustomerData={appointment1.customer}
           onSubmit={(formValues) => expect(formValues[fieldName]).toEqual(appointment1.customer[fieldName])}
-          phoneNumber={appointment1.customer.phoneNumber}
         />
       )
       await wait()
@@ -108,10 +92,8 @@ describe("CustomerForm", () => {
 
       render(
         <CustomerForm
-          firstName=""
-          lastName=""
+          initialCustomerData={appointment1.customer}
           onSubmit={(formValues) => expect(formValues[fieldName]).toEqual(newValue)}
-          phoneNumber=""
         />
       )
       await wait()
@@ -127,7 +109,7 @@ describe("CustomerForm", () => {
   }
 
   it("renders a form.", async () => {
-    render(<CustomerForm firstName="" lastName="" onSubmit={() => {}} phoneNumber="" />)
+    render(<CustomerForm initialCustomerData={appointment1.customer} onSubmit={() => {}} />)
     await wait()
     expect(findForm({ id: "customer" })).not.toBeNull()
   })
@@ -163,7 +145,7 @@ describe("CustomerForm", () => {
   })
 
   it("has a submit button", async () => {
-    render(<CustomerForm firstName="" lastName="" onSubmit={() => {}} phoneNumber="" />)
+    render(<CustomerForm initialCustomerData={appointment1.customer} onSubmit={() => {}} />)
     await wait()
     const submitButton = container.querySelector('input[type="submit"]')
     expect(submitButton).not.toBeNull()

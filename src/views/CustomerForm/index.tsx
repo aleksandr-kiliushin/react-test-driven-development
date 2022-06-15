@@ -3,48 +3,46 @@ import React from "react"
 import { ICustomer } from "#types/ICustomer"
 
 interface Props {
-  firstName: ICustomer["firstName"]
-  lastName: ICustomer["lastName"]
-  onSubmit(formValues: { firstName: string; lastName: string; phoneNumber: string }): void
-  phoneNumber: ICustomer["phoneNumber"]
+  initialCustomerData: ICustomer
+  onSubmit(formValues: ICustomer): void
 }
 
-export const CustomerForm: React.FC<Props> = ({ firstName, lastName, onSubmit, phoneNumber }) => {
-  const [customerFirstName, setCustomerFirstName] = React.useState<string>(firstName)
-  const [customerLastName, setCustomerLastName] = React.useState<string>(lastName)
-  const [customerPhoneNumber, setCustomerPhoneNumber] = React.useState<string>(phoneNumber)
+export const CustomerForm: React.FC<Props> = ({ initialCustomerData, onSubmit }) => {
+  const [firstName, setFirstName] = React.useState<string>(initialCustomerData.firstName)
+  const [lastName, setLastName] = React.useState<string>(initialCustomerData.lastName)
+  const [phoneNumber, setPhoneNumber] = React.useState<string>(initialCustomerData.phoneNumber)
 
   return (
     <form
       id="customer"
       onSubmit={(event) => {
         event.preventDefault()
-        onSubmit({ firstName: customerFirstName, lastName: customerLastName, phoneNumber: customerPhoneNumber })
+        onSubmit({ firstName, lastName, phoneNumber })
       }}
     >
       <label htmlFor="firstName">First name</label>
       <input
         id="firstName"
         name="firstName"
-        onChange={(event) => setCustomerFirstName(event.target.value)}
+        onChange={(event) => setFirstName(event.target.value)}
         type="text"
-        value={customerFirstName}
+        value={firstName}
       />
       <label htmlFor="lastName">Last name</label>
       <input
         id="lastName"
         name="lastName"
-        onChange={(event) => setCustomerLastName(event.target.value)}
+        onChange={(event) => setLastName(event.target.value)}
         type="text"
-        value={customerLastName}
+        value={lastName}
       />
       <label htmlFor="phoneNumber">Phone number</label>
       <input
         id="phoneNumber"
         name="phoneNumber"
-        onChange={(event) => setCustomerPhoneNumber(event.target.value)}
+        onChange={(event) => setPhoneNumber(event.target.value)}
         type="text"
-        value={customerPhoneNumber}
+        value={phoneNumber}
       />
       <input type="submit" value="Add" />
     </form>
