@@ -1,7 +1,7 @@
 import { IAppointment } from "#types/IAppointment"
 
 import { aCustomer1, aCustomer2 } from "./someCustomers"
-import { aTimeSlotTodayAt_12_00, aTimeSlotTomorrowAt_12_00 } from "./someTimeSlots"
+import { aTimeSlotInTwoDaysAt_12_00, aTimeSlotTodayAt_12_00 } from "./someTimeSlots"
 
 export const anAppointment1: IAppointment = {
   customer: aCustomer1,
@@ -16,5 +16,5 @@ export const anAppointment2: IAppointment = {
   notes: "Corporis autem nulla quos dolor ducimus architecto a mollitia est.",
   serviceName: "preference",
   stylistName: "Olin",
-  timeSlot: aTimeSlotTomorrowAt_12_00,
+  timeSlot: aTimeSlotInTwoDaysAt_12_00,
 }

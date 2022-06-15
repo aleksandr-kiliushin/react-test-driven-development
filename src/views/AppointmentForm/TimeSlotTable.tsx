@@ -56,8 +56,6 @@ export const TimeSlotTable: React.FC<IProps> = ({
   const theFollowingWeekDatesTimestamps = getWeeklyDateValues({ startDate: today })
   const timeSlotsTimestamps = getDailyTimeSlots({ salonClosesAt, salonOpensAt })
 
-  console.log("theFollowingWeekDatesTimestamps >>", theFollowingWeekDatesTimestamps)
-
   return (
     <table id="time-slots">
       <thead>
