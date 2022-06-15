@@ -66,6 +66,26 @@ describe("time slot table", () => {
     expect(timesOfDay[3].textContent).toEqual("13:30")
   })
 
+  it("renders a table cell in quantity of = N timeslots per a day * 7 days", async () => {
+    render(
+      <AppointmentForm
+        availableServiceNames={[]}
+        availableTimeSlots={[]}
+        defaultServiceName=""
+        onSubmit={noop}
+        salonClosesAt={14}
+        salonOpensAt={12}
+        today={new Date()}
+      />
+    )
+    await wait()
+    const slotsPerADayAmount = (14 - 12) / 0.5
+    const daysAmount = 7
+    const cellsAmount = slotsPerADayAmount * daysAmount
+    const cells = container.querySelectorAll("td")
+    expect(cells).toHaveLength(cellsAmount)
+  })
+
   it("renders an empty cell at the start of the header row", async () => {
     render(
       <AppointmentForm
