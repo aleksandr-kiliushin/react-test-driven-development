@@ -3,7 +3,7 @@ import noop from "lodash/noop"
 import React from "react"
 import ReactDom from "react-dom/client"
 
-import { aTimeSlotTodayAt_13_30, aTimeSlotTodayAt_14_00 } from "#sampleData/someTimeSlots"
+import { aTimeSlotTodayAt_12_00, aTimeSlotTodayAt_13_30 } from "#sampleData/someTimeSlots"
 import { createContainer } from "#utils/testing/createContainer"
 import { wait } from "#utils/testing/wait"
 
@@ -36,7 +36,7 @@ describe("time slot table", () => {
       <TimeSlotTable
         availableTimeSlots={[]}
         salonOpensAt={9}
-        salonClosesAt={19}
+        salonClosesAt={14}
         today={new Date()}
         selectedTimeSlot={null}
         setSelectedTimeSlot={noop}
@@ -53,17 +53,17 @@ describe("time slot table", () => {
         availableTimeSlots={[]}
         defaultServiceName=""
         onSubmit={noop}
-        salonClosesAt={19}
+        salonClosesAt={14}
         salonOpensAt={9}
         today={new Date()}
       />
     )
     await wait()
     const timesOfDay = findTimeSlotTable().querySelectorAll("tbody >* th")
-    expect(timesOfDay).toHaveLength(20)
+    expect(timesOfDay).toHaveLength(10)
     expect(timesOfDay[0].textContent).toEqual("09:00")
     expect(timesOfDay[1].textContent).toEqual("09:30")
-    expect(timesOfDay[15].textContent).toEqual("16:30")
+    expect(timesOfDay[3].textContent).toEqual("10:30")
   })
 
   it("renders an empty cell at the start of the header row", async () => {
@@ -73,7 +73,7 @@ describe("time slot table", () => {
         availableTimeSlots={[]}
         defaultServiceName=""
         onSubmit={noop}
-        salonClosesAt={19}
+        salonClosesAt={14}
         salonOpensAt={9}
         today={new Date()}
       />
@@ -94,7 +94,7 @@ describe("time slot table", () => {
         availableTimeSlots={[]}
         defaultServiceName=""
         onSubmit={noop}
-        salonClosesAt={19}
+        salonClosesAt={14}
         salonOpensAt={9}
         today={new Date(2018, 11, 1)}
       />
@@ -114,7 +114,7 @@ describe("time slot table", () => {
         availableTimeSlots={[]}
         defaultServiceName=""
         onSubmit={noop}
-        salonClosesAt={19}
+        salonClosesAt={14}
         salonOpensAt={9}
         today={new Date()}
       />
@@ -128,10 +128,10 @@ describe("time slot table", () => {
     render(
       <AppointmentForm
         availableServiceNames={[]}
-        availableTimeSlots={[aTimeSlotTodayAt_14_00, aTimeSlotTodayAt_13_30]}
+        availableTimeSlots={[aTimeSlotTodayAt_12_00, aTimeSlotTodayAt_13_30]}
         defaultServiceName=""
         onSubmit={noop}
-        salonClosesAt={19}
+        salonClosesAt={14}
         salonOpensAt={9}
         today={new Date()}
       />
@@ -145,16 +145,16 @@ describe("time slot table", () => {
     render(
       <AppointmentForm
         availableServiceNames={[]}
-        availableTimeSlots={[aTimeSlotTodayAt_14_00, aTimeSlotTodayAt_13_30]}
+        availableTimeSlots={[aTimeSlotTodayAt_12_00, aTimeSlotTodayAt_13_30]}
         defaultServiceName=""
         onSubmit={noop}
-        salonClosesAt={19}
+        salonClosesAt={14}
         salonOpensAt={9}
         today={new Date()}
       />
     )
     await wait()
-    expect(findStartsAtFieldInput({ inputIndex: 0 }).value).toEqual(aTimeSlotTodayAt_13_30.toString())
-    expect(findStartsAtFieldInput({ inputIndex: 1 }).value).toEqual(aTimeSlotTodayAt_14_00.toString())
+    expect(findStartsAtFieldInput({ inputIndex: 0 }).value).toEqual(aTimeSlotTodayAt_12_00.toString())
+    expect(findStartsAtFieldInput({ inputIndex: 1 }).value).toEqual(aTimeSlotTodayAt_13_30.toString())
   })
 })

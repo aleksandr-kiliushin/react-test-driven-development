@@ -40,7 +40,7 @@ describe("AppointmentsDayView", () => {
     const appointmentsList = container.querySelector("ol.appointmentsDayView")
     assert(appointmentsList !== null, "appointmentsList is `null`")
     const appointmentsNodes = appointmentsList.querySelectorAll("li")
-    expect(appointmentsNodes[0].textContent).toMatch("14:00")
+    expect(appointmentsNodes[0].textContent).toMatch("12:00")
     expect(appointmentsNodes[1].textContent).toMatch("12:00")
   })
 

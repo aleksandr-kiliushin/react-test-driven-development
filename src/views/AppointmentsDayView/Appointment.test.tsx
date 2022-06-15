@@ -21,7 +21,7 @@ describe("Appointment", () => {
     await wait()
     const appointmentHeading = container.querySelector("h2")
     assert(appointmentHeading !== null, "appointmentHeading should not be null")
-    expect(appointmentHeading.textContent).toMatch(`Todays appointment at 14:00`)
+    expect(appointmentHeading.textContent).toMatch(`Todays appointment at 12:00`)
   })
 
   it("renders an appointment heading", async () => {

@@ -64,7 +64,7 @@ describe("AppointmentForm", () => {
         defaultServiceName=""
         onSubmit={noop}
         salonOpensAt={9}
-        salonClosesAt={19}
+        salonClosesAt={14}
         today={new Date()}
       />
     )
@@ -81,7 +81,7 @@ describe("AppointmentForm", () => {
           defaultServiceName=""
           onSubmit={noop}
           salonOpensAt={9}
-          salonClosesAt={19}
+          salonClosesAt={14}
           today={new Date()}
         />
       )
@@ -97,7 +97,7 @@ describe("AppointmentForm", () => {
           defaultServiceName=""
           onSubmit={noop}
           salonOpensAt={9}
-          salonClosesAt={19}
+          salonClosesAt={14}
           today={new Date()}
         />
       )
@@ -116,7 +116,7 @@ describe("AppointmentForm", () => {
           defaultServiceName={defaultServiceName}
           onSubmit={noop}
           salonOpensAt={9}
-          salonClosesAt={19}
+          salonClosesAt={14}
           today={new Date()}
         />
       )
@@ -135,7 +135,7 @@ describe("AppointmentForm", () => {
           defaultServiceName={defaultServiceName}
           onSubmit={noop}
           salonOpensAt={9}
-          salonClosesAt={19}
+          salonClosesAt={14}
           today={new Date()}
         />
       )
@@ -153,7 +153,7 @@ describe("AppointmentForm", () => {
           defaultServiceName={defaultServiceName}
           onSubmit={noop}
           salonOpensAt={9}
-          salonClosesAt={19}
+          salonClosesAt={14}
           today={new Date()}
         />
       )
@@ -175,7 +175,7 @@ describe("AppointmentForm", () => {
             expect(formValues.serviceName).toEqual(defaultServiceName)
           }}
           salonOpensAt={9}
-          salonClosesAt={19}
+          salonClosesAt={14}
           today={new Date()}
         />
       )
@@ -196,7 +196,7 @@ describe("AppointmentForm", () => {
             expect(formValues.serviceName).toEqual(aNewEnteredServiceName)
           }}
           salonOpensAt={9}
-          salonClosesAt={19}
+          salonClosesAt={14}
           today={new Date()}
         />
       )
