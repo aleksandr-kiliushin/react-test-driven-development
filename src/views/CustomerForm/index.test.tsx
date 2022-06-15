@@ -3,8 +3,8 @@ import React from "react"
 import ReactDom from "react-dom/client"
 import ReactDomTestUtils from "react-dom/test-utils"
 
-import createContainer from "#utils/testing/createContainer"
-import wait from "#utils/testing/wait"
+import { createContainer } from "#utils/testing/createContainer"
+import { wait } from "#utils/testing/wait"
 
 import { appointment1 } from "../AppointmentsDayView/sampleData"
 import { Customer } from "../AppointmentsDayView/types"

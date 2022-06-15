@@ -5,7 +5,7 @@ type CreateContainer = () => {
   render: ReactDom.Root["render"]
 }
 
-const createContainer: CreateContainer = () => {
+export const createContainer: CreateContainer = () => {
   const container = document.createElement("div")
   const root = ReactDom.createRoot(container)
 
@@ -14,5 +14,3 @@ const createContainer: CreateContainer = () => {
     render: (aComponent) => root.render(aComponent),
   }
 }
-
-export default createContainer
