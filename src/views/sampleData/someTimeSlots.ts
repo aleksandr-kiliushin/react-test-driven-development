@@ -18,7 +18,7 @@ inAWeekAt_17_30.setDate(new Date().getDate() + 6)
 inAWeekAt_17_30.setHours(17)
 inAWeekAt_17_30.setMinutes(30)
 
-export const someStaticAvailableTimeSlots: ITimeSlot[] = [
+export const someTimeSlots: ITimeSlot[] = [
   { startsAt: todayAt_14_00 },
   { startsAt: todayAt_16_30 },
   { startsAt: tomorrowAt_12_00 },
