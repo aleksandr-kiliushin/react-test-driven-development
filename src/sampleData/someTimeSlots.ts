@@ -1,26 +1,19 @@
-import { ITimeSlot } from "#types/ITimeSlot"
+const aTimeSlotTodayAt_14_00 = new Date()
+aTimeSlotTodayAt_14_00.setHours(14)
+aTimeSlotTodayAt_14_00.setMinutes(0)
 
-const todayAt_14_00 = new Date()
-todayAt_14_00.setHours(14)
-todayAt_14_00.setMinutes(0)
+const aTimeSlotTodayAt_16_30 = new Date()
+aTimeSlotTodayAt_16_30.setHours(16, 0, 0, 0)
+aTimeSlotTodayAt_16_30.setHours(16, 30, 0, 0)
 
-const todayAt_16_30 = new Date()
-todayAt_16_30.setHours(16, 0, 0, 0)
-todayAt_16_30.setHours(16, 30, 0, 0)
+const aTimeSlotTomorrowAt_12_00 = new Date()
+aTimeSlotTomorrowAt_12_00.setDate(new Date().getDate() + 1)
+aTimeSlotTomorrowAt_12_00.setHours(12)
+aTimeSlotTomorrowAt_12_00.setMinutes(0)
 
-const tomorrowAt_12_00 = new Date()
-tomorrowAt_12_00.setDate(new Date().getDate() + 1)
-tomorrowAt_12_00.setHours(12)
-tomorrowAt_12_00.setMinutes(0)
+const aTimeSlotInAWeekAt_17_30 = new Date()
+aTimeSlotInAWeekAt_17_30.setDate(new Date().getDate() + 6)
+aTimeSlotInAWeekAt_17_30.setHours(17)
+aTimeSlotInAWeekAt_17_30.setMinutes(30)
 
-const inAWeekAt_17_30 = new Date()
-inAWeekAt_17_30.setDate(new Date().getDate() + 6)
-inAWeekAt_17_30.setHours(17)
-inAWeekAt_17_30.setMinutes(30)
-
-export const someTimeSlots: ITimeSlot[] = [
-  { startsAt: todayAt_14_00 },
-  { startsAt: todayAt_16_30 },
-  { startsAt: tomorrowAt_12_00 },
-  { startsAt: inAWeekAt_17_30 },
-]
+export { aTimeSlotTodayAt_14_00, aTimeSlotTodayAt_16_30, aTimeSlotTomorrowAt_12_00, aTimeSlotInAWeekAt_17_30 }

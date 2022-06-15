@@ -1,33 +1,20 @@
 import { IAppointment } from "#types/IAppointment"
 
-const today = new Date()
+import { aCustomer1, aCustomer2 } from "./someCustomers"
+import { aTimeSlotTodayAt_14_00, aTimeSlotTomorrowAt_12_00 } from "./someTimeSlots"
 
-const todayAt = ({ hours }: { hours: number }) => {
-  return today.setHours(hours, 0)
-}
-
-const anAppointment1: IAppointment = {
-  customer: {
-    firstName: "Roscoe",
-    lastName: "Schmeler",
-    phoneNumber: "995.319.0012",
-  },
+export const anAppointment1: IAppointment = {
+  customer: aCustomer1,
   notes: "Ducimus numquam aperiam aut sunt enim nihil natus similique ducimus.",
   serviceName: "grief",
-  startsAt: new Date(todayAt({ hours: 9 })),
   stylistName: "Glenda",
+  timeSlot: aTimeSlotTodayAt_14_00,
 }
 
-const anAppointment2: IAppointment = {
-  customer: {
-    firstName: "Cara",
-    lastName: "Schaefer",
-    phoneNumber: "504-716-6011 x80954",
-  },
+export const anAppointment2: IAppointment = {
+  customer: aCustomer2,
   notes: "Corporis autem nulla quos dolor ducimus architecto a mollitia est.",
   serviceName: "preference",
-  startsAt: new Date(todayAt({ hours: 10 })),
   stylistName: "Olin",
+  timeSlot: aTimeSlotTomorrowAt_12_00,
 }
-
-export const someAppointments = [anAppointment1, anAppointment2]

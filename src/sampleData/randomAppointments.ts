@@ -16,6 +16,6 @@ export const randomAppointments: IAppointment[] = [10, 11, 12, 13, 14, 15, 16].m
   },
   notes: faker.lorem.sentence(10),
   serviceName: faker.word.noun(),
-  startsAt: new Date(todayAt({ hours })),
+  timeSlot: new Date(todayAt({ hours })),
   stylistName: faker.name.firstName(),
 }))
