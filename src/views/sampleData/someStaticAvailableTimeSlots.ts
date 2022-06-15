@@ -1,4 +1,4 @@
-import { IAppointment } from "#types/IAppointment"
+import { ITimeSlot } from "#types/ITimeSlot"
 
 const todayAt_14_00 = new Date()
 todayAt_14_00.setHours(14)
@@ -18,9 +18,9 @@ inAWeekAt_17_30.setDate(new Date().getDate() + 6)
 inAWeekAt_17_30.setHours(17)
 inAWeekAt_17_30.setMinutes(30)
 
-export const someStaticAvailableTimeSlots: IAppointment["startsAt"][] = [
-  todayAt_14_00,
-  todayAt_16_30,
-  tomorrowAt_12_00,
-  inAWeekAt_17_30,
+export const someStaticAvailableTimeSlots: ITimeSlot[] = [
+  { startsAt: todayAt_14_00 },
+  { startsAt: todayAt_16_30 },
+  { startsAt: tomorrowAt_12_00 },
+  { startsAt: inAWeekAt_17_30 },
 ]
