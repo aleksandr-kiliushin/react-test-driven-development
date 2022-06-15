@@ -61,27 +61,31 @@ export const TimeSlotTable: React.FC<IProps> = ({
       <thead>
         <tr>
           <th />
-          {theFollowingWeekDatesTimestamps.map((aDate) => {
-            return <th key={aDate.toString()}>{shortenDate({ aDate })}</th>
-          })}
+          {theFollowingWeekDatesTimestamps.map((aDate) => (
+            <th className="border border-sky-900 bg-sky-300" key={aDate.toString()}>
+              {shortenDate({ aDate })}
+            </th>
+          ))}
         </tr>
       </thead>
       <tbody>
         {timeSlotsTimestamps.map((aTimestamp) => (
           <tr key={aTimestamp.toString()}>
-            <th>{timestampToTimeString(aTimestamp)}</th>
-            {theFollowingWeekDatesTimestamps.map((aDate) => {
-              return (
-                <RadioButton
-                  availableTimeSlots={availableTimeSlots}
-                  date={aDate}
-                  key={aDate.toString()}
-                  selectedTimeSlot={selectedTimeSlot}
-                  setSelectedTimeSlot={setSelectedTimeSlot}
-                  slotTimestamp={aTimestamp}
-                />
-              )
-            })}
+            <th className="border border-indigo-900 bg-indigo-300">{timestampToTimeString(aTimestamp)}</th>
+            <td className="border border-teal-900 bg-teal-100">
+              {theFollowingWeekDatesTimestamps.map((aDate) => {
+                return (
+                  <RadioButton
+                    availableTimeSlots={availableTimeSlots}
+                    date={aDate}
+                    key={aDate.toString()}
+                    selectedTimeSlot={selectedTimeSlot}
+                    setSelectedTimeSlot={setSelectedTimeSlot}
+                    slotTimestamp={aTimestamp}
+                  />
+                )
+              })}
+            </td>
           </tr>
         ))}
       </tbody>

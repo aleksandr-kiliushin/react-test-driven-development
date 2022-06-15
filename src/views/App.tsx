@@ -13,15 +13,21 @@ export const App: React.FC = () => {
   return (
     <>
       <nav>
-        <ul>
+        <ul className="flex gap-x-4 mb-4">
           <li>
-            <Link to="/appointments-day-view">AppointmentsDayView</Link>
+            <Link className="underline text-purple-900" to="/appointments-day-view">
+              AppointmentsDayView
+            </Link>
           </li>
           <li>
-            <Link to="/customer-form">CustomerForm</Link>
+            <Link className="underline text-purple-900" to="/customer-form">
+              CustomerForm
+            </Link>
           </li>
           <li>
-            <Link to="/appointment-form">AppointmentForm</Link>
+            <Link className="underline text-purple-900" to="/appointment-form">
+              AppointmentForm
+            </Link>
           </li>
         </ul>
       </nav>

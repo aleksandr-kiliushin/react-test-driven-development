@@ -10,21 +10,23 @@ interface IProps {
 export const Appointment: React.FC<IProps> = ({ appointment }) => {
   return (
     <>
-      <h2>Todays appointment at {getAppointmentTimeOfDayPrettified({ aDate: appointment.timeSlot })}</h2>
+      <h2 className="text-2xl mb-2 font-semibold">
+        Todays appointment at {getAppointmentTimeOfDayPrettified({ aDate: appointment.timeSlot })}
+      </h2>
       <p>
-        Customer name:{" "}
+        <label>Customer name</label>:{" "}
         <strong>
           {appointment.customer.firstName} {appointment.customer.lastName}
         </strong>
       </p>
       <p>
-        Customer phone: <strong>{appointment.customer.phoneNumber}</strong>
+        <label>Customer phone</label>: <strong>{appointment.customer.phoneNumber}</strong>
       </p>
       <p>
-        Service: <strong>{appointment.serviceName}</strong>
+        <label>Service</label>: <strong>{appointment.serviceName}</strong>
       </p>
       <p>
-        Notes: <strong>{appointment.notes}</strong>
+        <label>Notes</label>: <strong>{appointment.notes}</strong>
       </p>
     </>
   )

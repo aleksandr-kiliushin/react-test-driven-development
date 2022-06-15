@@ -27,15 +27,13 @@ export const RadioButton: React.FC<IProps> = ({
 
   if (availableTimeSlots.some((aSlot) => aSlot.toString() === anAppointmenTimestamp.toString())) {
     return (
-      <td>
-        <input
-          checked={isChecked}
-          name="startsAt"
-          onChange={(event) => setSelectedTimeSlot(new Date(parseInt(event.target.value)))}
-          type="radio"
-          value={anAppointmenTimestamp.toString()}
-        />
-      </td>
+      <input
+        checked={isChecked}
+        name="startsAt"
+        onChange={(event) => setSelectedTimeSlot(new Date(parseInt(event.target.value)))}
+        type="radio"
+        value={anAppointmenTimestamp.toString()}
+      />
     )
   }
 

@@ -44,20 +44,16 @@ describe("AppointmentsDayView", () => {
     expect(appointmentsNodes[1].textContent).toMatch("12:00")
   })
 
-  it("renders a ol with the right className.", async () => {
+  it("renders an empty appointments text when passed an empty appointments array.", async () => {
     render(<AppointmentsDayView appointments={[]} />)
     await wait()
-    const appointmentsList = container.querySelector("ol.appointmentsDayView")
-    assert(appointmentsList !== null, "appointmentsList is `null`")
-    expect(appointmentsList.textContent).toMatch("There are no appointments scheduled for today.")
+    expect(container.textContent).toMatch("There are no appointments scheduled for today.")
   })
 
   it("selects the first appointment by default.", async () => {
     render(<AppointmentsDayView appointments={appointments} />)
     await wait()
-    const appointmentsList = container.querySelector("ol.appointmentsDayView")
-    assert(appointmentsList !== null, "appointmentsList is `null`")
-    expect(appointmentsList.textContent).toMatch("Roscoe")
+    expect(container.textContent).toMatch("Roscoe")
   })
 
   it("has a button element in each li.", async () => {

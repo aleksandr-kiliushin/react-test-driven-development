@@ -13,22 +13,29 @@ export const AppointmentsDayView: React.FC<IProps> = ({ appointments }) => {
   const [selectedAppointmentIndex, setSelectedAppointmentIndex] = React.useState<number>(0)
 
   return (
-    <ol className="appointmentsDayView">
-      {appointments.map((anAppointment, index) => {
-        return (
-          <li key={anAppointment.timeSlot.toString()}>
-            <button onClick={() => setSelectedAppointmentIndex(index)} type="button">
-              {getAppointmentTimeOfDayPrettified({ aDate: anAppointment.timeSlot })}
-            </button>
-          </li>
-        )
-      })}
-
-      {appointments.length === 0 ? (
-        <p>There are no appointments scheduled for today.</p>
-      ) : (
-        <Appointment appointment={appointments[selectedAppointmentIndex]} />
-      )}
-    </ol>
+    <div className="flex gap-x-10">
+      <ol className="appointmentsDayView">
+        {appointments.map((anAppointment, index) => {
+          return (
+            <li key={anAppointment.timeSlot.toString()}>
+              <button
+                className="border border-cyan-900 bg-cyan-500 hover:bg-cyan-600"
+                onClick={() => setSelectedAppointmentIndex(index)}
+                type="button"
+              >
+                {getAppointmentTimeOfDayPrettified({ aDate: anAppointment.timeSlot })}
+              </button>
+            </li>
+          )
+        })}
+      </ol>
+      <div>
+        {appointments.length === 0 ? (
+          <p>There are no appointments scheduled for today.</p>
+        ) : (
+          <Appointment appointment={appointments[selectedAppointmentIndex]} />
+        )}
+      </div>
+    </div>
   )
 }
