@@ -254,6 +254,7 @@ describe("time slot table", () => {
         ]}
         defaultServiceName=""
         onSubmit={(formValues) => {
+          assert(formValues.timeSlot !== null)
           expect(formValues.timeSlot.toString()).toEqual(aTimeSlotTodayAt_12_00.toString())
         }}
         salonClosesAt={14}
@@ -277,6 +278,7 @@ describe("time slot table", () => {
         ]}
         defaultServiceName=""
         onSubmit={(formValues) => {
+          assert(formValues.timeSlot !== null)
           expect(formValues.timeSlot.toString()).toEqual(aTimeSlotTodayAt_13_30.toString())
         }}
         salonClosesAt={14}
@@ -302,6 +304,7 @@ describe("time slot table", () => {
         ]}
         defaultServiceName=""
         onSubmit={(formValues) => {
+          assert(formValues.timeSlot !== null)
           expect(formValues.timeSlot.toString()).toEqual(aTimeSlotTodayAt_12_00.toString())
         }}
         salonClosesAt={14}
