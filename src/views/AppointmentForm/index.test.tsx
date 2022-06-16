@@ -10,6 +10,10 @@ import { wait } from "#utils/testing/wait"
 import { AppointmentForm, IFieldName } from "./index"
 
 const availableServiceNames = ["Cut", "Blow-dry"]
+// const availableStylists = [
+//   { name: "Hanna", serviceSertificates: ["Cut"] },
+//   { name: "Suzan", serviceSertificates: ["Cut", "Blow-dry"] },
+// ]
 
 describe("AppointmentForm", () => {
   let container: HTMLDivElement
@@ -208,5 +212,140 @@ describe("AppointmentForm", () => {
       await wait()
       ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
     })
+  })
+
+  describe("stylist field", () => {
+    it("renders as a select box", async () => {
+      render(
+        <AppointmentForm
+          availableServiceNames={[]}
+          availableTimeSlots={[]}
+          defaultServiceName=""
+          onSubmit={noop}
+          salonOpensAt={12}
+          salonClosesAt={14}
+          today={new Date()}
+        />
+      )
+      await wait()
+      expect(findSelectField({ fieldName: "stylistName" })).not.toBeNull()
+    })
+
+    it("pre-selects an empty stylist name", async () => {
+      render(
+        <AppointmentForm
+          availableServiceNames={[]}
+          availableTimeSlots={[]}
+          defaultServiceName="Blow-dry"
+          onSubmit={noop}
+          salonOpensAt={12}
+          salonClosesAt={14}
+          today={new Date()}
+        />
+      )
+      await wait()
+      expect(findSelectField({ fieldName: "stylistName" }).value).toEqual("")
+    })
+
+    it("renders a field label with an appropriate htmlFor attribute", async () => {
+      render(
+        <AppointmentForm
+          availableServiceNames={[]}
+          availableTimeSlots={[]}
+          defaultServiceName="Blow-dry"
+          onSubmit={noop}
+          salonOpensAt={12}
+          salonClosesAt={14}
+          today={new Date()}
+        />
+      )
+      await wait()
+
+      expect(findLabelFor({ fieldName: "stylistName" })).not.toBeNull()
+    })
+
+    it("assign label htmlFor matching to the select field ID", async () => {
+      render(
+        <AppointmentForm
+          availableServiceNames={[]}
+          availableTimeSlots={[]}
+          defaultServiceName="Blow-dry"
+          onSubmit={noop}
+          salonOpensAt={12}
+          salonClosesAt={14}
+          today={new Date()}
+        />
+      )
+      await wait()
+
+      const field = findSelectField({ fieldName: "serviceName" })
+      const label = findLabelFor({ fieldName: "serviceName" })
+      expect(label.htmlFor).toEqual(field.id)
+    })
+
+    it.skip("onSubmit returns null the form is submitted with no stylist selected", async () => {
+      expect.hasAssertions() // It seems to be useless because async assertions (i. e. in `onSubmit`) complete anyway.
+
+      render(
+        <AppointmentForm
+          availableServiceNames={availableServiceNames}
+          availableTimeSlots={[]}
+          defaultServiceName="Blow-dry"
+          onSubmit={(formValues) => {
+            expect(formValues).toEqual(null)
+          }}
+          salonOpensAt={12}
+          salonClosesAt={14}
+          today={new Date()}
+        />
+      )
+      await wait()
+
+      ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
+      await wait()
+    })
+
+    // it("lists all salon services", async () => {
+    //   render(
+    //     <AppointmentForm
+    //       availableServiceNames={availableServiceNames}
+    //       availableTimeSlots={[]}
+    //       defaultServiceName=""
+    //       onSubmit={noop}
+    //       salonOpensAt={12}
+    //       salonClosesAt={14}
+    //       today={new Date()}
+    //     />
+    //   )
+    //   await wait()
+    //   const optionNodes = Array.from(findSelectField({ fieldName: "serviceName" }).childNodes)
+    //   const renderedServices = optionNodes.map((node) => node.textContent)
+    //   expect(renderedServices).toEqual(expect.arrayContaining(availableServiceNames))
+    // })
+
+    // it("saves the new entered service name when the form is submitted", async () => {
+    //   const defaultServiceName = "Blow-dry"
+    //   const aNewEnteredServiceName = "Cut"
+    //   render(
+    //     <AppointmentForm
+    //       availableServiceNames={availableServiceNames}
+    //       availableTimeSlots={[]}
+    //       defaultServiceName={defaultServiceName}
+    //       onSubmit={(formValues) => {
+    //         expect(formValues.serviceName).toEqual(aNewEnteredServiceName)
+    //       }}
+    //       salonOpensAt={12}
+    //       salonClosesAt={14}
+    //       today={new Date()}
+    //     />
+    //   )
+    //   await wait()
+    //   ReactDomTestUtils.Simulate.change(findSelectField({ fieldName: "serviceName" }), {
+    //     // @ts-ignore
+    //     target: { value: aNewEnteredServiceName },
+    //   })
+    //   await wait()
+    //   ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
+    // })
   })
 })

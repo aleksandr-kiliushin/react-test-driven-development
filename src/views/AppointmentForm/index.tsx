@@ -4,7 +4,7 @@ import { IAppointment } from "#types/IAppointment"
 
 import { TimeSlotTable } from "./TimeSlotTable"
 
-export type IFieldName = "serviceName"
+export type IFieldName = "serviceName" | "stylistName"
 
 interface IProps {
   availableTimeSlots: IAppointment["timeSlot"][]
@@ -37,19 +37,36 @@ export const AppointmentForm: React.FC<IProps> = ({
         onSubmit({ serviceName: selectedServiceName, timeSlot: selectedTimeSlot.toString() })
       }}
     >
-      <label htmlFor="serviceName">Service</label>
-      <select
-        id="serviceName"
-        name="serviceName"
-        onChange={(event) => {
-          setSelectedServiceName(event.target.value)
-        }}
-        value={selectedServiceName}
-      >
-        {availableServiceNames.map((aServiceName) => (
-          <option key={aServiceName}>{aServiceName}</option>
-        ))}
-      </select>
+      <div>
+        <label htmlFor="serviceName">Service</label>
+        <select
+          id="serviceName"
+          name="serviceName"
+          onChange={(event) => {
+            setSelectedServiceName(event.target.value)
+          }}
+          value={selectedServiceName}
+        >
+          {availableServiceNames.map((aServiceName) => (
+            <option key={aServiceName}>{aServiceName}</option>
+          ))}
+        </select>
+      </div>
+      <div>
+        <label htmlFor="stylistName">Stylist</label>
+        <select
+          id="stylistName"
+          name="stylistName"
+          onChange={(event) => {
+            // setSelectedServiceName(event.target.value)
+          }}
+          value=""
+        >
+          {/* {availableServiceNames.map((aServiceName) => (
+            <option key={aServiceName}>{aServiceName}</option>
+          ))} */}
+        </select>
+      </div>
       <TimeSlotTable
         availableTimeSlots={availableTimeSlots}
         salonClosesAt={salonClosesAt}
