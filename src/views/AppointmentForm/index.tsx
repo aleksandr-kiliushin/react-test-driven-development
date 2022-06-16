@@ -6,7 +6,7 @@ import { TimeSlotTable } from "./TimeSlotTable"
 
 export type IFieldName = "serviceName" | "stylistName"
 
-interface IAppointmentFormProps {
+export interface IAppointmentFormProps {
   availableTimeSlots: IAppointment["timeSlot"][]
   availableServiceNames: string[]
   defaultServiceName: string
