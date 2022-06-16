@@ -181,12 +181,6 @@ describe("AppointmentForm", () => {
       expect(findSelectField({ fieldName: "stylistName" })).not.toBeNull()
     })
 
-    it("pre-selects an empty stylist name", async () => {
-      render(<AppointmentForm {...appointmentFormDefaultProps} />)
-      await wait()
-      expect(findSelectField({ fieldName: "stylistName" }).value).toEqual("")
-    })
-
     it("renders a field label with an appropriate htmlFor attribute", async () => {
       render(<AppointmentForm {...appointmentFormDefaultProps} />)
       await wait()
@@ -201,13 +195,19 @@ describe("AppointmentForm", () => {
       expect(label.htmlFor).toEqual(field.id)
     })
 
-    it.skip("onSubmit returns null the form is submitted with no stylist selected", async () => {
+    it("initialized with the 'Not selected' option", async () => {
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
+      await wait()
+      expect(findSelectField({ fieldName: "stylistName" }).value).toEqual("Not selected")
+    })
+
+    it("onSubmit contains 'Not selected' stylist when the form is submitted with no stylist selected", async () => {
       expect.hasAssertions()
       render(
         <AppointmentForm
           {...appointmentFormDefaultProps}
           onSubmit={(formValues) => {
-            expect(formValues).toEqual(null)
+            expect(formValues.stylistName).toEqual("Not selected")
           }}
         />
       )
@@ -215,51 +215,47 @@ describe("AppointmentForm", () => {
       ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
     })
 
-    // it("lists all salon services", async () => {
-    //   render(
-    //     <AppointmentForm
-    //       availableServiceNames={availableServiceNames}
-    //       availableTimeSlots={[]}
-    //       defaultServiceName=""
-    //       onSubmit={noop}
-    //       salonOpensAt={12}
-    //       salonClosesAt={14}
-    //       today={new Date()}
-    //     />
-    //   )
-    //   await wait()
-    //   const optionNodes = Array.from(findSelectField({ fieldName: "serviceName" }).childNodes)
-    //   const renderedServices = optionNodes.map((node) => node.textContent)
-    //   expect(renderedServices).toEqual(expect.arrayContaining(availableServiceNames))
-    // })
+    it("from start, has only 'Suzan' stylistName available, because only she is certified for 'Blow-dry'", async () => {
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
+      await wait()
+      const optionNodes = Array.from(findSelectField({ fieldName: "stylistName" }).childNodes)
+      const availableStylistsNames = optionNodes.map((node) => node.textContent)
+      expect(availableStylistsNames).toEqual(["Not selected", "Suzan"])
+    })
 
-    // it("saves the new entered service name when the form is submitted", async () => {
-    //   const defaultServiceName = "Blow-dry"
-    //   const aNewEnteredServiceName = "Cut"
-    //   render(
-    //     <AppointmentForm
-    //       availableServiceNames={availableServiceNames}
-    //       availableTimeSlots={[]}
-    //       defaultServiceName={defaultServiceName}
-    //       onSubmit={(formValues) => {
-    //         expect(formValues.serviceName).toEqual(aNewEnteredServiceName)
-    //       }}
-    //       salonOpensAt={12}
-    //       salonClosesAt={14}
-    //       today={new Date()}
-    //     />
-    //   )
-    //   await wait()
-    //   ReactDomTestUtils.Simulate.change(findSelectField({ fieldName: "serviceName" }), {
-    //     // @ts-ignore
-    //     target: { value: aNewEnteredServiceName },
-    //   })
-    //   await wait()
-    //   ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
-    // })
+    it("allows selecting 'Hanna' and 'Suzan' serviceNames when 'Cut' service is choosen, because they both are certified for 'Cut'", async () => {
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
+      await wait()
+      // @ts-ignore
+      ReactDomTestUtils.Simulate.change(findSelectField({ fieldName: "serviceName" }), { target: { value: "Cut" } })
+      await wait()
+      const optionNodes = Array.from(findSelectField({ fieldName: "stylistName" }).childNodes)
+      const availableStylistsNames = optionNodes.map((node) => node.textContent)
+      expect(availableStylistsNames).toEqual(["Not selected", "Hanna", "Suzan"])
+    })
+
+    it("submits with a newly selected stylistName", async () => {
+      expect.hasAssertions()
+      render(
+        <AppointmentForm
+          {...appointmentFormDefaultProps}
+          onSubmit={(formValues) => {
+            expect(formValues.stylistName).toEqual("Hanna")
+          }}
+        />
+      )
+      await wait()
+      // @ts-ignore
+      ReactDomTestUtils.Simulate.change(findSelectField({ fieldName: "serviceName" }), { target: { value: "Cut" } })
+      await wait()
+      // @ts-ignore
+      ReactDomTestUtils.Simulate.change(findSelectField({ fieldName: "stylistName" }), { target: { value: "Hanna" } })
+      await wait()
+      ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
+    })
   })
 
-  describe("timeslots table", () => {
+  describe.skip("timeslots table", () => {
     it("renders", async () => {
       render(<AppointmentForm {...appointmentFormDefaultProps} />)
       await wait()

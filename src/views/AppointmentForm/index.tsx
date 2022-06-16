@@ -5,14 +5,18 @@ import { IStylist } from "#types/IStylist"
 
 import { TimeSlotTable } from "./TimeSlotTable"
 
-export type IFieldName = "serviceName" | "stylistName"
+export type IFieldName = "serviceName" | "stylistName" | "timeSlot"
 
 export interface IAppointmentFormProps {
   availableServiceNames: string[]
   availableStylists: IStylist[]
   availableTimeSlots: IAppointment["timeSlot"][]
   defaultServiceName: string
-  onSubmit(formValues: { serviceName: string; timeSlot: string | null }): void
+  onSubmit(formValues: {
+    serviceName: string
+    stylistName: IAppointment["stylistName"] | undefined
+    timeSlot: IAppointment["stylistName"] | null
+  }): void
   salonClosesAt: number
   salonOpensAt: number
   today: Date
@@ -30,7 +34,9 @@ export const AppointmentForm: React.FC<IAppointmentFormProps> = ({
 }) => {
   const [selectedServiceName, setSelectedServiceName] = React.useState<string>(defaultServiceName)
   const [selectedTimeSlot, setSelectedTimeSlot] = React.useState<Date | null>(availableTimeSlots[0] || null)
-  // const [selectedStylistName, setSelectedStylistName] = React.useState<IStylist["name"] | null>(null)
+  const [selectedStylistName, setSelectedStylistName] = React.useState<IStylist["name"] | "Not selected">(
+    "Not selected"
+  )
 
   return (
     <form
@@ -39,6 +45,7 @@ export const AppointmentForm: React.FC<IAppointmentFormProps> = ({
         event.preventDefault()
         onSubmit({
           serviceName: selectedServiceName,
+          stylistName: selectedStylistName,
           timeSlot: selectedTimeSlot === null ? null : selectedTimeSlot.toString(),
         })
       }}
@@ -64,13 +71,16 @@ export const AppointmentForm: React.FC<IAppointmentFormProps> = ({
           id="stylistName"
           name="stylistName"
           onChange={(event) => {
-            // setSelectedServiceName(event.target.value)
+            setSelectedStylistName(event.target.value)
           }}
-          value=""
+          value={selectedStylistName}
         >
-          {/* {availableServiceNames.map((aServiceName) => (
-            <option key={aServiceName}>{aServiceName}</option>
-          ))} */}
+          <option>Not selected</option>
+          {availableStylists
+            .filter((aStylist) => aStylist.sertifiedServicesNames.includes(selectedServiceName))
+            .map((aStylist) => (
+              <option key={aStylist.name}>{aStylist.name}</option>
+            ))}
         </select>
       </div>
       <TimeSlotTable
