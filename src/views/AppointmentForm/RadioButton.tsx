@@ -2,7 +2,7 @@ import React from "react"
 
 import { IAppointment } from "#types/IAppointment"
 
-interface IProps {
+interface IRadioButtonProps {
   availableTimeSlots: IAppointment["timeSlot"][]
   dayOfTheFoollowingWeekDate: Date
   selectedTimeSlot: Date | null
@@ -10,7 +10,7 @@ interface IProps {
   timeSlotsInTermsOfADay: IAppointment["timeSlot"]
 }
 
-export const RadioButton: React.FC<IProps> = ({
+export const RadioButton: React.FC<IRadioButtonProps> = ({
   availableTimeSlots,
   dayOfTheFoollowingWeekDate,
   selectedTimeSlot,

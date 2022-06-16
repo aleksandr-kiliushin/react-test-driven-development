@@ -6,7 +6,7 @@ import { TimeSlotTable } from "./TimeSlotTable"
 
 export type IFieldName = "serviceName" | "stylistName"
 
-interface IProps {
+interface IAppointmentFormProps {
   availableTimeSlots: IAppointment["timeSlot"][]
   availableServiceNames: string[]
   defaultServiceName: string
@@ -16,7 +16,7 @@ interface IProps {
   today: Date
 }
 
-export const AppointmentForm: React.FC<IProps> = ({
+export const AppointmentForm: React.FC<IAppointmentFormProps> = ({
   availableTimeSlots,
   availableServiceNames,
   defaultServiceName,

@@ -3,11 +3,11 @@ import React from "react"
 import { IAppointment } from "#types/IAppointment"
 import { getAppointmentTimeOfDayPrettified } from "#utils/getAppointmentTimeOfDayPrettified"
 
-interface IProps {
+interface IAppointmentProps {
   appointment: IAppointment
 }
 
-export const Appointment: React.FC<IProps> = ({ appointment }) => {
+export const Appointment: React.FC<IAppointmentProps> = ({ appointment }) => {
   return (
     <>
       <h2 className="text-2xl mb-2 font-semibold">

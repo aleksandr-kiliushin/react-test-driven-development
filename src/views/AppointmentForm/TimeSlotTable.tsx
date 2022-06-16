@@ -36,7 +36,7 @@ const shortenDate = ({ aDate }: { aDate: Date }) => {
   return `${day} ${dayOfMonth}`
 }
 
-interface IProps {
+interface ITimeSlotTableProps {
   availableTimeSlots: IAppointment["timeSlot"][]
   salonClosesAt: number
   salonOpensAt: number
@@ -45,7 +45,7 @@ interface IProps {
   today: Date
 }
 
-export const TimeSlotTable: React.FC<IProps> = ({
+export const TimeSlotTable: React.FC<ITimeSlotTableProps> = ({
   availableTimeSlots,
   salonClosesAt,
   salonOpensAt,
