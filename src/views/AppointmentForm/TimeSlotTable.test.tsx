@@ -50,9 +50,9 @@ describe("time slot table", () => {
         availableTimeSlots={[]}
         salonOpensAt={12}
         salonClosesAt={14}
-        today={new Date()}
         selectedTimeSlot={null}
         setSelectedTimeSlot={noop}
+        today={new Date()}
       />
     )
     await wait()
@@ -265,7 +265,7 @@ describe("time slot table", () => {
     ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
   })
 
-  it.skip("submits with a newly selected value if a new value was selected.", async () => {
+  it("submits with a newly selected value if a new value was selected.", async () => {
     render(
       <AppointmentForm
         availableServiceNames={[]}
@@ -286,6 +286,40 @@ describe("time slot table", () => {
     )
     await wait()
     ReactDomTestUtils.Simulate.change(findTimeSlotRadioButton({ inputValue: aTimeSlotTodayAt_13_30.toString() }))
+    await wait()
+    ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
+
+    await wait()
+    ReactDomTestUtils.Simulate.change(findTimeSlotRadioButton({ inputValue: aTimeSlotTodayAt_13_30.toString() }))
+    await wait()
+    ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
+  })
+
+  it("submits with a another newly selected value if a new value was selected.", async () => {
+    render(
+      <AppointmentForm
+        availableServiceNames={[]}
+        availableTimeSlots={[
+          aTimeSlotTodayAt_12_00,
+          aTimeSlotTodayAt_13_30,
+          aTimeSlotInTwoDaysAt_12_00,
+          aTimeSlotIn6DaysAt_13_00,
+        ]}
+        defaultServiceName=""
+        onSubmit={(formValues) => {
+          expect(formValues.timeSlot.toString()).toEqual(aTimeSlotTodayAt_12_00.toString())
+        }}
+        salonClosesAt={14}
+        salonOpensAt={12}
+        today={new Date()}
+      />
+    )
+    await wait()
+    ReactDomTestUtils.Simulate.change(findTimeSlotRadioButton({ inputValue: aTimeSlotTodayAt_13_30.toString() }))
+    await wait()
+    ReactDomTestUtils.Simulate.change(findTimeSlotRadioButton({ inputValue: aTimeSlotIn6DaysAt_13_00.toString() }))
+    await wait()
+    ReactDomTestUtils.Simulate.change(findTimeSlotRadioButton({ inputValue: aTimeSlotTodayAt_12_00.toString() }))
     await wait()
     ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
   })

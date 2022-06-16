@@ -30,7 +30,7 @@ export const RadioButton: React.FC<IProps> = ({
       <input
         checked={isChecked}
         name="startsAt"
-        onChange={(event) => setSelectedTimeSlot(new Date(parseInt(event.target.value)))}
+        onChange={(event) => setSelectedTimeSlot(new Date(event.target.value))}
         type="radio"
         value={anAppointmenTimestamp.toString()}
       />
