@@ -1,38 +1,13 @@
 import assert from "assert"
-import { noop } from "lodash"
 import React from "react"
 import ReactDom from "react-dom/client"
 import ReactDomTestUtils from "react-dom/test-utils"
 
-import {
-  aTimeSlotIn6DaysAt_13_00,
-  aTimeSlotInTwoDaysAt_12_00,
-  aTimeSlotTodayAt_12_00,
-  aTimeSlotTodayAt_13_30,
-} from "#sampleData/someTimeSlots"
 import { createContainer } from "#utils/testing/createContainer"
 import { wait } from "#utils/testing/wait"
 
-import { AppointmentForm, IAppointmentFormProps, IFieldName } from "./index"
-
-const defaultProps: IAppointmentFormProps = {
-  availableServiceNames: ["Cut", "Blow-dry"],
-  availableStylists: [
-    { name: "Hanna", sertifiedServicesNames: ["Cut"] },
-    { name: "Suzan", sertifiedServicesNames: ["Cut", "Blow-dry"] },
-  ],
-  availableTimeSlots: [
-    aTimeSlotTodayAt_12_00,
-    aTimeSlotTodayAt_13_30,
-    aTimeSlotInTwoDaysAt_12_00,
-    aTimeSlotIn6DaysAt_13_00,
-  ],
-  defaultServiceName: "Blow-dry",
-  onSubmit: noop,
-  salonClosesAt: 14,
-  salonOpensAt: 12,
-  today: new Date(),
-}
+import { appointmentFormDefaultProps } from "./appointmentFormDefaultProps"
+import { AppointmentForm, IFieldName } from "./index"
 
 describe("AppointmentForm", () => {
   let container: HTMLDivElement
@@ -80,45 +55,45 @@ describe("AppointmentForm", () => {
   }
 
   it("renders a form.", async () => {
-    render(<AppointmentForm {...defaultProps} />)
+    render(<AppointmentForm {...appointmentFormDefaultProps} />)
     await wait()
     expect(findForm({ id: "appointment" })).not.toBeNull()
   })
 
   describe("service field", () => {
     it("renders as a select box", async () => {
-      render(<AppointmentForm {...defaultProps} />)
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
       await wait()
       expect(findSelectField({ fieldName: "serviceName" })).not.toBeNull()
     })
 
     it("lists all salon services", async () => {
-      render(<AppointmentForm {...defaultProps} />)
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
       await wait()
       const optionNodes = Array.from(findSelectField({ fieldName: "serviceName" }).childNodes)
       const renderedServices = optionNodes.map((node) => node.textContent)
-      expect(renderedServices).toEqual(expect.arrayContaining(defaultProps.availableServiceNames))
+      expect(renderedServices).toEqual(expect.arrayContaining(appointmentFormDefaultProps.availableServiceNames))
     })
 
     it("pre-selects the existing value", async () => {
-      render(<AppointmentForm {...defaultProps} />)
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
       await wait()
       const selectOption = findSelectOption({
-        optionTextContent: defaultProps.defaultServiceName,
+        optionTextContent: appointmentFormDefaultProps.defaultServiceName,
         selectFieldName: "serviceName",
       })
-      expect(selectOption.textContent).toEqual(defaultProps.defaultServiceName)
+      expect(selectOption.textContent).toEqual(appointmentFormDefaultProps.defaultServiceName)
       expect(selectOption.selected).toEqual(true)
     })
 
     it("renders a field label with an appropriate htmlFor attribute", async () => {
-      render(<AppointmentForm {...defaultProps} />)
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
       await wait()
       expect(findLabelFor({ fieldName: "serviceName" })).not.toBeNull()
     })
 
     it("assign label htmlFor matching to the select field ID", async () => {
-      render(<AppointmentForm {...defaultProps} />)
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
       await wait()
       const field = findSelectField({ fieldName: "serviceName" })
       const label = findLabelFor({ fieldName: "serviceName" })
@@ -129,9 +104,9 @@ describe("AppointmentForm", () => {
       expect.hasAssertions()
       render(
         <AppointmentForm
-          {...defaultProps}
+          {...appointmentFormDefaultProps}
           onSubmit={(formValues) => {
-            expect(formValues.serviceName).toEqual(defaultProps.defaultServiceName)
+            expect(formValues.serviceName).toEqual(appointmentFormDefaultProps.defaultServiceName)
           }}
         />
       )
@@ -145,7 +120,7 @@ describe("AppointmentForm", () => {
       const aNewEnteredServiceName = "Cut"
       render(
         <AppointmentForm
-          {...defaultProps}
+          {...appointmentFormDefaultProps}
           onSubmit={(formValues) => {
             expect(formValues.serviceName).toEqual(aNewEnteredServiceName)
           }}
@@ -163,25 +138,25 @@ describe("AppointmentForm", () => {
 
   describe("stylist field", () => {
     it("renders as a select box", async () => {
-      render(<AppointmentForm {...defaultProps} />)
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
       await wait()
       expect(findSelectField({ fieldName: "stylistName" })).not.toBeNull()
     })
 
     it("pre-selects an empty stylist name", async () => {
-      render(<AppointmentForm {...defaultProps} />)
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
       await wait()
       expect(findSelectField({ fieldName: "stylistName" }).value).toEqual("")
     })
 
     it("renders a field label with an appropriate htmlFor attribute", async () => {
-      render(<AppointmentForm {...defaultProps} />)
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
       await wait()
       expect(findLabelFor({ fieldName: "stylistName" })).not.toBeNull()
     })
 
     it("assign label htmlFor matching to the select field ID", async () => {
-      render(<AppointmentForm {...defaultProps} />)
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
       await wait()
       const field = findSelectField({ fieldName: "serviceName" })
       const label = findLabelFor({ fieldName: "serviceName" })
@@ -192,7 +167,7 @@ describe("AppointmentForm", () => {
       expect.hasAssertions()
       render(
         <AppointmentForm
-          {...defaultProps}
+          {...appointmentFormDefaultProps}
           onSubmit={(formValues) => {
             expect(formValues).toEqual(null)
           }}
