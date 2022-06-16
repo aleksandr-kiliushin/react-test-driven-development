@@ -15,13 +15,12 @@ import { wait } from "#utils/testing/wait"
 
 import { AppointmentForm, IAppointmentFormProps, IFieldName } from "./index"
 
-// const availableStylists = [
-//   { name: "Hanna", serviceSertificates: ["Cut"] },
-//   { name: "Suzan", serviceSertificates: ["Cut", "Blow-dry"] },
-// ]
-
 const defaultProps: IAppointmentFormProps = {
   availableServiceNames: ["Cut", "Blow-dry"],
+  availableStylists: [
+    { name: "Hanna", sertifiedServicesNames: ["Cut"] },
+    { name: "Suzan", sertifiedServicesNames: ["Cut", "Blow-dry"] },
+  ],
   availableTimeSlots: [
     aTimeSlotTodayAt_12_00,
     aTimeSlotTodayAt_13_30,

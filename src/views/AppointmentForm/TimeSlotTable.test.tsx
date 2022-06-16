@@ -63,6 +63,10 @@ describe("time slot table", () => {
     render(
       <AppointmentForm
         availableServiceNames={[]}
+        availableStylists={[
+          { name: "Hanna", sertifiedServicesNames: ["Cut"] },
+          { name: "Suzan", sertifiedServicesNames: ["Cut", "Blow-dry"] },
+        ]}
         availableTimeSlots={[]}
         defaultServiceName=""
         onSubmit={noop}
@@ -83,6 +87,10 @@ describe("time slot table", () => {
     render(
       <AppointmentForm
         availableServiceNames={[]}
+        availableStylists={[
+          { name: "Hanna", sertifiedServicesNames: ["Cut"] },
+          { name: "Suzan", sertifiedServicesNames: ["Cut", "Blow-dry"] },
+        ]}
         availableTimeSlots={[]}
         defaultServiceName=""
         onSubmit={noop}
@@ -103,6 +111,10 @@ describe("time slot table", () => {
     render(
       <AppointmentForm
         availableServiceNames={[]}
+        availableStylists={[
+          { name: "Hanna", sertifiedServicesNames: ["Cut"] },
+          { name: "Suzan", sertifiedServicesNames: ["Cut", "Blow-dry"] },
+        ]}
         availableTimeSlots={[]}
         defaultServiceName=""
         onSubmit={noop}
@@ -124,6 +136,10 @@ describe("time slot table", () => {
     render(
       <AppointmentForm
         availableServiceNames={[]}
+        availableStylists={[
+          { name: "Hanna", sertifiedServicesNames: ["Cut"] },
+          { name: "Suzan", sertifiedServicesNames: ["Cut", "Blow-dry"] },
+        ]}
         availableTimeSlots={[]}
         defaultServiceName=""
         onSubmit={noop}
@@ -144,6 +160,10 @@ describe("time slot table", () => {
     render(
       <AppointmentForm
         availableServiceNames={[]}
+        availableStylists={[
+          { name: "Hanna", sertifiedServicesNames: ["Cut"] },
+          { name: "Suzan", sertifiedServicesNames: ["Cut", "Blow-dry"] },
+        ]}
         availableTimeSlots={[]}
         defaultServiceName=""
         onSubmit={noop}
@@ -161,6 +181,10 @@ describe("time slot table", () => {
     render(
       <AppointmentForm
         availableServiceNames={[]}
+        availableStylists={[
+          { name: "Hanna", sertifiedServicesNames: ["Cut"] },
+          { name: "Suzan", sertifiedServicesNames: ["Cut", "Blow-dry"] },
+        ]}
         availableTimeSlots={[aTimeSlotTodayAt_12_00, aTimeSlotTodayAt_13_30]}
         defaultServiceName=""
         onSubmit={noop}
@@ -178,6 +202,10 @@ describe("time slot table", () => {
     render(
       <AppointmentForm
         availableServiceNames={[]}
+        availableStylists={[
+          { name: "Hanna", sertifiedServicesNames: ["Cut"] },
+          { name: "Suzan", sertifiedServicesNames: ["Cut", "Blow-dry"] },
+        ]}
         availableTimeSlots={[aTimeSlotTodayAt_12_00, aTimeSlotTodayAt_13_30]}
         defaultServiceName=""
         onSubmit={noop}
@@ -199,6 +227,10 @@ describe("time slot table", () => {
     render(
       <AppointmentForm
         availableServiceNames={[]}
+        availableStylists={[
+          { name: "Hanna", sertifiedServicesNames: ["Cut"] },
+          { name: "Suzan", sertifiedServicesNames: ["Cut", "Blow-dry"] },
+        ]}
         availableTimeSlots={[
           aTimeSlotTodayAt_12_00,
           aTimeSlotTodayAt_13_30,
@@ -221,6 +253,10 @@ describe("time slot table", () => {
     render(
       <AppointmentForm
         availableServiceNames={[]}
+        availableStylists={[
+          { name: "Hanna", sertifiedServicesNames: ["Cut"] },
+          { name: "Suzan", sertifiedServicesNames: ["Cut", "Blow-dry"] },
+        ]}
         availableTimeSlots={[
           aTimeSlotTodayAt_12_00,
           aTimeSlotTodayAt_13_30,
@@ -246,6 +282,10 @@ describe("time slot table", () => {
     render(
       <AppointmentForm
         availableServiceNames={[]}
+        availableStylists={[
+          { name: "Hanna", sertifiedServicesNames: ["Cut"] },
+          { name: "Suzan", sertifiedServicesNames: ["Cut", "Blow-dry"] },
+        ]}
         availableTimeSlots={[
           aTimeSlotTodayAt_12_00,
           aTimeSlotTodayAt_13_30,
@@ -270,6 +310,10 @@ describe("time slot table", () => {
     render(
       <AppointmentForm
         availableServiceNames={[]}
+        availableStylists={[
+          { name: "Hanna", sertifiedServicesNames: ["Cut"] },
+          { name: "Suzan", sertifiedServicesNames: ["Cut", "Blow-dry"] },
+        ]}
         availableTimeSlots={[
           aTimeSlotTodayAt_12_00,
           aTimeSlotTodayAt_13_30,
@@ -296,6 +340,10 @@ describe("time slot table", () => {
     render(
       <AppointmentForm
         availableServiceNames={[]}
+        availableStylists={[
+          { name: "Hanna", sertifiedServicesNames: ["Cut"] },
+          { name: "Suzan", sertifiedServicesNames: ["Cut", "Blow-dry"] },
+        ]}
         availableTimeSlots={[
           aTimeSlotTodayAt_12_00,
           aTimeSlotTodayAt_13_30,
@@ -326,6 +374,10 @@ describe("time slot table", () => {
     render(
       <AppointmentForm
         availableServiceNames={[]}
+        availableStylists={[
+          { name: "Hanna", sertifiedServicesNames: ["Cut"] },
+          { name: "Suzan", sertifiedServicesNames: ["Cut", "Blow-dry"] },
+        ]}
         availableTimeSlots={[
           aTimeSlotTodayAt_12_00,
           aTimeSlotTodayAt_13_30,

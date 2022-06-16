@@ -1,14 +1,16 @@
 import React from "react"
 
 import { IAppointment } from "#types/IAppointment"
+import { IStylist } from "#types/IStylist"
 
 import { TimeSlotTable } from "./TimeSlotTable"
 
 export type IFieldName = "serviceName" | "stylistName"
 
 export interface IAppointmentFormProps {
-  availableTimeSlots: IAppointment["timeSlot"][]
   availableServiceNames: string[]
+  availableStylists: IStylist[]
+  availableTimeSlots: IAppointment["timeSlot"][]
   defaultServiceName: string
   onSubmit(formValues: { serviceName: string; timeSlot: string | null }): void
   salonClosesAt: number
@@ -17,8 +19,9 @@ export interface IAppointmentFormProps {
 }
 
 export const AppointmentForm: React.FC<IAppointmentFormProps> = ({
-  availableTimeSlots,
   availableServiceNames,
+  availableStylists,
+  availableTimeSlots,
   defaultServiceName,
   onSubmit,
   salonClosesAt,
@@ -27,6 +30,7 @@ export const AppointmentForm: React.FC<IAppointmentFormProps> = ({
 }) => {
   const [selectedServiceName, setSelectedServiceName] = React.useState<string>(defaultServiceName)
   const [selectedTimeSlot, setSelectedTimeSlot] = React.useState<Date | null>(availableTimeSlots[0] || null)
+  // const [selectedStylistName, setSelectedStylistName] = React.useState<IStylist["name"] | null>(null)
 
   return (
     <form

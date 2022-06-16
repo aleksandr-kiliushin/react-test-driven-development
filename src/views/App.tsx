@@ -51,6 +51,10 @@ export const App: React.FC = () => {
           element={
             <AppointmentForm
               availableServiceNames={["Cut", "Blow-dry", "Cut & color", "Beard trim", "Cut & beard trim", "Extensions"]}
+              availableStylists={[
+                { name: "Hanna", sertifiedServicesNames: ["Cut"] },
+                { name: "Suzan", sertifiedServicesNames: ["Cut", "Blow-dry"] },
+              ]}
               availableTimeSlots={getRandomTimeSlots()}
               onSubmit={(formValues) => {
                 console.log(JSON.stringify(formValues, null, 2))
