@@ -38,10 +38,10 @@ describe("time slot table", () => {
     return table
   }
 
-  const findStartsAtFieldInput = ({ inputIndex }: { inputIndex: number }) => {
-    const anInput = container.querySelectorAll("input[name='startsAt']")[inputIndex]
-    assert(anInput instanceof HTMLInputElement, "found element is not an input element")
-    return anInput
+  const findTimeSlotRadioButton = ({ inputValue }: { inputValue: string }): HTMLInputElement => {
+    const theInput = container.querySelector(`input[type="radio"][name="startsAt"][value="${inputValue}"]`)
+    assert(theInput instanceof HTMLInputElement, `Could not find a timeSlot radio input with value of ${inputValue}.`)
+    return theInput
   }
 
   it("renders a table for time slots", async () => {
@@ -187,8 +187,12 @@ describe("time slot table", () => {
       />
     )
     await wait()
-    expect(findStartsAtFieldInput({ inputIndex: 0 }).value).toEqual(aTimeSlotTodayAt_12_00.toString())
-    expect(findStartsAtFieldInput({ inputIndex: 1 }).value).toEqual(aTimeSlotTodayAt_13_30.toString())
+    expect(findTimeSlotRadioButton({ inputValue: aTimeSlotTodayAt_12_00.toString() }).value).toEqual(
+      aTimeSlotTodayAt_12_00.toString()
+    )
+    expect(findTimeSlotRadioButton({ inputValue: aTimeSlotTodayAt_13_30.toString() }).value).toEqual(
+      aTimeSlotTodayAt_13_30.toString()
+    )
   })
 
   it("renders a radio button amount that corresponds available time slots amount", async () => {
@@ -257,6 +261,31 @@ describe("time slot table", () => {
         today={new Date()}
       />
     )
+    await wait()
+    ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
+  })
+
+  it.skip("submits with a newly selected value if a new value was selected.", async () => {
+    render(
+      <AppointmentForm
+        availableServiceNames={[]}
+        availableTimeSlots={[
+          aTimeSlotTodayAt_12_00,
+          aTimeSlotTodayAt_13_30,
+          aTimeSlotInTwoDaysAt_12_00,
+          aTimeSlotIn6DaysAt_13_00,
+        ]}
+        defaultServiceName=""
+        onSubmit={(formValues) => {
+          expect(formValues.timeSlot.toString()).toEqual(aTimeSlotTodayAt_13_30.toString())
+        }}
+        salonClosesAt={14}
+        salonOpensAt={12}
+        today={new Date()}
+      />
+    )
+    await wait()
+    ReactDomTestUtils.Simulate.change(findTimeSlotRadioButton({ inputValue: aTimeSlotTodayAt_13_30.toString() }))
     await wait()
     ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
   })
