@@ -17,13 +17,13 @@ export const AppointmentsDayView: React.FC<IAppointmentsDayViewProps> = ({ appoi
       <ol className="appointmentsDayView">
         {appointments.map((anAppointment, index) => {
           return (
-            <li key={anAppointment.timeSlot.toString()}>
+            <li key={anAppointment.timeSlot.startsAt.toString()}>
               <button
                 className="border border-cyan-900 bg-cyan-500 hover:bg-cyan-600"
                 onClick={() => setSelectedAppointmentIndex(index)}
                 type="button"
               >
-                {getAppointmentTimeOfDayPrettified({ aDate: anAppointment.timeSlot })}
+                {getAppointmentTimeOfDayPrettified({ aDate: anAppointment.timeSlot.startsAt })}
               </button>
             </li>
           )

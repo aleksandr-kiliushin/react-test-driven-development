@@ -1,6 +1,7 @@
 import React from "react"
 
 import { IAppointment } from "#types/IAppointment"
+import { ITimeSlot } from "#types/ITimeSlot"
 
 import { RadioButton } from "./RadioButton"
 
@@ -40,8 +41,8 @@ interface ITimeSlotTableProps {
   availableTimeSlots: IAppointment["timeSlot"][]
   salonClosesAt: number
   salonOpensAt: number
-  selectedTimeSlot: Date | null
-  setSelectedTimeSlot: React.Dispatch<React.SetStateAction<Date | null>>
+  selectedStartsAtDate: ITimeSlot["startsAt"] | undefined
+  setSelectedStartsAtDate: React.Dispatch<React.SetStateAction<ITimeSlot["startsAt"] | undefined>>
   today: Date
 }
 
@@ -49,8 +50,8 @@ export const TimeSlotTable: React.FC<ITimeSlotTableProps> = ({
   availableTimeSlots,
   salonClosesAt,
   salonOpensAt,
-  selectedTimeSlot,
-  setSelectedTimeSlot,
+  selectedStartsAtDate,
+  setSelectedStartsAtDate,
   today,
 }) => {
   const datesForEachDayOfTheFollowingWeek = getDatesForEachDayOfTheFollowingWeek({ startDate: today })
@@ -69,17 +70,17 @@ export const TimeSlotTable: React.FC<ITimeSlotTableProps> = ({
         </tr>
       </thead>
       <tbody>
-        {timeSlotsInTermsOfADay.map((aTimeSlotsInTermsOfADay) => (
-          <tr key={aTimeSlotsInTermsOfADay.toString()}>
-            <th className="border border-indigo-900 bg-indigo-300">{aDateToTimeString(aTimeSlotsInTermsOfADay)}</th>
+        {timeSlotsInTermsOfADay.map((startsAtDateInTermsOfADay) => (
+          <tr key={startsAtDateInTermsOfADay.toString()}>
+            <th className="border border-indigo-900 bg-indigo-300">{aDateToTimeString(startsAtDateInTermsOfADay)}</th>
             {datesForEachDayOfTheFollowingWeek.map((aDayOfTheFoollowingWeekDate) => (
               <td className="border border-teal-900 bg-teal-100" key={aDayOfTheFoollowingWeekDate.toString()}>
                 <RadioButton
                   availableTimeSlots={availableTimeSlots}
                   dayOfTheFoollowingWeekDate={aDayOfTheFoollowingWeekDate}
-                  selectedTimeSlot={selectedTimeSlot}
-                  setSelectedTimeSlot={setSelectedTimeSlot}
-                  timeSlotsInTermsOfADay={aTimeSlotsInTermsOfADay}
+                  selectedStartsAtDate={selectedStartsAtDate}
+                  setSelectedStartsAtDate={setSelectedStartsAtDate}
+                  startsAtDateInTermsOfADay={startsAtDateInTermsOfADay}
                 />
               </td>
             ))}

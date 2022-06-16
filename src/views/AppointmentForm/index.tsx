@@ -1,7 +1,7 @@
 import React from "react"
 
-import { IAppointment } from "#types/IAppointment"
 import { IStylist } from "#types/IStylist"
+import { ITimeSlot } from "#types/ITimeSlot"
 
 import { TimeSlotTable } from "./TimeSlotTable"
 
@@ -10,12 +10,12 @@ export type IFieldName = "serviceName" | "stylistName" | "timeSlot"
 export interface IAppointmentFormProps {
   availableServiceNames: string[]
   availableStylists: IStylist[]
-  availableTimeSlots: IAppointment["timeSlot"][]
+  availableTimeSlots: ITimeSlot[]
   defaultServiceName: string
   onSubmit(formValues: {
     serviceName: string
-    stylistName: IAppointment["stylistName"] | undefined
-    timeSlot: IAppointment["stylistName"] | null
+    startsAtDate: ITimeSlot["startsAt"] | undefined
+    stylistName: IStylist["name"] | "Not selected"
   }): void
   salonClosesAt: number
   salonOpensAt: number
@@ -33,7 +33,7 @@ export const AppointmentForm: React.FC<IAppointmentFormProps> = ({
   today,
 }) => {
   const [selectedServiceName, setSelectedServiceName] = React.useState<string>(defaultServiceName)
-  const [selectedTimeSlot, setSelectedTimeSlot] = React.useState<Date | null>(availableTimeSlots[0] || null)
+  const [selectedStartsAtDate, setSelectedStartsAtDate] = React.useState<ITimeSlot["startsAt"] | undefined>(undefined)
   const [selectedStylistName, setSelectedStylistName] = React.useState<IStylist["name"] | "Not selected">(
     "Not selected"
   )
@@ -46,7 +46,7 @@ export const AppointmentForm: React.FC<IAppointmentFormProps> = ({
         onSubmit({
           serviceName: selectedServiceName,
           stylistName: selectedStylistName,
-          timeSlot: selectedTimeSlot === null ? null : selectedTimeSlot.toString(),
+          startsAtDate: selectedStartsAtDate,
         })
       }}
     >
@@ -87,8 +87,8 @@ export const AppointmentForm: React.FC<IAppointmentFormProps> = ({
         availableTimeSlots={availableTimeSlots}
         salonClosesAt={salonClosesAt}
         salonOpensAt={salonOpensAt}
-        selectedTimeSlot={selectedTimeSlot}
-        setSelectedTimeSlot={setSelectedTimeSlot}
+        selectedStartsAtDate={selectedStartsAtDate}
+        setSelectedStartsAtDate={setSelectedStartsAtDate}
         today={today}
       />
       <input type="submit" />

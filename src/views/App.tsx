@@ -2,7 +2,7 @@ import React from "react"
 import { Link, Route, Routes } from "react-router-dom"
 
 import { getRandomTimeSlots } from "#sampleData/getRandomTimeSlots"
-import { TODO_MAKE_DATE_RANDOM_TOO_randomAppointments } from "#sampleData/randomAppointments"
+import { randomAppointmentsForToday } from "#sampleData/randomAppointmentsForToday"
 import { aCustomer1 } from "#sampleData/someCustomers"
 
 import { AppointmentForm } from "./AppointmentForm"
@@ -33,7 +33,7 @@ export const App: React.FC = () => {
       </nav>
       <Routes>
         <Route
-          element={<AppointmentsDayView appointments={TODO_MAKE_DATE_RANDOM_TOO_randomAppointments} />}
+          element={<AppointmentsDayView appointments={randomAppointmentsForToday} />}
           path="/appointments-day-view"
         />
         <Route

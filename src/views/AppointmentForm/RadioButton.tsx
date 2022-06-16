@@ -1,38 +1,37 @@
 import React from "react"
 
-import { IAppointment } from "#types/IAppointment"
+import { ITimeSlot } from "#types/ITimeSlot"
 
 interface IRadioButtonProps {
-  availableTimeSlots: IAppointment["timeSlot"][]
+  availableTimeSlots: ITimeSlot[]
   dayOfTheFoollowingWeekDate: Date
-  selectedTimeSlot: Date | null
-  setSelectedTimeSlot: React.Dispatch<React.SetStateAction<Date | null>>
-  timeSlotsInTermsOfADay: IAppointment["timeSlot"]
+  selectedStartsAtDate: ITimeSlot["startsAt"] | undefined
+  setSelectedStartsAtDate: React.Dispatch<React.SetStateAction<ITimeSlot["startsAt"] | undefined>>
+  startsAtDateInTermsOfADay: Date
 }
 
 export const RadioButton: React.FC<IRadioButtonProps> = ({
   availableTimeSlots,
   dayOfTheFoollowingWeekDate,
-  selectedTimeSlot,
-  setSelectedTimeSlot,
-  timeSlotsInTermsOfADay,
+  selectedStartsAtDate,
+  setSelectedStartsAtDate,
+  startsAtDateInTermsOfADay,
 }) => {
-  if (selectedTimeSlot === null) return null
+  const anAppointmenDate = new Date(dayOfTheFoollowingWeekDate)
+  anAppointmenDate.setHours(new Date(startsAtDateInTermsOfADay).getHours())
+  anAppointmenDate.setMinutes(new Date(startsAtDateInTermsOfADay).getMinutes())
 
-  const anAppointmenTimestamp = new Date(dayOfTheFoollowingWeekDate)
-  anAppointmenTimestamp.setHours(new Date(timeSlotsInTermsOfADay).getHours())
-  anAppointmenTimestamp.setMinutes(new Date(timeSlotsInTermsOfADay).getMinutes())
+  const isChecked =
+    selectedStartsAtDate !== undefined && selectedStartsAtDate.toString() === anAppointmenDate.toString()
 
-  const isChecked = selectedTimeSlot.toString() === anAppointmenTimestamp.toString()
-
-  if (availableTimeSlots.some((aSlot) => aSlot.toString() === anAppointmenTimestamp.toString())) {
+  if (availableTimeSlots.some((aSlot) => aSlot.startsAt.toString() === anAppointmenDate.toString())) {
     return (
       <input
         checked={isChecked}
         name="startsAt"
-        onChange={(event) => setSelectedTimeSlot(new Date(event.target.value))}
+        onChange={(event) => setSelectedStartsAtDate(new Date(event.target.value))}
         type="radio"
-        value={anAppointmenTimestamp.toString()}
+        value={anAppointmenDate.toString()}
       />
     )
   }

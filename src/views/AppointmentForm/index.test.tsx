@@ -10,6 +10,7 @@ import {
   aTimeSlotTodayAt_12_00,
   aTimeSlotTodayAt_13_30,
 } from "#sampleData/someTimeSlots"
+import { ITimeSlot } from "#types/ITimeSlot"
 import { createContainer } from "#utils/testing/createContainer"
 import { wait } from "#utils/testing/wait"
 
@@ -329,11 +330,11 @@ describe("AppointmentForm", () => {
         />
       )
       await wait()
-      expect(findTimeSlotRadioButton({ inputValue: aTimeSlotTodayAt_12_00.toString() }).value).toEqual(
-        aTimeSlotTodayAt_12_00.toString()
+      expect(findTimeSlotRadioButton({ inputValue: aTimeSlotTodayAt_12_00.startsAt.toString() }).value).toEqual(
+        aTimeSlotTodayAt_12_00.startsAt.toString()
       )
-      expect(findTimeSlotRadioButton({ inputValue: aTimeSlotTodayAt_13_30.toString() }).value).toEqual(
-        aTimeSlotTodayAt_13_30.toString()
+      expect(findTimeSlotRadioButton({ inputValue: aTimeSlotTodayAt_13_30.startsAt.toString() }).value).toEqual(
+        aTimeSlotTodayAt_13_30.startsAt.toString()
       )
     })
 
@@ -344,22 +345,23 @@ describe("AppointmentForm", () => {
       expect(radioButtons).toHaveLength(4)
     })
 
-    it("renders a radio button with value of each available time slot", async () => {
+    it.each<ITimeSlot>([
+      aTimeSlotTodayAt_12_00,
+      aTimeSlotTodayAt_13_30,
+      aTimeSlotInTwoDaysAt_12_00,
+      aTimeSlotIn6DaysAt_13_00,
+    ])("renders a radio-button for each provided available date", async (aTimeSlot) => {
       render(<AppointmentForm {...appointmentFormDefaultProps} />)
       await wait()
-      expect(container.querySelector(`input[type="radio"][value="${aTimeSlotTodayAt_12_00}"]`)).not.toBeNull()
-      expect(container.querySelector(`input[type="radio"][value="${aTimeSlotTodayAt_13_30}"]`)).not.toBeNull()
-      expect(container.querySelector(`input[type="radio"][value="${aTimeSlotInTwoDaysAt_12_00}"]`)).not.toBeNull()
-      expect(container.querySelector(`input[type="radio"][value="${aTimeSlotIn6DaysAt_13_00}"]`)).not.toBeNull()
+      expect(container.querySelector(`input[type="radio"][value="${aTimeSlot.startsAt}"]`)).not.toBeNull()
     })
 
-    it("submits with a default value if no value was selected", async () => {
+    it("submits with a undefined value if no value was selected", async () => {
       render(
         <AppointmentForm
           {...appointmentFormDefaultProps}
           onSubmit={(formValues) => {
-            assert(formValues.timeSlot !== null)
-            expect(formValues.timeSlot.toString()).toEqual(aTimeSlotTodayAt_12_00.toString())
+            expect(formValues.startsAtDate).toBeUndefined()
           }}
         />
       )
@@ -373,13 +375,15 @@ describe("AppointmentForm", () => {
           {...appointmentFormDefaultProps}
           defaultServiceName=""
           onSubmit={(formValues) => {
-            assert(formValues.timeSlot !== null)
-            expect(formValues.timeSlot.toString()).toEqual(aTimeSlotTodayAt_13_30.toString())
+            assert(formValues.startsAtDate !== undefined)
+            expect(formValues.startsAtDate.toString()).toEqual(aTimeSlotTodayAt_13_30.startsAt.toString())
           }}
         />
       )
       await wait()
-      ReactDomTestUtils.Simulate.change(findTimeSlotRadioButton({ inputValue: aTimeSlotTodayAt_13_30.toString() }))
+      ReactDomTestUtils.Simulate.change(
+        findTimeSlotRadioButton({ inputValue: aTimeSlotTodayAt_13_30.startsAt.toString() })
+      )
       await wait()
       ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
     })
@@ -389,17 +393,23 @@ describe("AppointmentForm", () => {
         <AppointmentForm
           {...appointmentFormDefaultProps}
           onSubmit={(formValues) => {
-            assert(formValues.timeSlot !== null)
-            expect(formValues.timeSlot.toString()).toEqual(aTimeSlotTodayAt_12_00.toString())
+            assert(formValues.startsAtDate !== undefined)
+            expect(formValues.startsAtDate.toString()).toEqual(aTimeSlotTodayAt_12_00.startsAt.toString())
           }}
         />
       )
       await wait()
-      ReactDomTestUtils.Simulate.change(findTimeSlotRadioButton({ inputValue: aTimeSlotTodayAt_13_30.toString() }))
+      ReactDomTestUtils.Simulate.change(
+        findTimeSlotRadioButton({ inputValue: aTimeSlotTodayAt_13_30.startsAt.toString() })
+      )
       await wait()
-      ReactDomTestUtils.Simulate.change(findTimeSlotRadioButton({ inputValue: aTimeSlotIn6DaysAt_13_00.toString() }))
+      ReactDomTestUtils.Simulate.change(
+        findTimeSlotRadioButton({ inputValue: aTimeSlotIn6DaysAt_13_00.startsAt.toString() })
+      )
       await wait()
-      ReactDomTestUtils.Simulate.change(findTimeSlotRadioButton({ inputValue: aTimeSlotTodayAt_12_00.toString() }))
+      ReactDomTestUtils.Simulate.change(
+        findTimeSlotRadioButton({ inputValue: aTimeSlotTodayAt_12_00.startsAt.toString() })
+      )
       await wait()
       ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
     })
@@ -407,11 +417,18 @@ describe("AppointmentForm", () => {
     it("renders input radio buttons as checked after click on them.", async () => {
       render(<AppointmentForm {...appointmentFormDefaultProps} />)
       await wait()
-      const radioButton1 = findTimeSlotRadioButton({ inputValue: aTimeSlotTodayAt_12_00.toString() })
-      const radioButton2 = findTimeSlotRadioButton({ inputValue: aTimeSlotTodayAt_13_30.toString() })
-      const radioButton3 = findTimeSlotRadioButton({ inputValue: aTimeSlotInTwoDaysAt_12_00.toString() })
-      const radioButton4 = findTimeSlotRadioButton({ inputValue: aTimeSlotIn6DaysAt_13_00.toString() })
+      const radioButton1 = findTimeSlotRadioButton({ inputValue: aTimeSlotTodayAt_12_00.startsAt.toString() })
+      const radioButton2 = findTimeSlotRadioButton({ inputValue: aTimeSlotTodayAt_13_30.startsAt.toString() })
+      const radioButton3 = findTimeSlotRadioButton({ inputValue: aTimeSlotInTwoDaysAt_12_00.startsAt.toString() })
+      const radioButton4 = findTimeSlotRadioButton({ inputValue: aTimeSlotIn6DaysAt_13_00.startsAt.toString() })
 
+      expect(radioButton1.checked).toEqual(false)
+      expect(radioButton2.checked).toEqual(false)
+      expect(radioButton3.checked).toEqual(false)
+      expect(radioButton4.checked).toEqual(false)
+
+      ReactDomTestUtils.Simulate.change(radioButton1)
+      await wait()
       expect(radioButton1.checked).toEqual(true)
       expect(radioButton2.checked).toEqual(false)
       expect(radioButton3.checked).toEqual(false)

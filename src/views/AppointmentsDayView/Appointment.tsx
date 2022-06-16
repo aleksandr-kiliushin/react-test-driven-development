@@ -11,7 +11,7 @@ export const Appointment: React.FC<IAppointmentProps> = ({ appointment }) => {
   return (
     <>
       <h2 className="text-2xl mb-2 font-semibold">
-        Todays appointment at {getAppointmentTimeOfDayPrettified({ aDate: appointment.timeSlot })}
+        Todays appointment at {getAppointmentTimeOfDayPrettified({ aDate: appointment.timeSlot.startsAt })}
       </h2>
       <p>
         <label>Customer name</label>:{" "}
