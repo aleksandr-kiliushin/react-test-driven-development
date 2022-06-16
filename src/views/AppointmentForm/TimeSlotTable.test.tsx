@@ -288,11 +288,6 @@ describe("time slot table", () => {
     ReactDomTestUtils.Simulate.change(findTimeSlotRadioButton({ inputValue: aTimeSlotTodayAt_13_30.toString() }))
     await wait()
     ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
-
-    await wait()
-    ReactDomTestUtils.Simulate.change(findTimeSlotRadioButton({ inputValue: aTimeSlotTodayAt_13_30.toString() }))
-    await wait()
-    ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
   })
 
   it("submits with a another newly selected value if a new value was selected.", async () => {
