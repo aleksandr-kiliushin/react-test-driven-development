@@ -318,4 +318,54 @@ describe("time slot table", () => {
     await wait()
     ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
   })
+
+  it("renders input radio buttons as checked after click on them.", async () => {
+    render(
+      <AppointmentForm
+        availableServiceNames={[]}
+        availableTimeSlots={[
+          aTimeSlotTodayAt_12_00,
+          aTimeSlotTodayAt_13_30,
+          aTimeSlotInTwoDaysAt_12_00,
+          aTimeSlotIn6DaysAt_13_00,
+        ]}
+        defaultServiceName=""
+        onSubmit={noop}
+        salonClosesAt={14}
+        salonOpensAt={12}
+        today={new Date()}
+      />
+    )
+    await wait()
+    const radioButton1 = findTimeSlotRadioButton({ inputValue: aTimeSlotTodayAt_12_00.toString() })
+    const radioButton2 = findTimeSlotRadioButton({ inputValue: aTimeSlotTodayAt_13_30.toString() })
+    const radioButton3 = findTimeSlotRadioButton({ inputValue: aTimeSlotInTwoDaysAt_12_00.toString() })
+    const radioButton4 = findTimeSlotRadioButton({ inputValue: aTimeSlotIn6DaysAt_13_00.toString() })
+
+    expect(radioButton1.checked).toEqual(true)
+    expect(radioButton2.checked).toEqual(false)
+    expect(radioButton3.checked).toEqual(false)
+    expect(radioButton4.checked).toEqual(false)
+
+    ReactDomTestUtils.Simulate.change(radioButton2)
+    await wait()
+    expect(radioButton1.checked).toEqual(false)
+    expect(radioButton2.checked).toEqual(true)
+    expect(radioButton3.checked).toEqual(false)
+    expect(radioButton4.checked).toEqual(false)
+
+    ReactDomTestUtils.Simulate.change(radioButton3)
+    await wait()
+    expect(radioButton1.checked).toEqual(false)
+    expect(radioButton2.checked).toEqual(false)
+    expect(radioButton3.checked).toEqual(true)
+    expect(radioButton4.checked).toEqual(false)
+
+    ReactDomTestUtils.Simulate.change(radioButton4)
+    await wait()
+    expect(radioButton1.checked).toEqual(false)
+    expect(radioButton2.checked).toEqual(false)
+    expect(radioButton3.checked).toEqual(false)
+    expect(radioButton4.checked).toEqual(true)
+  })
 })

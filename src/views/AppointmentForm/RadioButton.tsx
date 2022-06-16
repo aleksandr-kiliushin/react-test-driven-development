@@ -4,26 +4,26 @@ import { IAppointment } from "#types/IAppointment"
 
 interface IProps {
   availableTimeSlots: IAppointment["timeSlot"][]
-  date: Date
+  dayOfTheFoollowingWeekDate: Date
   selectedTimeSlot: Date | null
   setSelectedTimeSlot: React.Dispatch<React.SetStateAction<Date | null>>
-  slotTimestamp: IAppointment["timeSlot"]
+  timeSlotsInTermsOfADay: IAppointment["timeSlot"]
 }
 
 export const RadioButton: React.FC<IProps> = ({
   availableTimeSlots,
-  date,
+  dayOfTheFoollowingWeekDate,
   selectedTimeSlot,
   setSelectedTimeSlot,
-  slotTimestamp,
+  timeSlotsInTermsOfADay,
 }) => {
-  const anAppointmenTimestamp = new Date(date)
-  anAppointmenTimestamp.setHours(new Date(slotTimestamp).getHours())
-  anAppointmenTimestamp.setMinutes(new Date(slotTimestamp).getMinutes())
-
   if (selectedTimeSlot === null) return null
 
-  const isChecked = selectedTimeSlot.toString() === slotTimestamp.toString()
+  const anAppointmenTimestamp = new Date(dayOfTheFoollowingWeekDate)
+  anAppointmenTimestamp.setHours(new Date(timeSlotsInTermsOfADay).getHours())
+  anAppointmenTimestamp.setMinutes(new Date(timeSlotsInTermsOfADay).getMinutes())
+
+  const isChecked = selectedTimeSlot.toString() === anAppointmenTimestamp.toString()
 
   if (availableTimeSlots.some((aSlot) => aSlot.toString() === anAppointmenTimestamp.toString())) {
     return (

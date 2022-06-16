@@ -4,7 +4,7 @@ import { IAppointment } from "#types/IAppointment"
 
 import { RadioButton } from "./RadioButton"
 
-const getDailyTimeSlots = ({
+const getTimeSlotsInTermsOfADay = ({
   salonClosesAt,
   salonOpensAt,
 }: {
@@ -19,7 +19,7 @@ const getDailyTimeSlots = ({
     .reduce((acc, _, i) => acc.concat([new Date(startTime + i * increment)]))
 }
 
-const getWeeklyDateValues = ({ startDate }: { startDate: Date }): Date[] => {
+const getDatesForEachDayOfTheFollowingWeek = ({ startDate }: { startDate: Date }): Date[] => {
   const midnight = new Date(startDate).setHours(0, 0, 0, 0)
   const increment = 24 * 60 * 60 * 1000
   return Array(7)
@@ -27,8 +27,8 @@ const getWeeklyDateValues = ({ startDate }: { startDate: Date }): Date[] => {
     .reduce((acc, _, i) => acc.concat([new Date(midnight + i * increment)]))
 }
 
-const timestampToTimeString = (timestamp: Date) => {
-  return timestamp.toTimeString().substring(0, 5)
+const aDateToTimeString = (aDate: Date) => {
+  return aDate.toTimeString().substring(0, 5)
 }
 
 const shortenDate = ({ aDate }: { aDate: Date }) => {
@@ -53,15 +53,15 @@ export const TimeSlotTable: React.FC<IProps> = ({
   setSelectedTimeSlot,
   today,
 }) => {
-  const theFollowingWeekDatesTimestamps = getWeeklyDateValues({ startDate: today })
-  const timeSlotsTimestamps = getDailyTimeSlots({ salonClosesAt, salonOpensAt })
+  const datesForEachDayOfTheFollowingWeek = getDatesForEachDayOfTheFollowingWeek({ startDate: today })
+  const timeSlotsInTermsOfADay = getTimeSlotsInTermsOfADay({ salonClosesAt, salonOpensAt })
 
   return (
     <table id="time-slots">
       <thead>
         <tr>
           <th />
-          {theFollowingWeekDatesTimestamps.map((aDate) => (
+          {datesForEachDayOfTheFollowingWeek.map((aDate) => (
             <th className="border border-sky-900 bg-sky-300" key={aDate.toString()}>
               {shortenDate({ aDate })}
             </th>
@@ -69,17 +69,17 @@ export const TimeSlotTable: React.FC<IProps> = ({
         </tr>
       </thead>
       <tbody>
-        {timeSlotsTimestamps.map((aTimestamp) => (
-          <tr key={aTimestamp.toString()}>
-            <th className="border border-indigo-900 bg-indigo-300">{timestampToTimeString(aTimestamp)}</th>
-            {theFollowingWeekDatesTimestamps.map((aDate) => (
-              <td className="border border-teal-900 bg-teal-100" key={aDate.toString()}>
+        {timeSlotsInTermsOfADay.map((aTimeSlotsInTermsOfADay) => (
+          <tr key={aTimeSlotsInTermsOfADay.toString()}>
+            <th className="border border-indigo-900 bg-indigo-300">{aDateToTimeString(aTimeSlotsInTermsOfADay)}</th>
+            {datesForEachDayOfTheFollowingWeek.map((aDayOfTheFoollowingWeekDate) => (
+              <td className="border border-teal-900 bg-teal-100" key={aDayOfTheFoollowingWeekDate.toString()}>
                 <RadioButton
                   availableTimeSlots={availableTimeSlots}
-                  date={aDate}
+                  dayOfTheFoollowingWeekDate={aDayOfTheFoollowingWeekDate}
                   selectedTimeSlot={selectedTimeSlot}
                   setSelectedTimeSlot={setSelectedTimeSlot}
-                  slotTimestamp={aTimestamp}
+                  timeSlotsInTermsOfADay={aTimeSlotsInTermsOfADay}
                 />
               </td>
             ))}
