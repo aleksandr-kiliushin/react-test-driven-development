@@ -57,7 +57,6 @@ export const App: React.FC = () => {
               ]}
               availableTimeSlots={getRandomTimeSlots()}
               onSubmit={(formValues) => {
-                console.log("formValues >>", formValues)
                 console.log(JSON.stringify(formValues, null, 2))
               }}
               defaultServiceName="Cut"
