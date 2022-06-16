@@ -1,6 +1,5 @@
 import React from "react"
 
-import { IAppointment } from "#types/IAppointment"
 import { ITimeSlot } from "#types/ITimeSlot"
 
 import { RadioButton } from "./RadioButton"
@@ -38,7 +37,7 @@ const shortenDate = ({ aDate }: { aDate: Date }) => {
 }
 
 interface ITimeSlotTableProps {
-  availableTimeSlots: IAppointment["timeSlot"][]
+  availableTimeSlotsForSelectedStylistName: ITimeSlot[]
   salonClosesAt: number
   salonOpensAt: number
   selectedStartsAtDate: ITimeSlot["startsAt"] | undefined
@@ -47,7 +46,7 @@ interface ITimeSlotTableProps {
 }
 
 export const TimeSlotTable: React.FC<ITimeSlotTableProps> = ({
-  availableTimeSlots,
+  availableTimeSlotsForSelectedStylistName,
   salonClosesAt,
   salonOpensAt,
   selectedStartsAtDate,
@@ -76,7 +75,7 @@ export const TimeSlotTable: React.FC<ITimeSlotTableProps> = ({
             {datesForEachDayOfTheFollowingWeek.map((aDayOfTheFoollowingWeekDate) => (
               <td className="border border-teal-900 bg-teal-100" key={aDayOfTheFoollowingWeekDate.toString()}>
                 <RadioButton
-                  availableTimeSlots={availableTimeSlots}
+                  availableTimeSlotsForSelectedStylistName={availableTimeSlotsForSelectedStylistName}
                   dayOfTheFoollowingWeekDate={aDayOfTheFoollowingWeekDate}
                   selectedStartsAtDate={selectedStartsAtDate}
                   setSelectedStartsAtDate={setSelectedStartsAtDate}

@@ -3,7 +3,7 @@ import React from "react"
 import { ITimeSlot } from "#types/ITimeSlot"
 
 interface IRadioButtonProps {
-  availableTimeSlots: ITimeSlot[]
+  availableTimeSlotsForSelectedStylistName: ITimeSlot[]
   dayOfTheFoollowingWeekDate: Date
   selectedStartsAtDate: ITimeSlot["startsAt"] | undefined
   setSelectedStartsAtDate: React.Dispatch<React.SetStateAction<ITimeSlot["startsAt"] | undefined>>
@@ -11,7 +11,7 @@ interface IRadioButtonProps {
 }
 
 export const RadioButton: React.FC<IRadioButtonProps> = ({
-  availableTimeSlots,
+  availableTimeSlotsForSelectedStylistName,
   dayOfTheFoollowingWeekDate,
   selectedStartsAtDate,
   setSelectedStartsAtDate,
@@ -24,7 +24,9 @@ export const RadioButton: React.FC<IRadioButtonProps> = ({
   const isChecked =
     selectedStartsAtDate !== undefined && selectedStartsAtDate.toString() === anAppointmenDate.toString()
 
-  if (availableTimeSlots.every((aSlot) => aSlot.startsAt.toString() !== anAppointmenDate.toString())) {
+  if (
+    availableTimeSlotsForSelectedStylistName.every((aSlot) => aSlot.startsAt.toString() !== anAppointmenDate.toString())
+  ) {
     return null
   }
 

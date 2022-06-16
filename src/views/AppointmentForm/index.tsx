@@ -38,6 +38,11 @@ export const AppointmentForm: React.FC<IAppointmentFormProps> = ({
     "Not selected"
   )
 
+  const availableTimeSlotsForSelectedStylistName = React.useMemo<ITimeSlot[]>(() => {
+    if (selectedStylistName === "Not selected") return []
+    return availableTimeSlots.filter((aTimeSlot) => aTimeSlot.stylist.name === selectedStylistName)
+  }, [availableTimeSlots, selectedStylistName])
+
   return (
     <form
       id="appointment"
@@ -84,7 +89,7 @@ export const AppointmentForm: React.FC<IAppointmentFormProps> = ({
         </select>
       </div>
       <TimeSlotTable
-        availableTimeSlots={availableTimeSlots}
+        availableTimeSlotsForSelectedStylistName={availableTimeSlotsForSelectedStylistName}
         salonClosesAt={salonClosesAt}
         salonOpensAt={salonOpensAt}
         selectedStartsAtDate={selectedStartsAtDate}
