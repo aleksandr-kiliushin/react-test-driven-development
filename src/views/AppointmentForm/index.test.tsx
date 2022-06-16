@@ -255,7 +255,7 @@ describe("AppointmentForm", () => {
     })
   })
 
-  describe.skip("timeslots table", () => {
+  describe("timeslots table", () => {
     it("renders", async () => {
       render(<AppointmentForm {...appointmentFormDefaultProps} />)
       await wait()
