@@ -2,6 +2,7 @@ import assert from "assert"
 import noop from "lodash/noop"
 import React from "react"
 import ReactDom from "react-dom/client"
+import ReactDomTestUtils from "react-dom/test-utils"
 
 import {
   aTimeSlotIn6DaysAt_13_00,
@@ -22,6 +23,13 @@ describe("time slot table", () => {
   beforeEach(() => {
     ;({ container, render } = createContainer())
   })
+
+  const findForm = ({ id }: { id: "appointment" }): HTMLFormElement => {
+    const form = container.querySelector(`form#${id}`)
+    assert(form !== null, "Expected to find a form instance, but found `null`")
+    assert(form instanceof HTMLFormElement, "Found element is not a form.")
+    return form
+  }
 
   const findTimeSlotTable = (): HTMLTableElement => {
     const table = container.querySelector("table#time-slots")
@@ -230,24 +238,26 @@ describe("time slot table", () => {
     expect(container.querySelector(`input[type="radio"][value="${aTimeSlotIn6DaysAt_13_00}"]`)).not.toBeNull()
   })
 
-  // import ReactDomTestUtils from "react-dom/test-utils"
-  // it("submits with a default value if no value was selected", async () => {
-  //   render(
-  //     <AppointmentForm
-  //       availableServiceNames={[]}
-  //       availableTimeSlots={[
-  //         aTimeSlotTodayAt_12_00,
-  //         aTimeSlotTodayAt_13_30,
-  //         aTimeSlotInTwoDaysAt_12_00,
-  //         aTimeSlotIn6DaysAt_13_00,
-  //       ]}
-  //       defaultServiceName=""
-  //       onSubmit={noop}
-  //       salonClosesAt={14}
-  //       salonOpensAt={12}
-  //       today={new Date()}
-  //     />
-  //   )
-  //   await wait()
-  // })
+  it("submits with a default value if no value was selected", async () => {
+    render(
+      <AppointmentForm
+        availableServiceNames={[]}
+        availableTimeSlots={[
+          aTimeSlotTodayAt_12_00,
+          aTimeSlotTodayAt_13_30,
+          aTimeSlotInTwoDaysAt_12_00,
+          aTimeSlotIn6DaysAt_13_00,
+        ]}
+        defaultServiceName=""
+        onSubmit={(formValues) => {
+          expect(formValues.timeSlot.toString()).toEqual(aTimeSlotTodayAt_12_00.toString())
+        }}
+        salonClosesAt={14}
+        salonOpensAt={12}
+        today={new Date()}
+      />
+    )
+    await wait()
+    ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
+  })
 })
