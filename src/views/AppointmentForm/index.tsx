@@ -10,7 +10,7 @@ interface IProps {
   availableTimeSlots: IAppointment["timeSlot"][]
   availableServiceNames: string[]
   defaultServiceName: string
-  onSubmit(formValues: { serviceName: string; timeSlot: string }): void
+  onSubmit(formValues: { serviceName: string; timeSlot: string | null }): void
   salonClosesAt: number
   salonOpensAt: number
   today: Date
@@ -33,8 +33,10 @@ export const AppointmentForm: React.FC<IProps> = ({
       id="appointment"
       onSubmit={(event) => {
         event.preventDefault()
-        if (selectedTimeSlot === null) return
-        onSubmit({ serviceName: selectedServiceName, timeSlot: selectedTimeSlot.toString() })
+        onSubmit({
+          serviceName: selectedServiceName,
+          timeSlot: selectedTimeSlot === null ? null : selectedTimeSlot.toString(),
+        })
       }}
     >
       <div>

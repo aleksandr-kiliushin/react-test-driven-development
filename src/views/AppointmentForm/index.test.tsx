@@ -169,6 +169,8 @@ describe("AppointmentForm", () => {
     })
 
     it("saves the default service name when the form is submitted", async () => {
+      expect.hasAssertions()
+
       const defaultServiceName = "Blow-dry"
       render(
         <AppointmentForm
@@ -189,6 +191,8 @@ describe("AppointmentForm", () => {
     })
 
     it("saves the new entered service name when the form is submitted", async () => {
+      expect.hasAssertions()
+
       const defaultServiceName = "Blow-dry"
       const aNewEnteredServiceName = "Cut"
       render(
@@ -284,7 +288,7 @@ describe("AppointmentForm", () => {
     })
 
     it.skip("onSubmit returns null the form is submitted with no stylist selected", async () => {
-      expect.hasAssertions() // It seems to be useless because async assertions (i. e. in `onSubmit`) complete anyway.
+      expect.hasAssertions()
 
       render(
         <AppointmentForm
@@ -302,7 +306,6 @@ describe("AppointmentForm", () => {
       await wait()
 
       ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
-      await wait()
     })
 
     // it("lists all salon services", async () => {
