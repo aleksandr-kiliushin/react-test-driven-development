@@ -24,17 +24,17 @@ export const RadioButton: React.FC<IRadioButtonProps> = ({
   const isChecked =
     selectedStartsAtDate !== undefined && selectedStartsAtDate.toString() === anAppointmenDate.toString()
 
-  if (availableTimeSlots.some((aSlot) => aSlot.startsAt.toString() === anAppointmenDate.toString())) {
-    return (
-      <input
-        checked={isChecked}
-        name="startsAt"
-        onChange={(event) => setSelectedStartsAtDate(new Date(event.target.value))}
-        type="radio"
-        value={anAppointmenDate.toString()}
-      />
-    )
+  if (availableTimeSlots.every((aSlot) => aSlot.startsAt.toString() !== anAppointmenDate.toString())) {
+    return null
   }
 
-  return null
+  return (
+    <input
+      checked={isChecked}
+      name="startsAt"
+      onChange={(event) => setSelectedStartsAtDate(new Date(event.target.value))}
+      type="radio"
+      value={anAppointmenDate.toString()}
+    />
+  )
 }
