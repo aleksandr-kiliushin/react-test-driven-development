@@ -79,18 +79,20 @@ describe("CustomerForm", () => {
 
   const itSubmitsWithThePassedInitialValueAtStart = ({ fieldName }: { fieldName: IFieldName }) => {
     it("submits existing value.", async () => {
-      expect.hasAssertions() // It seems to be useless because async assertions (i. e. in `onSubmit`) complete anyway.
-
+      let fieldValue
       render(
         <CustomerForm
           initialCustomerData={aCustomer1}
-          onSubmit={(formValues) => expect(formValues[fieldName]).toEqual(aCustomer1[fieldName])}
+          onSubmit={(formValues) => {
+            fieldValue = formValues[fieldName]
+          }}
         />
       )
       await wait()
-
       ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
       await wait()
+      expect(fieldValue).toBeDefined()
+      expect(fieldValue).toEqual(aCustomer1[fieldName])
     })
   }
 
@@ -102,21 +104,22 @@ describe("CustomerForm", () => {
     newValue: string
   }) => {
     it("saves new value when submitted.", async () => {
-      expect.hasAssertions() // It seems to be useless because async assertions (i. e. in `onSubmit`) complete anyway.
-
+      let fieldValue
       render(
         <CustomerForm
           initialCustomerData={aCustomer1}
-          onSubmit={(formValues) => expect(formValues[fieldName]).toEqual(newValue)}
+          onSubmit={(formValues) => {
+            fieldValue = formValues[fieldName]
+          }}
         />
       )
       await wait()
-
       // @ts-ignore
       ReactDomTestUtils.Simulate.change(findField({ fieldName }), { target: { value: newValue } })
       await wait()
-
       ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
+      await wait()
+      expect(fieldValue).toEqual(newValue)
     })
   }
 
