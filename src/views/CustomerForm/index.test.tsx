@@ -182,7 +182,8 @@ describe("CustomerForm", () => {
   })
 
   it("calls fetch with the right properties when submitting data", async () => {
-    fetchSpy.stubReturnValue(getCustomerCreationSuccessfullResponse(undefined))
+    fetchSpy.stubReturnValue(getCustomerCreationSuccessfullResponse(undefined)) // TODO: Move to beforeEach.
+    // TODO: Move aCustomer1 and noop to defaultProps.
     render(<CustomerForm initialCustomerData={aCustomer1} onCustomerSuccessfullyCreated={noop} />)
     await wait()
     ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
@@ -234,5 +235,19 @@ describe("CustomerForm", () => {
     ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }), { preventDefault: preventFormDefaultActionSpy.fn })
     await wait()
     expect(preventFormDefaultActionSpy).CUSTOM_toHaveBeenCalled()
+  })
+
+  it("renders error message when fetch call fails", async () => {
+    fetchSpy.stubReturnValue(getCustomerCreationErrorResponse()) // TODO: get... -> create...
+    render(<CustomerForm initialCustomerData={aCustomer1} onCustomerSuccessfullyCreated={noop} />)
+    // TODO: Use `act` instead of `wait`.
+    await wait()
+    // TODO: Move id definition from parameters to function body.
+    ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
+    await wait()
+    await wait() // TODO: Replace with a single wait().
+    const errorMessage = container.querySelector("p.error")
+    assert(errorMessage !== null, "Could not find errorMessage node.")
+    expect(errorMessage.textContent).toMatch("An error occurred during save.")
   })
 })

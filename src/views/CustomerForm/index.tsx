@@ -11,6 +11,7 @@ export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData
   const [firstName, setFirstName] = React.useState<string>(initialCustomerData.firstName)
   const [lastName, setLastName] = React.useState<string>(initialCustomerData.lastName)
   const [phoneNumber, setPhoneNumber] = React.useState<string>(initialCustomerData.phoneNumber)
+  const [errorMessage, setErrorMessage] = React.useState<string>("")
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -20,7 +21,10 @@ export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData
       headers: { "Content-Type": "application/json" },
       method: "POST",
     })
-    if (response.ok === false) return
+    if (response.ok === false) {
+      setErrorMessage("An error occurred during save.")
+      return
+    }
     const createdCustomer = await response.json()
     onCustomerSuccessfullyCreated(createdCustomer)
   }
@@ -57,9 +61,8 @@ export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData
           value={phoneNumber}
         />
       </div>
-      <div>
-        <input type="submit" value="Add" />
-      </div>
+      <input type="submit" value="Add" />
+      {errorMessage !== "" && <p className="error">{errorMessage}</p>}
     </form>
   )
 }
