@@ -85,6 +85,7 @@ describe("CustomerForm", () => {
       await wait()
       ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
       await wait()
+      expect(submitSpy).CUSTOM_toHaveBeenCalled()
       expect(submitSpy.getReceivedArguments()[0][fieldName]).toEqual(aCustomer1[fieldName])
     })
   }
