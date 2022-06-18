@@ -87,6 +87,7 @@ describe("CustomerForm", () => {
       ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
       await wait()
       expect(submitSpy).CUSTOM_toHaveBeenCalled()
+      expect(fetchSpy).CUSTOM_toHaveBeenCalled()
       expect(submitSpy.getReceivedArguments()[0][fieldName]).toEqual(aCustomer1[fieldName])
       expect(JSON.parse(fetchSpy.getReceivedArguments()[1].body)[fieldName]).toEqual(aCustomer1[fieldName])
     })
@@ -101,13 +102,17 @@ describe("CustomerForm", () => {
   }) => {
     it("saves new value when submitted.", async () => {
       const submitSpy = createSpy()
-      render(<CustomerForm fetch={async () => {}} initialCustomerData={aCustomer1} onSubmit={submitSpy.fn} />)
+      const fetchSpy = createSpy()
+      render(<CustomerForm fetch={fetchSpy.fn} initialCustomerData={aCustomer1} onSubmit={submitSpy.fn} />)
       await wait()
       // @ts-ignore
       ReactDomTestUtils.Simulate.change(findField({ fieldName }), { target: { value: newValue } })
       await wait()
       ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
       await wait()
+      expect(fetchSpy).CUSTOM_toHaveBeenCalled()
+      const optionsBodyFetchHasBeenCalledWith = JSON.parse(fetchSpy.getReceivedArguments()[1].body)
+      expect(optionsBodyFetchHasBeenCalledWith[fieldName]).toEqual(newValue)
       expect(submitSpy.getReceivedArguments()[0][fieldName]).toEqual(newValue)
     })
   }
