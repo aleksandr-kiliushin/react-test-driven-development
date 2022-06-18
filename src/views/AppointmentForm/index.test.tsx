@@ -153,6 +153,7 @@ describe("AppointmentForm", () => {
       await wait()
       ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
       await wait()
+      expect(submitSpy).CUSTOM_toHaveBeenCalled()
       expect(submitSpy.getReceivedArguments()[0].serviceName).toEqual(appointmentFormDefaultProps.defaultServiceName)
     })
 
@@ -168,6 +169,7 @@ describe("AppointmentForm", () => {
       await wait()
       ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
       await wait()
+      expect(submitSpy).CUSTOM_toHaveBeenCalled()
       expect(submitSpy.getReceivedArguments()[0].serviceName).toEqual(aNewEnteredServiceName)
     })
   })
@@ -205,6 +207,7 @@ describe("AppointmentForm", () => {
       await wait()
       ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
       await wait()
+      expect(submitSpy).CUSTOM_toHaveBeenCalled()
       expect(submitSpy.getReceivedArguments()[0].stylistName).toEqual("Not selected")
     })
 
@@ -238,6 +241,7 @@ describe("AppointmentForm", () => {
       await selectStylist({ aStylistName: aNewlySelectedStylistName })
       ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
       await wait()
+      expect(submitSpy).CUSTOM_toHaveBeenCalled()
       expect(submitSpy.getReceivedArguments()[0].stylistName).toEqual(aNewlySelectedStylistName)
     })
   })
@@ -317,6 +321,7 @@ describe("AppointmentForm", () => {
       await wait()
       ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
       await wait()
+      expect(submitSpy).CUSTOM_toHaveBeenCalled()
       expect(submitSpy.getReceivedArguments()[0].startsAtDate).toBeUndefined()
     })
 
@@ -332,6 +337,7 @@ describe("AppointmentForm", () => {
       await wait()
       ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
       await wait()
+      expect(submitSpy).CUSTOM_toHaveBeenCalled()
       expect(submitSpy.getReceivedArguments()[0].startsAtDate.toString()).toEqual(
         aNewlySelectedTimeSlotStartsAtValue.toString()
       )
@@ -357,6 +363,7 @@ describe("AppointmentForm", () => {
       await wait()
       ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
       await wait()
+      expect(submitSpy).CUSTOM_toHaveBeenCalled()
       expect(submitSpy.getReceivedArguments()[0].startsAtDate.toString()).toEqual(
         aTimeSlotAtSuzanTodayAt_12_00.startsAt.toString()
       )
