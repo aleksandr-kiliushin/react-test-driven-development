@@ -3,11 +3,10 @@ import React from "react"
 import { ICustomer } from "#types/ICustomer"
 
 interface ICustomerFormProps {
-  fetch(input: RequestInfo | URL, init?: RequestInit): Promise<any>
   initialCustomerData: ICustomer
 }
 
-export const CustomerForm: React.FC<ICustomerFormProps> = ({ fetch, initialCustomerData }) => {
+export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData }) => {
   const [firstName, setFirstName] = React.useState<string>(initialCustomerData.firstName)
   const [lastName, setLastName] = React.useState<string>(initialCustomerData.lastName)
   const [phoneNumber, setPhoneNumber] = React.useState<string>(initialCustomerData.phoneNumber)
