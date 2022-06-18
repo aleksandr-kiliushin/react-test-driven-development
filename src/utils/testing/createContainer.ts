@@ -11,6 +11,8 @@ export const createContainer: CreateContainer = () => {
 
   return {
     container,
-    render: (aComponent) => root.render(aComponent),
+    render: (aComponent) => {
+      root.render(aComponent)
+    },
   }
 }

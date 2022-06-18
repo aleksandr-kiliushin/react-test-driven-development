@@ -2,14 +2,13 @@ import { noop } from "lodash"
 import assert from "node:assert"
 import React from "react"
 import ReactDom from "react-dom/client"
-import ReactDomTestUtils from "react-dom/test-utils"
+import ReactDomTestUtils, { act } from "react-dom/test-utils"
 
 import { ISpy } from "#declarations/jest"
 import { aCustomer1 } from "#sampleData/someCustomers"
 import { ICustomer } from "#types/ICustomer"
 import { createContainer } from "#utils/testing/createContainer"
 import { createSpy } from "#utils/testing/createSpy"
-import { wait } from "#utils/testing/wait"
 
 import { CustomerForm, ICustomerFormProps } from "./index"
 
@@ -74,17 +73,19 @@ describe("CustomerForm", () => {
   }
 
   const itRendersAsATextBox = ({ fieldName }: { fieldName: IFieldName }) => {
-    it("renders as a text box.", async () => {
-      render(<CustomerForm {...defaultProps} />)
-      await wait()
+    it("renders as a text box.", () => {
+      act(() => {
+        render(<CustomerForm {...defaultProps} />)
+      })
       expect(findField({ fieldName }).type).toEqual("text")
     })
   }
 
   const itHasThePassedInitialValueAtStart = ({ fieldName }: { fieldName: IFieldName }) => {
-    it("includes the existing value", async () => {
-      render(<CustomerForm {...defaultProps} />)
-      await wait()
+    it("includes the existing value", () => {
+      act(() => {
+        render(<CustomerForm {...defaultProps} />)
+      })
       expect(findField({ fieldName }).value).toEqual(aCustomer1[fieldName])
     })
   }
@@ -96,27 +97,29 @@ describe("CustomerForm", () => {
     fieldName: IFieldName
     labelText: string
   }) => {
-    it("renders a label.", async () => {
-      render(<CustomerForm {...defaultProps} />)
-      await wait()
+    it("renders a label.", () => {
+      act(() => {
+        render(<CustomerForm {...defaultProps} />)
+      })
       expect(findLabelFor({ fieldName }).textContent).toEqual(labelText)
     })
   }
 
   const itAssignsAFieldAnIdThatMatchesTheCorrespondingLabelId = ({ fieldName }: { fieldName: IFieldName }) => {
-    it("assigns an id that matches the label id.", async () => {
-      render(<CustomerForm {...defaultProps} />)
-      await wait()
+    it("assigns an id that matches the label id.", () => {
+      act(() => {
+        render(<CustomerForm {...defaultProps} />)
+      })
       expect(findLabelFor({ fieldName }).htmlFor).toEqual(findField({ fieldName }).id)
     })
   }
 
   const itSubmitsWithThePassedInitialValueAtStart = ({ fieldName }: { fieldName: IFieldName }) => {
-    it("submits existing value when submitted.", async () => {
-      render(<CustomerForm {...defaultProps} />)
-      await wait()
+    it("submits existing value when submitted.", () => {
+      act(() => {
+        render(<CustomerForm {...defaultProps} />)
+      })
       ReactDomTestUtils.Simulate.submit(findForm())
-      await wait()
       expect(fetchSpy).CUSTOM_toHaveBeenCalled()
       expect(JSON.parse(fetchSpy.getReceivedArguments()[1].body)[fieldName]).toEqual(aCustomer1[fieldName])
     })
@@ -129,23 +132,25 @@ describe("CustomerForm", () => {
     fieldName: IFieldName
     newValue: string
   }) => {
-    it("saves new value when submitted.", async () => {
-      render(<CustomerForm {...defaultProps} />)
-      await wait()
-      // @ts-ignore
-      ReactDomTestUtils.Simulate.change(findField({ fieldName }), { target: { value: newValue } })
-      await wait()
+    it("saves new value when submitted.", () => {
+      act(() => {
+        render(<CustomerForm {...defaultProps} />)
+      })
+      act(() => {
+        // @ts-ignore
+        ReactDomTestUtils.Simulate.change(findField({ fieldName }), { target: { value: newValue } })
+      })
       ReactDomTestUtils.Simulate.submit(findForm())
-      await wait()
       expect(fetchSpy).CUSTOM_toHaveBeenCalled()
       const optionsBodyFetchHasBeenCalledWith = JSON.parse(fetchSpy.getReceivedArguments()[1].body)
       expect(optionsBodyFetchHasBeenCalledWith[fieldName]).toEqual(newValue)
     })
   }
 
-  it("renders a form.", async () => {
-    render(<CustomerForm {...defaultProps} />)
-    await wait()
+  it("renders a form.", () => {
+    act(() => {
+      render(<CustomerForm {...defaultProps} />)
+    })
     expect(findForm()).not.toBeNull()
   })
 
@@ -179,18 +184,19 @@ describe("CustomerForm", () => {
     itSubmitsWithANewValueWhenANewValueWasEntered({ fieldName, newValue: "123-456-789" })
   })
 
-  it("has a submit button", async () => {
-    render(<CustomerForm {...defaultProps} />)
-    await wait()
+  it("has a submit button", () => {
+    act(() => {
+      render(<CustomerForm {...defaultProps} />)
+    })
     const submitButton = container.querySelector('input[type="submit"]')
     expect(submitButton).not.toBeNull()
   })
 
-  it("calls fetch with the right properties when submitting data", async () => {
-    render(<CustomerForm {...defaultProps} />)
-    await wait()
+  it("calls fetch with the right properties when submitting data", () => {
+    act(() => {
+      render(<CustomerForm {...defaultProps} />)
+    })
     ReactDomTestUtils.Simulate.submit(findForm())
-    await wait()
     expect(fetchSpy).CUSTOM_toHaveBeenCalled()
     expect(fetchSpy.getReceivedArguments()[0]).toEqual("/customers")
     const fetchOptions: RequestInit = fetchSpy.getReceivedArguments()[1]
@@ -202,10 +208,12 @@ describe("CustomerForm", () => {
   it("notifies onCustomerCreated when form is submitted", async () => {
     const onCustomerSuccessfullyCreatedSpy = createSpy()
     fetchSpy.stubReturnValue(getCustomerCreationSuccessfullResponse(aCustomer1))
-    render(<CustomerForm {...defaultProps} onCustomerCreated={onCustomerSuccessfullyCreatedSpy.fn} />)
-    await wait()
-    ReactDomTestUtils.Simulate.submit(findForm())
-    await wait()
+    act(() => {
+      render(<CustomerForm {...defaultProps} onCustomerCreated={onCustomerSuccessfullyCreatedSpy.fn} />)
+    })
+    await act(async () => {
+      ReactDomTestUtils.Simulate.submit(findForm())
+    })
     expect(onCustomerSuccessfullyCreatedSpy).CUSTOM_toHaveBeenCalled()
     expect(onCustomerSuccessfullyCreatedSpy.getReceivedArguments()[0]).toEqual(aCustomer1)
   })
@@ -213,31 +221,33 @@ describe("CustomerForm", () => {
   it("does not notify onCustomerCreated if the POST request returns an error", async () => {
     const onCustomerSuccessfullyCreatedSpy = createSpy()
     fetchSpy.stubReturnValue(getCustomerCreationErrorResponse())
-    render(<CustomerForm {...defaultProps} onCustomerCreated={onCustomerSuccessfullyCreatedSpy.fn} />)
-    await wait()
-    ReactDomTestUtils.Simulate.submit(findForm())
-    await wait()
+    act(() => {
+      render(<CustomerForm {...defaultProps} onCustomerCreated={onCustomerSuccessfullyCreatedSpy.fn} />)
+    })
+    await act(async () => {
+      ReactDomTestUtils.Simulate.submit(findForm())
+    })
     expect(onCustomerSuccessfullyCreatedSpy).not.CUSTOM_toHaveBeenCalled()
   })
 
-  it("prevents the default action when submitting the form", async () => {
+  it("prevents the default action when submitting the form", () => {
     const preventFormDefaultActionSpy = createSpy()
     fetchSpy.stubReturnValue(getCustomerCreationSuccessfullResponse(aCustomer1))
-    render(<CustomerForm {...defaultProps} />)
-    await wait()
+    act(() => {
+      render(<CustomerForm {...defaultProps} />)
+    })
     ReactDomTestUtils.Simulate.submit(findForm(), { preventDefault: preventFormDefaultActionSpy.fn })
-    await wait()
     expect(preventFormDefaultActionSpy).CUSTOM_toHaveBeenCalled()
   })
 
   it("renders error message when fetch call fails", async () => {
     fetchSpy.stubReturnValue(getCustomerCreationErrorResponse()) // TODO: get... -> create...
-    render(<CustomerForm {...defaultProps} />)
-    // TODO: Use `act` instead of `wait`.
-    await wait()
-    ReactDomTestUtils.Simulate.submit(findForm())
-    await wait()
-    await wait() // TODO: Replace with a single wait().
+    act(() => {
+      render(<CustomerForm {...defaultProps} />)
+    })
+    await act(async () => {
+      ReactDomTestUtils.Simulate.submit(findForm())
+    })
     const errorMessage = container.querySelector("p.error")
     assert(errorMessage !== null, "Could not find errorMessage node.")
     expect(errorMessage.textContent).toMatch("An error occurred during save.")
