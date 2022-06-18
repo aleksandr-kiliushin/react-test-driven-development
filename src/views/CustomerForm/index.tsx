@@ -16,7 +16,12 @@ export const CustomerForm: React.FC<ICustomerFormProps> = ({ fetch, initialCusto
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     onSubmit({ firstName, lastName, phoneNumber })
-    fetch("/customers", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" } })
+    fetch("/customers", {
+      body: JSON.stringify({ firstName, lastName, phoneNumber }),
+      credentials: "same-origin",
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+    })
   }
 
   return (

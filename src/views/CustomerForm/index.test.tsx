@@ -79,14 +79,16 @@ describe("CustomerForm", () => {
   }
 
   const itSubmitsWithThePassedInitialValueAtStart = ({ fieldName }: { fieldName: IFieldName }) => {
-    it("submits existing value.", async () => {
+    it("submits existing value when submitted.", async () => {
       const submitSpy = createSpy()
-      render(<CustomerForm fetch={async () => {}} initialCustomerData={aCustomer1} onSubmit={submitSpy.fn} />)
+      const fetchSpy = createSpy()
+      render(<CustomerForm fetch={fetchSpy.fn} initialCustomerData={aCustomer1} onSubmit={submitSpy.fn} />)
       await wait()
       ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
       await wait()
       expect(submitSpy).CUSTOM_toHaveBeenCalled()
       expect(submitSpy.getReceivedArguments()[0][fieldName]).toEqual(aCustomer1[fieldName])
+      expect(JSON.parse(fetchSpy.getReceivedArguments()[1].body)[fieldName]).toEqual(aCustomer1[fieldName])
     })
   }
 
