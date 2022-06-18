@@ -6,6 +6,7 @@ export interface ISpy {
 }
 
 declare global {
+  var IS_REACT_ACT_ENVIRONMENT: boolean
   namespace jest {
     interface Matchers<R> {
       CUSTOM_toHaveBeenCalled(): void

@@ -13,6 +13,8 @@ import { wait } from "#utils/testing/wait"
 
 import { CustomerForm, ICustomerFormProps } from "./index"
 
+globalThis.IS_REACT_ACT_ENVIRONMENT = true // TODO: Move to test setup file.
+
 type IFieldName = keyof ICustomer
 
 const defaultProps: ICustomerFormProps = {
@@ -185,7 +187,6 @@ describe("CustomerForm", () => {
   })
 
   it("calls fetch with the right properties when submitting data", async () => {
-    // TODO: Move aCustomer1 and noop to defaultProps.
     render(<CustomerForm {...defaultProps} />)
     await wait()
     ReactDomTestUtils.Simulate.submit(findForm())
