@@ -40,7 +40,7 @@ export const App: React.FC = () => {
           element={
             <CustomerForm
               initialCustomerData={aCustomer1}
-              onCustomerSuccessfullyCreated={(createdCustomer) => {
+              onCustomerCreated={(createdCustomer) => {
                 console.log(JSON.stringify(createdCustomer, null, 2))
               }}
             />

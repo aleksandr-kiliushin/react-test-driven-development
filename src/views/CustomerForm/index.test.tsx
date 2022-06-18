@@ -68,7 +68,7 @@ describe("CustomerForm", () => {
 
   const itRendersAsATextBox = ({ fieldName }: { fieldName: IFieldName }) => {
     it("renders as a text box.", async () => {
-      render(<CustomerForm initialCustomerData={aCustomer1} onCustomerSuccessfullyCreated={noop} />)
+      render(<CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={noop} />)
       await wait()
       expect(findField({ fieldName }).type).toEqual("text")
     })
@@ -76,7 +76,7 @@ describe("CustomerForm", () => {
 
   const itHasThePassedInitialValueAtStart = ({ fieldName }: { fieldName: IFieldName }) => {
     it("includes the existing value", async () => {
-      render(<CustomerForm initialCustomerData={aCustomer1} onCustomerSuccessfullyCreated={noop} />)
+      render(<CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={noop} />)
       await wait()
       expect(findField({ fieldName }).value).toEqual(aCustomer1[fieldName])
     })
@@ -90,7 +90,7 @@ describe("CustomerForm", () => {
     labelText: string
   }) => {
     it("renders a label.", async () => {
-      render(<CustomerForm initialCustomerData={aCustomer1} onCustomerSuccessfullyCreated={noop} />)
+      render(<CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={noop} />)
       await wait()
       expect(findLabelFor({ fieldName }).textContent).toEqual(labelText)
     })
@@ -98,7 +98,7 @@ describe("CustomerForm", () => {
 
   const itAssignsAFieldAnIdThatMatchesTheCorrespondingLabelId = ({ fieldName }: { fieldName: IFieldName }) => {
     it("assigns an id that matches the label id.", async () => {
-      render(<CustomerForm initialCustomerData={aCustomer1} onCustomerSuccessfullyCreated={noop} />)
+      render(<CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={noop} />)
       await wait()
       expect(findLabelFor({ fieldName }).htmlFor).toEqual(findField({ fieldName }).id)
     })
@@ -107,7 +107,7 @@ describe("CustomerForm", () => {
   const itSubmitsWithThePassedInitialValueAtStart = ({ fieldName }: { fieldName: IFieldName }) => {
     it("submits existing value when submitted.", async () => {
       fetchSpy.stubReturnValue(getCustomerCreationSuccessfullResponse(undefined))
-      render(<CustomerForm initialCustomerData={aCustomer1} onCustomerSuccessfullyCreated={noop} />)
+      render(<CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={noop} />)
       await wait()
       ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
       await wait()
@@ -125,7 +125,7 @@ describe("CustomerForm", () => {
   }) => {
     it("saves new value when submitted.", async () => {
       fetchSpy.stubReturnValue(getCustomerCreationSuccessfullResponse(undefined))
-      render(<CustomerForm initialCustomerData={aCustomer1} onCustomerSuccessfullyCreated={noop} />)
+      render(<CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={noop} />)
       await wait()
       // @ts-ignore
       ReactDomTestUtils.Simulate.change(findField({ fieldName }), { target: { value: newValue } })
@@ -139,7 +139,7 @@ describe("CustomerForm", () => {
   }
 
   it("renders a form.", async () => {
-    render(<CustomerForm initialCustomerData={aCustomer1} onCustomerSuccessfullyCreated={noop} />)
+    render(<CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={noop} />)
     await wait()
     expect(findForm({ id: "customer" })).not.toBeNull()
   })
@@ -175,7 +175,7 @@ describe("CustomerForm", () => {
   })
 
   it("has a submit button", async () => {
-    render(<CustomerForm initialCustomerData={aCustomer1} onCustomerSuccessfullyCreated={noop} />)
+    render(<CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={noop} />)
     await wait()
     const submitButton = container.querySelector('input[type="submit"]')
     expect(submitButton).not.toBeNull()
@@ -184,7 +184,7 @@ describe("CustomerForm", () => {
   it("calls fetch with the right properties when submitting data", async () => {
     fetchSpy.stubReturnValue(getCustomerCreationSuccessfullResponse(undefined)) // TODO: Move to beforeEach.
     // TODO: Move aCustomer1 and noop to defaultProps.
-    render(<CustomerForm initialCustomerData={aCustomer1} onCustomerSuccessfullyCreated={noop} />)
+    render(<CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={noop} />)
     await wait()
     ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
     await wait()
@@ -196,15 +196,10 @@ describe("CustomerForm", () => {
     expect(fetchOptions.headers).toEqual({ "Content-Type": "application/json" })
   })
 
-  it("notifies onCustomerSuccessfullyCreated when form is submitted", async () => {
+  it("notifies onCustomerCreated when form is submitted", async () => {
     const onCustomerSuccessfullyCreatedSpy = createSpy()
     fetchSpy.stubReturnValue(getCustomerCreationSuccessfullResponse(aCustomer1))
-    render(
-      <CustomerForm
-        initialCustomerData={aCustomer1}
-        onCustomerSuccessfullyCreated={onCustomerSuccessfullyCreatedSpy.fn}
-      />
-    )
+    render(<CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={onCustomerSuccessfullyCreatedSpy.fn} />)
     await wait()
     ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
     await wait()
@@ -212,15 +207,10 @@ describe("CustomerForm", () => {
     expect(onCustomerSuccessfullyCreatedSpy.getReceivedArguments()[0]).toEqual(aCustomer1)
   })
 
-  it("does not notify onCustomerSuccessfullyCreated if the POST request returns an error", async () => {
+  it("does not notify onCustomerCreated if the POST request returns an error", async () => {
     const onCustomerSuccessfullyCreatedSpy = createSpy()
     fetchSpy.stubReturnValue(getCustomerCreationErrorResponse())
-    render(
-      <CustomerForm
-        initialCustomerData={aCustomer1}
-        onCustomerSuccessfullyCreated={onCustomerSuccessfullyCreatedSpy.fn}
-      />
-    )
+    render(<CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={onCustomerSuccessfullyCreatedSpy.fn} />)
     await wait()
     ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
     await wait()
@@ -230,7 +220,7 @@ describe("CustomerForm", () => {
   it("prevents the default action when submitting the form", async () => {
     const preventFormDefaultActionSpy = createSpy()
     fetchSpy.stubReturnValue(getCustomerCreationSuccessfullResponse(aCustomer1))
-    render(<CustomerForm initialCustomerData={aCustomer1} onCustomerSuccessfullyCreated={noop} />)
+    render(<CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={noop} />)
     await wait()
     ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }), { preventDefault: preventFormDefaultActionSpy.fn })
     await wait()
@@ -239,7 +229,7 @@ describe("CustomerForm", () => {
 
   it("renders error message when fetch call fails", async () => {
     fetchSpy.stubReturnValue(getCustomerCreationErrorResponse()) // TODO: get... -> create...
-    render(<CustomerForm initialCustomerData={aCustomer1} onCustomerSuccessfullyCreated={noop} />)
+    render(<CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={noop} />)
     // TODO: Use `act` instead of `wait`.
     await wait()
     // TODO: Move id definition from parameters to function body.

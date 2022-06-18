@@ -4,10 +4,10 @@ import { ICustomer } from "#types/ICustomer"
 
 interface ICustomerFormProps {
   initialCustomerData: ICustomer
-  onCustomerSuccessfullyCreated(responseData: unknown): void
+  onCustomerCreated(responseData: unknown): void
 }
 
-export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData, onCustomerSuccessfullyCreated }) => {
+export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData, onCustomerCreated }) => {
   const [firstName, setFirstName] = React.useState<string>(initialCustomerData.firstName)
   const [lastName, setLastName] = React.useState<string>(initialCustomerData.lastName)
   const [phoneNumber, setPhoneNumber] = React.useState<string>(initialCustomerData.phoneNumber)
@@ -26,7 +26,7 @@ export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData
       return
     }
     const createdCustomer = await response.json()
-    onCustomerSuccessfullyCreated(createdCustomer)
+    onCustomerCreated(createdCustomer)
   }
 
   return (
