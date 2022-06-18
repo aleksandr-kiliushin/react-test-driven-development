@@ -1,4 +1,6 @@
+// TODO: replace with node:assert
 import assert from "assert"
+import { noop } from "lodash"
 import React from "react"
 import ReactDom from "react-dom/client"
 import ReactDomTestUtils from "react-dom/test-utils"
@@ -20,6 +22,15 @@ describe("CustomerForm", () => {
 
   const originalFetch = window.fetch
   let fetchSpy: ISpy
+
+  const getCustomerCreationSuccessfullResponse = (body: unknown) => {
+    return Promise.resolve({
+      ok: true,
+      async json() {
+        return Promise.resolve(body)
+      },
+    })
+  }
 
   beforeEach(() => {
     ;({ container, render } = createContainer())
@@ -51,7 +62,7 @@ describe("CustomerForm", () => {
 
   const itRendersAsATextBox = ({ fieldName }: { fieldName: IFieldName }) => {
     it("renders as a text box.", async () => {
-      render(<CustomerForm initialCustomerData={aCustomer1} />)
+      render(<CustomerForm initialCustomerData={aCustomer1} onCustomerSuccessfullyCreated={noop} />)
       await wait()
       expect(findField({ fieldName }).type).toEqual("text")
     })
@@ -59,7 +70,7 @@ describe("CustomerForm", () => {
 
   const itHasThePassedInitialValueAtStart = ({ fieldName }: { fieldName: IFieldName }) => {
     it("includes the existing value", async () => {
-      render(<CustomerForm initialCustomerData={aCustomer1} />)
+      render(<CustomerForm initialCustomerData={aCustomer1} onCustomerSuccessfullyCreated={noop} />)
       await wait()
       expect(findField({ fieldName }).value).toEqual(aCustomer1[fieldName])
     })
@@ -73,7 +84,7 @@ describe("CustomerForm", () => {
     labelText: string
   }) => {
     it("renders a label.", async () => {
-      render(<CustomerForm initialCustomerData={aCustomer1} />)
+      render(<CustomerForm initialCustomerData={aCustomer1} onCustomerSuccessfullyCreated={noop} />)
       await wait()
       expect(findLabelFor({ fieldName }).textContent).toEqual(labelText)
     })
@@ -81,7 +92,7 @@ describe("CustomerForm", () => {
 
   const itAssignsAFieldAnIdThatMatchesTheCorrespondingLabelId = ({ fieldName }: { fieldName: IFieldName }) => {
     it("assigns an id that matches the label id.", async () => {
-      render(<CustomerForm initialCustomerData={aCustomer1} />)
+      render(<CustomerForm initialCustomerData={aCustomer1} onCustomerSuccessfullyCreated={noop} />)
       await wait()
       expect(findLabelFor({ fieldName }).htmlFor).toEqual(findField({ fieldName }).id)
     })
@@ -89,7 +100,8 @@ describe("CustomerForm", () => {
 
   const itSubmitsWithThePassedInitialValueAtStart = ({ fieldName }: { fieldName: IFieldName }) => {
     it("submits existing value when submitted.", async () => {
-      render(<CustomerForm initialCustomerData={aCustomer1} />)
+      fetchSpy.stubReturnValue(getCustomerCreationSuccessfullResponse(undefined))
+      render(<CustomerForm initialCustomerData={aCustomer1} onCustomerSuccessfullyCreated={noop} />)
       await wait()
       ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
       await wait()
@@ -106,7 +118,8 @@ describe("CustomerForm", () => {
     newValue: string
   }) => {
     it("saves new value when submitted.", async () => {
-      render(<CustomerForm initialCustomerData={aCustomer1} />)
+      fetchSpy.stubReturnValue(getCustomerCreationSuccessfullResponse(undefined))
+      render(<CustomerForm initialCustomerData={aCustomer1} onCustomerSuccessfullyCreated={noop} />)
       await wait()
       // @ts-ignore
       ReactDomTestUtils.Simulate.change(findField({ fieldName }), { target: { value: newValue } })
@@ -120,7 +133,7 @@ describe("CustomerForm", () => {
   }
 
   it("renders a form.", async () => {
-    render(<CustomerForm initialCustomerData={aCustomer1} />)
+    render(<CustomerForm initialCustomerData={aCustomer1} onCustomerSuccessfullyCreated={noop} />)
     await wait()
     expect(findForm({ id: "customer" })).not.toBeNull()
   })
@@ -156,14 +169,15 @@ describe("CustomerForm", () => {
   })
 
   it("has a submit button", async () => {
-    render(<CustomerForm initialCustomerData={aCustomer1} />)
+    render(<CustomerForm initialCustomerData={aCustomer1} onCustomerSuccessfullyCreated={noop} />)
     await wait()
     const submitButton = container.querySelector('input[type="submit"]')
     expect(submitButton).not.toBeNull()
   })
 
   it("calls fetch with the right properties when submitting data", async () => {
-    render(<CustomerForm initialCustomerData={aCustomer1} />)
+    fetchSpy.stubReturnValue(getCustomerCreationSuccessfullResponse(undefined))
+    render(<CustomerForm initialCustomerData={aCustomer1} onCustomerSuccessfullyCreated={noop} />)
     await wait()
     ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
     await wait()
@@ -173,5 +187,21 @@ describe("CustomerForm", () => {
     expect(fetchOptions.method).toEqual("POST")
     expect(fetchOptions.credentials).toEqual("same-origin")
     expect(fetchOptions.headers).toEqual({ "Content-Type": "application/json" })
+  })
+
+  it("notifies onCustomerSuccessfullyCreated when form is submitted", async () => {
+    const onCustomerSuccessfullyCreatedSpy = createSpy()
+    fetchSpy.stubReturnValue(getCustomerCreationSuccessfullResponse(aCustomer1))
+    render(
+      <CustomerForm
+        initialCustomerData={aCustomer1}
+        onCustomerSuccessfullyCreated={onCustomerSuccessfullyCreatedSpy.fn}
+      />
+    )
+    await wait()
+    ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
+    await wait()
+    expect(onCustomerSuccessfullyCreatedSpy).CUSTOM_toHaveBeenCalled()
+    expect(onCustomerSuccessfullyCreatedSpy.getReceivedArguments()[0]).toEqual(aCustomer1)
   })
 })

@@ -3,7 +3,7 @@ import { ISpy } from "#declarations/jest"
 export const createSpy = (): ISpy => {
   let hasBeenCalled = false
   let receivedArguments: any[] = []
-  let returnValue: unknown
+  let returnValue: unknown = undefined
   return {
     checkIfItHasBeenCalled() {
       return hasBeenCalled

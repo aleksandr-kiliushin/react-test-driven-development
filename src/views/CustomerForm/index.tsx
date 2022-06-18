@@ -4,21 +4,23 @@ import { ICustomer } from "#types/ICustomer"
 
 interface ICustomerFormProps {
   initialCustomerData: ICustomer
+  onCustomerSuccessfullyCreated(responseData: unknown): void
 }
 
-export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData }) => {
+export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData, onCustomerSuccessfullyCreated }) => {
   const [firstName, setFirstName] = React.useState<string>(initialCustomerData.firstName)
   const [lastName, setLastName] = React.useState<string>(initialCustomerData.lastName)
   const [phoneNumber, setPhoneNumber] = React.useState<string>(initialCustomerData.phoneNumber)
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    fetch("/customers", {
+    const createdCustomer = await fetch("/customers", {
       body: JSON.stringify({ firstName, lastName, phoneNumber }),
       credentials: "same-origin",
       headers: { "Content-Type": "application/json" },
       method: "POST",
-    })
+    }).then((response) => response.json())
+    onCustomerSuccessfullyCreated(createdCustomer)
   }
 
   return (

@@ -36,7 +36,10 @@ export const App: React.FC = () => {
           element={<AppointmentsDayView appointments={randomAppointmentsForToday} />}
           path="/appointments-day-view"
         />
-        <Route element={<CustomerForm initialCustomerData={aCustomer1} />} path="/customer-form" />
+        <Route
+          element={<CustomerForm initialCustomerData={aCustomer1} onCustomerSuccessfullyCreated={console.log} />}
+          path="/customer-form"
+        />
         <Route
           element={
             <AppointmentForm
