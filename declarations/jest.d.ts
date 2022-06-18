@@ -1,4 +1,4 @@
-export interface Spy {
+export interface ISpy {
   checkIfItHasBeenCalled(): boolean
   fn(...args: unknown[]): void
   getReceivedArguments(): any[]

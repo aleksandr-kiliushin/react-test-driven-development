@@ -1,10 +1,6 @@
-interface Spy {
-  checkIfItHasBeenCalled(): boolean
-  fn(...args: unknown[]): void
-  getReceivedArguments(): any[]
-}
+import { ISpy } from "#declarations/jest"
 
-export const createSpy = (): Spy => {
+export const createSpy = (): ISpy => {
   let receivedArguments: any[] = []
   let hasBeenCalled = false
   return {
@@ -18,7 +14,7 @@ export const createSpy = (): Spy => {
 }
 
 expect.extend({
-  CUSTOM_toHaveBeenCalled(aSpy: Spy) {
+  CUSTOM_toHaveBeenCalled(aSpy: ISpy) {
     if (aSpy.checkIfItHasBeenCalled()) {
       return { message: () => "Spy was called.", pass: true }
     }
