@@ -232,7 +232,7 @@ describe("AppointmentForm", () => {
       expect(availableStylistsNames).toEqual(["Not selected", "Suzan"])
     })
 
-    it("allows selecting 'Hanna' and 'Suzan' serviceNames when 'Cut' service is choosen, because they both are certified for 'Cut'", async () => {
+    it("allows selecting 'Hanna' and 'Suzan' serviceNames when 'Cut' service is choosen, because they both are certified for 'Cut'", () => {
       act(() => {
         render(<AppointmentForm {...appointmentFormDefaultProps} />)
       })
@@ -245,7 +245,7 @@ describe("AppointmentForm", () => {
       expect(availableStylistsNames).toEqual(["Not selected", "Hanna", "Suzan"])
     })
 
-    it("submits with a newly selected stylistName", async () => {
+    it("submits with a newly selected stylistName", () => {
       const submitSpy = createSpy()
       const aNewlySelectedStylistName = "Hanna"
       act(() => {
