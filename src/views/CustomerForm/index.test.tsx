@@ -1,5 +1,4 @@
 import assert from "assert"
-import noop from "lodash/noop"
 import React from "react"
 import ReactDom from "react-dom/client"
 import ReactDomTestUtils from "react-dom/test-utils"
@@ -42,7 +41,7 @@ describe("CustomerForm", () => {
 
   const itRendersAsATextBox = ({ fieldName }: { fieldName: IFieldName }) => {
     it("renders as a text box.", async () => {
-      render(<CustomerForm fetch={async () => {}} initialCustomerData={aCustomer1} onSubmit={noop} />)
+      render(<CustomerForm fetch={async () => {}} initialCustomerData={aCustomer1} />)
       await wait()
       expect(findField({ fieldName }).type).toEqual("text")
     })
@@ -50,7 +49,7 @@ describe("CustomerForm", () => {
 
   const itHasThePassedInitialValueAtStart = ({ fieldName }: { fieldName: IFieldName }) => {
     it("includes the existing value", async () => {
-      render(<CustomerForm fetch={async () => {}} initialCustomerData={aCustomer1} onSubmit={noop} />)
+      render(<CustomerForm fetch={async () => {}} initialCustomerData={aCustomer1} />)
       await wait()
       expect(findField({ fieldName }).value).toEqual(aCustomer1[fieldName])
     })
@@ -64,7 +63,7 @@ describe("CustomerForm", () => {
     labelText: string
   }) => {
     it("renders a label.", async () => {
-      render(<CustomerForm fetch={async () => {}} initialCustomerData={aCustomer1} onSubmit={noop} />)
+      render(<CustomerForm fetch={async () => {}} initialCustomerData={aCustomer1} />)
       await wait()
       expect(findLabelFor({ fieldName }).textContent).toEqual(labelText)
     })
@@ -72,7 +71,7 @@ describe("CustomerForm", () => {
 
   const itAssignsAFieldAnIdThatMatchesTheCorrespondingLabelId = ({ fieldName }: { fieldName: IFieldName }) => {
     it("assigns an id that matches the label id.", async () => {
-      render(<CustomerForm fetch={async () => {}} initialCustomerData={aCustomer1} onSubmit={noop} />)
+      render(<CustomerForm fetch={async () => {}} initialCustomerData={aCustomer1} />)
       await wait()
       expect(findLabelFor({ fieldName }).htmlFor).toEqual(findField({ fieldName }).id)
     })
@@ -80,15 +79,12 @@ describe("CustomerForm", () => {
 
   const itSubmitsWithThePassedInitialValueAtStart = ({ fieldName }: { fieldName: IFieldName }) => {
     it("submits existing value when submitted.", async () => {
-      const submitSpy = createSpy()
       const fetchSpy = createSpy()
-      render(<CustomerForm fetch={fetchSpy.fn} initialCustomerData={aCustomer1} onSubmit={submitSpy.fn} />)
+      render(<CustomerForm fetch={fetchSpy.fn} initialCustomerData={aCustomer1} />)
       await wait()
       ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
       await wait()
-      expect(submitSpy).CUSTOM_toHaveBeenCalled()
       expect(fetchSpy).CUSTOM_toHaveBeenCalled()
-      expect(submitSpy.getReceivedArguments()[0][fieldName]).toEqual(aCustomer1[fieldName])
       expect(JSON.parse(fetchSpy.getReceivedArguments()[1].body)[fieldName]).toEqual(aCustomer1[fieldName])
     })
   }
@@ -101,9 +97,8 @@ describe("CustomerForm", () => {
     newValue: string
   }) => {
     it("saves new value when submitted.", async () => {
-      const submitSpy = createSpy()
       const fetchSpy = createSpy()
-      render(<CustomerForm fetch={fetchSpy.fn} initialCustomerData={aCustomer1} onSubmit={submitSpy.fn} />)
+      render(<CustomerForm fetch={fetchSpy.fn} initialCustomerData={aCustomer1} />)
       await wait()
       // @ts-ignore
       ReactDomTestUtils.Simulate.change(findField({ fieldName }), { target: { value: newValue } })
@@ -113,12 +108,11 @@ describe("CustomerForm", () => {
       expect(fetchSpy).CUSTOM_toHaveBeenCalled()
       const optionsBodyFetchHasBeenCalledWith = JSON.parse(fetchSpy.getReceivedArguments()[1].body)
       expect(optionsBodyFetchHasBeenCalledWith[fieldName]).toEqual(newValue)
-      expect(submitSpy.getReceivedArguments()[0][fieldName]).toEqual(newValue)
     })
   }
 
   it("renders a form.", async () => {
-    render(<CustomerForm fetch={async () => {}} initialCustomerData={aCustomer1} onSubmit={noop} />)
+    render(<CustomerForm fetch={async () => {}} initialCustomerData={aCustomer1} />)
     await wait()
     expect(findForm({ id: "customer" })).not.toBeNull()
   })
@@ -154,7 +148,7 @@ describe("CustomerForm", () => {
   })
 
   it("has a submit button", async () => {
-    render(<CustomerForm fetch={async () => {}} initialCustomerData={aCustomer1} onSubmit={noop} />)
+    render(<CustomerForm fetch={async () => {}} initialCustomerData={aCustomer1} />)
     await wait()
     const submitButton = container.querySelector('input[type="submit"]')
     expect(submitButton).not.toBeNull()
@@ -162,7 +156,7 @@ describe("CustomerForm", () => {
 
   it("calls fetch with the right properties when submitting data", async () => {
     const fetchSpy = createSpy()
-    render(<CustomerForm fetch={fetchSpy.fn} initialCustomerData={aCustomer1} onSubmit={noop} />)
+    render(<CustomerForm fetch={fetchSpy.fn} initialCustomerData={aCustomer1} />)
     await wait()
     ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
     await wait()

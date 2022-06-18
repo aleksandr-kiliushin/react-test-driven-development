@@ -36,18 +36,7 @@ export const App: React.FC = () => {
           element={<AppointmentsDayView appointments={randomAppointmentsForToday} />}
           path="/appointments-day-view"
         />
-        <Route
-          element={
-            <CustomerForm
-              fetch={window.fetch}
-              initialCustomerData={aCustomer1}
-              onSubmit={(formValues) => {
-                console.log(JSON.stringify(formValues, null, 2))
-              }}
-            />
-          }
-          path="/customer-form"
-        />
+        <Route element={<CustomerForm fetch={window.fetch} initialCustomerData={aCustomer1} />} path="/customer-form" />
         <Route
           element={
             <AppointmentForm
