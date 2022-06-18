@@ -37,7 +37,14 @@ export const App: React.FC = () => {
           path="/appointments-day-view"
         />
         <Route
-          element={<CustomerForm initialCustomerData={aCustomer1} onCustomerSuccessfullyCreated={console.log} />}
+          element={
+            <CustomerForm
+              initialCustomerData={aCustomer1}
+              onCustomerSuccessfullyCreated={(createdCustomer) => {
+                console.log(JSON.stringify(createdCustomer, null, 2))
+              }}
+            />
+          }
           path="/customer-form"
         />
         <Route

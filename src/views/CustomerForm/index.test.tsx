@@ -32,6 +32,12 @@ describe("CustomerForm", () => {
     })
   }
 
+  const getCustomerCreationErrorResponse = () => {
+    return Promise.resolve({
+      ok: false,
+    })
+  }
+
   beforeEach(() => {
     ;({ container, render } = createContainer())
     fetchSpy = createSpy()
@@ -203,5 +209,20 @@ describe("CustomerForm", () => {
     await wait()
     expect(onCustomerSuccessfullyCreatedSpy).CUSTOM_toHaveBeenCalled()
     expect(onCustomerSuccessfullyCreatedSpy.getReceivedArguments()[0]).toEqual(aCustomer1)
+  })
+
+  it("does not notify onCustomerSuccessfullyCreated if the POST request returns an error", async () => {
+    const onCustomerSuccessfullyCreatedSpy = createSpy()
+    fetchSpy.stubReturnValue(getCustomerCreationErrorResponse())
+    render(
+      <CustomerForm
+        initialCustomerData={aCustomer1}
+        onCustomerSuccessfullyCreated={onCustomerSuccessfullyCreatedSpy.fn}
+      />
+    )
+    await wait()
+    ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
+    await wait()
+    expect(onCustomerSuccessfullyCreatedSpy).not.CUSTOM_toHaveBeenCalled()
   })
 })
