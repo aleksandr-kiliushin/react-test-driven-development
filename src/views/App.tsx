@@ -39,6 +39,7 @@ export const App: React.FC = () => {
         <Route
           element={
             <CustomerForm
+              fetch={window.fetch}
               initialCustomerData={aCustomer1}
               onSubmit={(formValues) => {
                 console.log(JSON.stringify(formValues, null, 2))

@@ -3,24 +3,24 @@ import React from "react"
 import { ICustomer } from "#types/ICustomer"
 
 interface ICustomerFormProps {
+  fetch(input: RequestInfo | URL, init?: RequestInit): Promise<any>
   initialCustomerData: ICustomer
   onSubmit(formValues: ICustomer): void
 }
 
-export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData, onSubmit }) => {
+export const CustomerForm: React.FC<ICustomerFormProps> = ({ fetch, initialCustomerData, onSubmit }) => {
   const [firstName, setFirstName] = React.useState<string>(initialCustomerData.firstName)
   const [lastName, setLastName] = React.useState<string>(initialCustomerData.lastName)
   const [phoneNumber, setPhoneNumber] = React.useState<string>(initialCustomerData.phoneNumber)
 
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    onSubmit({ firstName, lastName, phoneNumber })
+    fetch("/customers", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" } })
+  }
+
   return (
-    <form
-      className="grid gap-y-4"
-      id="customer"
-      onSubmit={(event) => {
-        event.preventDefault()
-        onSubmit({ firstName, lastName, phoneNumber })
-      }}
-    >
+    <form className="grid gap-y-4" id="customer" onSubmit={handleSubmit}>
       <div>
         <label htmlFor="firstName">First name</label>
         <input

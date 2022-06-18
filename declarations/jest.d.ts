@@ -1,6 +1,6 @@
 export interface ISpy {
   checkIfItHasBeenCalled(): boolean
-  fn(...args: unknown[]): void
+  fn(...args: unknown[]): any
   getReceivedArguments(): any[]
 }
 

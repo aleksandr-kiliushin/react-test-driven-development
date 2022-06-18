@@ -42,7 +42,7 @@ describe("CustomerForm", () => {
 
   const itRendersAsATextBox = ({ fieldName }: { fieldName: IFieldName }) => {
     it("renders as a text box.", async () => {
-      render(<CustomerForm initialCustomerData={aCustomer1} onSubmit={noop} />)
+      render(<CustomerForm fetch={async () => {}} initialCustomerData={aCustomer1} onSubmit={noop} />)
       await wait()
       expect(findField({ fieldName }).type).toEqual("text")
     })
@@ -50,7 +50,7 @@ describe("CustomerForm", () => {
 
   const itHasThePassedInitialValueAtStart = ({ fieldName }: { fieldName: IFieldName }) => {
     it("includes the existing value", async () => {
-      render(<CustomerForm initialCustomerData={aCustomer1} onSubmit={noop} />)
+      render(<CustomerForm fetch={async () => {}} initialCustomerData={aCustomer1} onSubmit={noop} />)
       await wait()
       expect(findField({ fieldName }).value).toEqual(aCustomer1[fieldName])
     })
@@ -64,7 +64,7 @@ describe("CustomerForm", () => {
     labelText: string
   }) => {
     it("renders a label.", async () => {
-      render(<CustomerForm initialCustomerData={aCustomer1} onSubmit={noop} />)
+      render(<CustomerForm fetch={async () => {}} initialCustomerData={aCustomer1} onSubmit={noop} />)
       await wait()
       expect(findLabelFor({ fieldName }).textContent).toEqual(labelText)
     })
@@ -72,7 +72,7 @@ describe("CustomerForm", () => {
 
   const itAssignsAFieldAnIdThatMatchesTheCorrespondingLabelId = ({ fieldName }: { fieldName: IFieldName }) => {
     it("assigns an id that matches the label id.", async () => {
-      render(<CustomerForm initialCustomerData={aCustomer1} onSubmit={noop} />)
+      render(<CustomerForm fetch={async () => {}} initialCustomerData={aCustomer1} onSubmit={noop} />)
       await wait()
       expect(findLabelFor({ fieldName }).htmlFor).toEqual(findField({ fieldName }).id)
     })
@@ -81,7 +81,7 @@ describe("CustomerForm", () => {
   const itSubmitsWithThePassedInitialValueAtStart = ({ fieldName }: { fieldName: IFieldName }) => {
     it("submits existing value.", async () => {
       const submitSpy = createSpy()
-      render(<CustomerForm initialCustomerData={aCustomer1} onSubmit={submitSpy.fn} />)
+      render(<CustomerForm fetch={async () => {}} initialCustomerData={aCustomer1} onSubmit={submitSpy.fn} />)
       await wait()
       ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
       await wait()
@@ -99,7 +99,7 @@ describe("CustomerForm", () => {
   }) => {
     it("saves new value when submitted.", async () => {
       const submitSpy = createSpy()
-      render(<CustomerForm initialCustomerData={aCustomer1} onSubmit={submitSpy.fn} />)
+      render(<CustomerForm fetch={async () => {}} initialCustomerData={aCustomer1} onSubmit={submitSpy.fn} />)
       await wait()
       // @ts-ignore
       ReactDomTestUtils.Simulate.change(findField({ fieldName }), { target: { value: newValue } })
@@ -111,7 +111,7 @@ describe("CustomerForm", () => {
   }
 
   it("renders a form.", async () => {
-    render(<CustomerForm initialCustomerData={aCustomer1} onSubmit={noop} />)
+    render(<CustomerForm fetch={async () => {}} initialCustomerData={aCustomer1} onSubmit={noop} />)
     await wait()
     expect(findForm({ id: "customer" })).not.toBeNull()
   })
@@ -147,9 +147,23 @@ describe("CustomerForm", () => {
   })
 
   it("has a submit button", async () => {
-    render(<CustomerForm initialCustomerData={aCustomer1} onSubmit={noop} />)
+    render(<CustomerForm fetch={async () => {}} initialCustomerData={aCustomer1} onSubmit={noop} />)
     await wait()
     const submitButton = container.querySelector('input[type="submit"]')
     expect(submitButton).not.toBeNull()
+  })
+
+  it("calls fetch with the right properties when submitting data", async () => {
+    const fetchSpy = createSpy()
+    render(<CustomerForm fetch={fetchSpy.fn} initialCustomerData={aCustomer1} onSubmit={noop} />)
+    await wait()
+    ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
+    await wait()
+    expect(fetchSpy).CUSTOM_toHaveBeenCalled()
+    expect(fetchSpy.getReceivedArguments()[0]).toEqual("/customers")
+    const fetchOptions: RequestInit = fetchSpy.getReceivedArguments()[1]
+    expect(fetchOptions.method).toEqual("POST")
+    expect(fetchOptions.credentials).toEqual("same-origin")
+    expect(fetchOptions.headers).toEqual({ "Content-Type": "application/json" })
   })
 })
