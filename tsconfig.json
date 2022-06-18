@@ -33,6 +33,6 @@
     "types": ["jest", "node"]
   },
   "exclude": [".vscode", "dist", "node_modules"],
-  "files": ["declarations.d.ts"],
+  "files": ["./declarations/css-modules.d.ts", "./declarations/jest.d.ts"],
   "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

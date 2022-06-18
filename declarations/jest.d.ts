@@ -1,5 +1,3 @@
-declare module "*.module.css"
-
 export interface Spy {
   fn(...args: unknown[]): void
   getReceivedArguments(): any[]
