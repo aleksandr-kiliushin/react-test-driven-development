@@ -13,7 +13,6 @@ import {
 import { createContainer } from "#utils/testing/createContainer"
 import { createSpy } from "#utils/testing/createSpy"
 
-// TODO: Move to test setup file.
 import { AppointmentForm, IAppointmentFormProps, IFieldName } from "./index"
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true // TODO: Move to test setup file.

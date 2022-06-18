@@ -21,7 +21,7 @@ const defaultProps: ICustomerFormProps = {
   onCustomerCreated: noop,
 }
 
-const getCustomerCreationSuccessfullResponse = (body: unknown) => {
+const createCustomerCreationSuccessfullResponse = (body: unknown) => {
   return Promise.resolve({
     ok: true,
     async json() {
@@ -30,7 +30,7 @@ const getCustomerCreationSuccessfullResponse = (body: unknown) => {
   })
 }
 
-const getCustomerCreationErrorResponse = () => {
+const createCustomerCreationErrorResponse = () => {
   return Promise.resolve({
     ok: false,
   })
@@ -47,7 +47,7 @@ describe("CustomerForm", () => {
     ;({ container, render } = createContainer())
     fetchSpy = createSpy()
     window.fetch = fetchSpy.fn
-    fetchSpy.stubReturnValue(getCustomerCreationSuccessfullResponse(undefined))
+    fetchSpy.stubReturnValue(createCustomerCreationSuccessfullResponse(undefined))
   })
 
   afterEach(() => {
@@ -207,7 +207,7 @@ describe("CustomerForm", () => {
 
   it("notifies onCustomerCreated when form is submitted", async () => {
     const onCustomerSuccessfullyCreatedSpy = createSpy()
-    fetchSpy.stubReturnValue(getCustomerCreationSuccessfullResponse(aCustomer1))
+    fetchSpy.stubReturnValue(createCustomerCreationSuccessfullResponse(aCustomer1))
     act(() => {
       render(<CustomerForm {...defaultProps} onCustomerCreated={onCustomerSuccessfullyCreatedSpy.fn} />)
     })
@@ -220,7 +220,7 @@ describe("CustomerForm", () => {
 
   it("does not notify onCustomerCreated if the POST request returns an error", async () => {
     const onCustomerSuccessfullyCreatedSpy = createSpy()
-    fetchSpy.stubReturnValue(getCustomerCreationErrorResponse())
+    fetchSpy.stubReturnValue(createCustomerCreationErrorResponse())
     act(() => {
       render(<CustomerForm {...defaultProps} onCustomerCreated={onCustomerSuccessfullyCreatedSpy.fn} />)
     })
@@ -232,7 +232,7 @@ describe("CustomerForm", () => {
 
   it("prevents the default action when submitting the form", () => {
     const preventFormDefaultActionSpy = createSpy()
-    fetchSpy.stubReturnValue(getCustomerCreationSuccessfullResponse(aCustomer1))
+    fetchSpy.stubReturnValue(createCustomerCreationSuccessfullResponse(aCustomer1))
     act(() => {
       render(<CustomerForm {...defaultProps} />)
     })
@@ -241,7 +241,7 @@ describe("CustomerForm", () => {
   })
 
   it("renders error message when fetch call fails", async () => {
-    fetchSpy.stubReturnValue(getCustomerCreationErrorResponse()) // TODO: get... -> create...
+    fetchSpy.stubReturnValue(createCustomerCreationErrorResponse())
     act(() => {
       render(<CustomerForm {...defaultProps} />)
     })
