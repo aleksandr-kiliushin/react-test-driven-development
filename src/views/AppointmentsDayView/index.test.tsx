@@ -1,4 +1,4 @@
-import assert from "assert"
+import assert from "node:assert"
 import React from "react"
 import ReactDom from "react-dom/client"
 import ReactDomTestUtils from "react-dom/test-utils"

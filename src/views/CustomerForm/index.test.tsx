@@ -1,6 +1,5 @@
-// TODO: replace with node:assert
-import assert from "assert"
 import { noop } from "lodash"
+import assert from "node:assert"
 import React from "react"
 import ReactDom from "react-dom/client"
 import ReactDomTestUtils from "react-dom/test-utils"
@@ -12,9 +11,29 @@ import { createContainer } from "#utils/testing/createContainer"
 import { createSpy } from "#utils/testing/createSpy"
 import { wait } from "#utils/testing/wait"
 
-import { CustomerForm } from "./index"
+import { CustomerForm, ICustomerFormProps } from "./index"
 
 type IFieldName = keyof ICustomer
+
+const defaultProps: ICustomerFormProps = {
+  initialCustomerData: aCustomer1,
+  onCustomerCreated: noop,
+}
+
+const getCustomerCreationSuccessfullResponse = (body: unknown) => {
+  return Promise.resolve({
+    ok: true,
+    async json() {
+      return Promise.resolve(body)
+    },
+  })
+}
+
+const getCustomerCreationErrorResponse = () => {
+  return Promise.resolve({
+    ok: false,
+  })
+}
 
 describe("CustomerForm", () => {
   let container: HTMLDivElement
@@ -23,39 +42,25 @@ describe("CustomerForm", () => {
   const originalFetch = window.fetch
   let fetchSpy: ISpy
 
-  const getCustomerCreationSuccessfullResponse = (body: unknown) => {
-    return Promise.resolve({
-      ok: true,
-      async json() {
-        return Promise.resolve(body)
-      },
-    })
-  }
-
-  const getCustomerCreationErrorResponse = () => {
-    return Promise.resolve({
-      ok: false,
-    })
-  }
-
   beforeEach(() => {
     ;({ container, render } = createContainer())
     fetchSpy = createSpy()
     window.fetch = fetchSpy.fn
+    fetchSpy.stubReturnValue(getCustomerCreationSuccessfullResponse(undefined))
   })
 
   afterEach(() => {
     window.fetch = originalFetch
   })
 
-  const findForm = ({ id }: { id: "customer" }): HTMLFormElement => {
-    const form = container.querySelector(`form#${id}`)
-    assert(form instanceof HTMLFormElement, `Cannot find a form with ID of [${id}].`)
+  const findForm = (): HTMLFormElement => {
+    const form = container.querySelector(`form#customer`)
+    assert(form instanceof HTMLFormElement, `Cannot find a form with ID of [customer].`)
     return form
   }
 
   const findField = ({ fieldName }: { fieldName: IFieldName }): HTMLInputElement => {
-    const field = findForm({ id: "customer" }).elements.namedItem(fieldName)
+    const field = findForm().elements.namedItem(fieldName)
     assert(field instanceof HTMLInputElement, `Cannot find a field with fieldName of [${fieldName}].`)
     return field
   }
@@ -68,7 +73,7 @@ describe("CustomerForm", () => {
 
   const itRendersAsATextBox = ({ fieldName }: { fieldName: IFieldName }) => {
     it("renders as a text box.", async () => {
-      render(<CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={noop} />)
+      render(<CustomerForm {...defaultProps} />)
       await wait()
       expect(findField({ fieldName }).type).toEqual("text")
     })
@@ -76,7 +81,7 @@ describe("CustomerForm", () => {
 
   const itHasThePassedInitialValueAtStart = ({ fieldName }: { fieldName: IFieldName }) => {
     it("includes the existing value", async () => {
-      render(<CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={noop} />)
+      render(<CustomerForm {...defaultProps} />)
       await wait()
       expect(findField({ fieldName }).value).toEqual(aCustomer1[fieldName])
     })
@@ -90,7 +95,7 @@ describe("CustomerForm", () => {
     labelText: string
   }) => {
     it("renders a label.", async () => {
-      render(<CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={noop} />)
+      render(<CustomerForm {...defaultProps} />)
       await wait()
       expect(findLabelFor({ fieldName }).textContent).toEqual(labelText)
     })
@@ -98,7 +103,7 @@ describe("CustomerForm", () => {
 
   const itAssignsAFieldAnIdThatMatchesTheCorrespondingLabelId = ({ fieldName }: { fieldName: IFieldName }) => {
     it("assigns an id that matches the label id.", async () => {
-      render(<CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={noop} />)
+      render(<CustomerForm {...defaultProps} />)
       await wait()
       expect(findLabelFor({ fieldName }).htmlFor).toEqual(findField({ fieldName }).id)
     })
@@ -106,10 +111,9 @@ describe("CustomerForm", () => {
 
   const itSubmitsWithThePassedInitialValueAtStart = ({ fieldName }: { fieldName: IFieldName }) => {
     it("submits existing value when submitted.", async () => {
-      fetchSpy.stubReturnValue(getCustomerCreationSuccessfullResponse(undefined))
-      render(<CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={noop} />)
+      render(<CustomerForm {...defaultProps} />)
       await wait()
-      ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
+      ReactDomTestUtils.Simulate.submit(findForm())
       await wait()
       expect(fetchSpy).CUSTOM_toHaveBeenCalled()
       expect(JSON.parse(fetchSpy.getReceivedArguments()[1].body)[fieldName]).toEqual(aCustomer1[fieldName])
@@ -124,13 +128,12 @@ describe("CustomerForm", () => {
     newValue: string
   }) => {
     it("saves new value when submitted.", async () => {
-      fetchSpy.stubReturnValue(getCustomerCreationSuccessfullResponse(undefined))
-      render(<CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={noop} />)
+      render(<CustomerForm {...defaultProps} />)
       await wait()
       // @ts-ignore
       ReactDomTestUtils.Simulate.change(findField({ fieldName }), { target: { value: newValue } })
       await wait()
-      ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
+      ReactDomTestUtils.Simulate.submit(findForm())
       await wait()
       expect(fetchSpy).CUSTOM_toHaveBeenCalled()
       const optionsBodyFetchHasBeenCalledWith = JSON.parse(fetchSpy.getReceivedArguments()[1].body)
@@ -139,9 +142,9 @@ describe("CustomerForm", () => {
   }
 
   it("renders a form.", async () => {
-    render(<CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={noop} />)
+    render(<CustomerForm {...defaultProps} />)
     await wait()
-    expect(findForm({ id: "customer" })).not.toBeNull()
+    expect(findForm()).not.toBeNull()
   })
 
   describe("first name field", () => {
@@ -175,18 +178,17 @@ describe("CustomerForm", () => {
   })
 
   it("has a submit button", async () => {
-    render(<CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={noop} />)
+    render(<CustomerForm {...defaultProps} />)
     await wait()
     const submitButton = container.querySelector('input[type="submit"]')
     expect(submitButton).not.toBeNull()
   })
 
   it("calls fetch with the right properties when submitting data", async () => {
-    fetchSpy.stubReturnValue(getCustomerCreationSuccessfullResponse(undefined)) // TODO: Move to beforeEach.
     // TODO: Move aCustomer1 and noop to defaultProps.
-    render(<CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={noop} />)
+    render(<CustomerForm {...defaultProps} />)
     await wait()
-    ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
+    ReactDomTestUtils.Simulate.submit(findForm())
     await wait()
     expect(fetchSpy).CUSTOM_toHaveBeenCalled()
     expect(fetchSpy.getReceivedArguments()[0]).toEqual("/customers")
@@ -199,9 +201,9 @@ describe("CustomerForm", () => {
   it("notifies onCustomerCreated when form is submitted", async () => {
     const onCustomerSuccessfullyCreatedSpy = createSpy()
     fetchSpy.stubReturnValue(getCustomerCreationSuccessfullResponse(aCustomer1))
-    render(<CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={onCustomerSuccessfullyCreatedSpy.fn} />)
+    render(<CustomerForm {...defaultProps} onCustomerCreated={onCustomerSuccessfullyCreatedSpy.fn} />)
     await wait()
-    ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
+    ReactDomTestUtils.Simulate.submit(findForm())
     await wait()
     expect(onCustomerSuccessfullyCreatedSpy).CUSTOM_toHaveBeenCalled()
     expect(onCustomerSuccessfullyCreatedSpy.getReceivedArguments()[0]).toEqual(aCustomer1)
@@ -210,9 +212,9 @@ describe("CustomerForm", () => {
   it("does not notify onCustomerCreated if the POST request returns an error", async () => {
     const onCustomerSuccessfullyCreatedSpy = createSpy()
     fetchSpy.stubReturnValue(getCustomerCreationErrorResponse())
-    render(<CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={onCustomerSuccessfullyCreatedSpy.fn} />)
+    render(<CustomerForm {...defaultProps} onCustomerCreated={onCustomerSuccessfullyCreatedSpy.fn} />)
     await wait()
-    ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
+    ReactDomTestUtils.Simulate.submit(findForm())
     await wait()
     expect(onCustomerSuccessfullyCreatedSpy).not.CUSTOM_toHaveBeenCalled()
   })
@@ -220,20 +222,19 @@ describe("CustomerForm", () => {
   it("prevents the default action when submitting the form", async () => {
     const preventFormDefaultActionSpy = createSpy()
     fetchSpy.stubReturnValue(getCustomerCreationSuccessfullResponse(aCustomer1))
-    render(<CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={noop} />)
+    render(<CustomerForm {...defaultProps} />)
     await wait()
-    ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }), { preventDefault: preventFormDefaultActionSpy.fn })
+    ReactDomTestUtils.Simulate.submit(findForm(), { preventDefault: preventFormDefaultActionSpy.fn })
     await wait()
     expect(preventFormDefaultActionSpy).CUSTOM_toHaveBeenCalled()
   })
 
   it("renders error message when fetch call fails", async () => {
     fetchSpy.stubReturnValue(getCustomerCreationErrorResponse()) // TODO: get... -> create...
-    render(<CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={noop} />)
+    render(<CustomerForm {...defaultProps} />)
     // TODO: Use `act` instead of `wait`.
     await wait()
-    // TODO: Move id definition from parameters to function body.
-    ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
+    ReactDomTestUtils.Simulate.submit(findForm())
     await wait()
     await wait() // TODO: Replace with a single wait().
     const errorMessage = container.querySelector("p.error")

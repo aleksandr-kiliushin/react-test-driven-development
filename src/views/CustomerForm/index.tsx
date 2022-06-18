@@ -2,7 +2,7 @@ import React from "react"
 
 import { ICustomer } from "#types/ICustomer"
 
-interface ICustomerFormProps {
+export interface ICustomerFormProps {
   initialCustomerData: ICustomer
   onCustomerCreated(responseData: unknown): void
 }
