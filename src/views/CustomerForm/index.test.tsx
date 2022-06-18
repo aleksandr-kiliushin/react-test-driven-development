@@ -3,6 +3,7 @@ import React from "react"
 import ReactDom from "react-dom/client"
 import ReactDomTestUtils from "react-dom/test-utils"
 
+import { ISpy } from "#declarations/jest"
 import { aCustomer1 } from "#sampleData/someCustomers"
 import { ICustomer } from "#types/ICustomer"
 import { createContainer } from "#utils/testing/createContainer"
@@ -17,8 +18,17 @@ describe("CustomerForm", () => {
   let container: HTMLDivElement
   let render: ReactDom.Root["render"]
 
+  const originalFetch = window.fetch
+  let fetchSpy: ISpy
+
   beforeEach(() => {
     ;({ container, render } = createContainer())
+    fetchSpy = createSpy()
+    window.fetch = fetchSpy.fn
+  })
+
+  afterEach(() => {
+    window.fetch = originalFetch
   })
 
   const findForm = ({ id }: { id: "customer" }): HTMLFormElement => {
@@ -79,8 +89,6 @@ describe("CustomerForm", () => {
 
   const itSubmitsWithThePassedInitialValueAtStart = ({ fieldName }: { fieldName: IFieldName }) => {
     it("submits existing value when submitted.", async () => {
-      const fetchSpy = createSpy()
-      window.fetch = fetchSpy.fn
       render(<CustomerForm initialCustomerData={aCustomer1} />)
       await wait()
       ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
@@ -98,8 +106,6 @@ describe("CustomerForm", () => {
     newValue: string
   }) => {
     it("saves new value when submitted.", async () => {
-      const fetchSpy = createSpy()
-      window.fetch = fetchSpy.fn
       render(<CustomerForm initialCustomerData={aCustomer1} />)
       await wait()
       // @ts-ignore
@@ -157,8 +163,6 @@ describe("CustomerForm", () => {
   })
 
   it("calls fetch with the right properties when submitting data", async () => {
-    const fetchSpy = createSpy()
-    window.fetch = fetchSpy.fn
     render(<CustomerForm initialCustomerData={aCustomer1} />)
     await wait()
     ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
