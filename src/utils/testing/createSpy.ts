@@ -1,15 +1,24 @@
 import { ISpy } from "#declarations/jest"
 
 export const createSpy = (): ISpy => {
-  let receivedArguments: any[] = []
   let hasBeenCalled = false
+  let receivedArguments: any[] = []
+  let returnValue: unknown
   return {
-    checkIfItHasBeenCalled: () => hasBeenCalled,
-    fn: (...args) => {
+    checkIfItHasBeenCalled() {
+      return hasBeenCalled
+    },
+    fn(...args) {
       hasBeenCalled = true
       receivedArguments = args
+      return returnValue
     },
-    getReceivedArguments: () => receivedArguments,
+    getReceivedArguments() {
+      return receivedArguments
+    },
+    stubReturnValue(aReturnValue: unknown) {
+      returnValue = aReturnValue
+    },
   }
 }
 
