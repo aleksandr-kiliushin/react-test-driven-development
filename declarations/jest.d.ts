@@ -1,4 +1,5 @@
 export interface Spy {
+  checkIfItHasBeenCalled(): boolean
   fn(...args: unknown[]): void
   getReceivedArguments(): any[]
 }
