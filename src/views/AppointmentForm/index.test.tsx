@@ -43,15 +43,15 @@ describe("AppointmentForm", () => {
     ;({ container, render } = createContainer())
   })
 
-  const findForm = ({ id }: { id: "appointment" }): HTMLFormElement => {
-    const form = container.querySelector(`form#${id}`)
-    assert(form !== null, "Expected to find a form instance, but found `null`")
+  const findForm = (): HTMLFormElement => {
+    const form = container.querySelector(`form#appointment`)
+    assert(form !== null, "form#appointment not found")
     assert(form instanceof HTMLFormElement, "Found element is not a form.")
     return form
   }
 
   const findSelectField = ({ fieldName }: { fieldName: IFieldName }): HTMLSelectElement => {
-    const field = findForm({ id: "appointment" }).elements.namedItem(fieldName)
+    const field = findForm().elements.namedItem(fieldName)
     assert(field instanceof HTMLSelectElement, "firstNameField is not a select")
     return field
   }
@@ -104,7 +104,7 @@ describe("AppointmentForm", () => {
   it("renders a form.", async () => {
     render(<AppointmentForm {...appointmentFormDefaultProps} />)
     await wait()
-    expect(findForm({ id: "appointment" })).not.toBeNull()
+    expect(findForm()).not.toBeNull()
   })
 
   describe("service field", () => {
@@ -151,7 +151,7 @@ describe("AppointmentForm", () => {
       const submitSpy = createSpy()
       render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy.fn} />)
       await wait()
-      ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
+      ReactDomTestUtils.Simulate.submit(findForm())
       await wait()
       expect(submitSpy).CUSTOM_toHaveBeenCalled()
       expect(submitSpy.getReceivedArguments()[0].serviceName).toEqual(appointmentFormDefaultProps.defaultServiceName)
@@ -167,7 +167,7 @@ describe("AppointmentForm", () => {
         target: { value: aNewEnteredServiceName },
       })
       await wait()
-      ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
+      ReactDomTestUtils.Simulate.submit(findForm())
       await wait()
       expect(submitSpy).CUSTOM_toHaveBeenCalled()
       expect(submitSpy.getReceivedArguments()[0].serviceName).toEqual(aNewEnteredServiceName)
@@ -205,7 +205,7 @@ describe("AppointmentForm", () => {
       const submitSpy = createSpy()
       render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy.fn} />)
       await wait()
-      ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
+      ReactDomTestUtils.Simulate.submit(findForm())
       await wait()
       expect(submitSpy).CUSTOM_toHaveBeenCalled()
       expect(submitSpy.getReceivedArguments()[0].stylistName).toEqual("Not selected")
@@ -239,7 +239,7 @@ describe("AppointmentForm", () => {
       ReactDomTestUtils.Simulate.change(findSelectField({ fieldName: "serviceName" }), { target: { value: "Cut" } })
       await wait()
       await selectStylist({ aStylistName: aNewlySelectedStylistName })
-      ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
+      ReactDomTestUtils.Simulate.submit(findForm())
       await wait()
       expect(submitSpy).CUSTOM_toHaveBeenCalled()
       expect(submitSpy.getReceivedArguments()[0].stylistName).toEqual(aNewlySelectedStylistName)
@@ -319,7 +319,7 @@ describe("AppointmentForm", () => {
       const submitSpy = createSpy()
       render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy.fn} />)
       await wait()
-      ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
+      ReactDomTestUtils.Simulate.submit(findForm())
       await wait()
       expect(submitSpy).CUSTOM_toHaveBeenCalled()
       expect(submitSpy.getReceivedArguments()[0].startsAtDate).toBeUndefined()
@@ -335,7 +335,7 @@ describe("AppointmentForm", () => {
         findTimeSlotRadioButton({ inputValue: aNewlySelectedTimeSlotStartsAtValue.toString() })
       )
       await wait()
-      ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
+      ReactDomTestUtils.Simulate.submit(findForm())
       await wait()
       expect(submitSpy).CUSTOM_toHaveBeenCalled()
       expect(submitSpy.getReceivedArguments()[0].startsAtDate.toString()).toEqual(
@@ -361,7 +361,7 @@ describe("AppointmentForm", () => {
         findTimeSlotRadioButton({ inputValue: aTimeSlotAtSuzanTodayAt_12_00.startsAt.toString() })
       )
       await wait()
-      ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
+      ReactDomTestUtils.Simulate.submit(findForm())
       await wait()
       expect(submitSpy).CUSTOM_toHaveBeenCalled()
       expect(submitSpy.getReceivedArguments()[0].startsAtDate.toString()).toEqual(
