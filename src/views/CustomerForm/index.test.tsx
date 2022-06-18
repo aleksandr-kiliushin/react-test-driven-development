@@ -225,4 +225,14 @@ describe("CustomerForm", () => {
     await wait()
     expect(onCustomerSuccessfullyCreatedSpy).not.CUSTOM_toHaveBeenCalled()
   })
+
+  it("prevents the default action when submitting the form", async () => {
+    const preventFormDefaultActionSpy = createSpy()
+    fetchSpy.stubReturnValue(getCustomerCreationSuccessfullResponse(aCustomer1))
+    render(<CustomerForm initialCustomerData={aCustomer1} onCustomerSuccessfullyCreated={noop} />)
+    await wait()
+    ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }), { preventDefault: preventFormDefaultActionSpy.fn })
+    await wait()
+    expect(preventFormDefaultActionSpy).CUSTOM_toHaveBeenCalled()
+  })
 })
