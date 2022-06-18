@@ -11,6 +11,7 @@ import {
   aTimeSlotAtSuzanTodayAt_12_00,
 } from "#sampleData/someTimeSlots"
 import { createContainer } from "#utils/testing/createContainer"
+import { createSingleArgumentSpy } from "#utils/testing/createSingleArgumentSpy"
 import { wait } from "#utils/testing/wait"
 
 import { AppointmentForm, IAppointmentFormProps, IFieldName } from "./index"
@@ -147,32 +148,18 @@ describe("AppointmentForm", () => {
     })
 
     it("saves the default service name when the form is submitted", async () => {
-      let fieldValue
-      render(
-        <AppointmentForm
-          {...appointmentFormDefaultProps}
-          onSubmit={(formValues) => {
-            fieldValue = formValues.serviceName
-          }}
-        />
-      )
+      const submitSpy = createSingleArgumentSpy()
+      render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy.fn} />)
       await wait()
       ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
       await wait()
-      expect(fieldValue).toEqual(appointmentFormDefaultProps.defaultServiceName)
+      expect(submitSpy.getReceivedArgument().serviceName).toEqual(appointmentFormDefaultProps.defaultServiceName)
     })
 
     it("saves the new entered service name when the form is submitted", async () => {
-      let fieldValue
+      const submitSpy = createSingleArgumentSpy()
       const aNewEnteredServiceName = "Cut"
-      render(
-        <AppointmentForm
-          {...appointmentFormDefaultProps}
-          onSubmit={(formValues) => {
-            fieldValue = formValues.serviceName
-          }}
-        />
-      )
+      render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy.fn} />)
       await wait()
       ReactDomTestUtils.Simulate.change(findSelectField({ fieldName: "serviceName" }), {
         // @ts-ignore
@@ -181,7 +168,7 @@ describe("AppointmentForm", () => {
       await wait()
       ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
       await wait()
-      expect(fieldValue).toEqual(aNewEnteredServiceName)
+      expect(submitSpy.getReceivedArgument().serviceName).toEqual(aNewEnteredServiceName)
     })
   })
 
@@ -213,19 +200,12 @@ describe("AppointmentForm", () => {
     })
 
     it("onSubmit contains 'Not selected' stylist when the form is submitted with no stylist selected", async () => {
-      let fieldValue
-      render(
-        <AppointmentForm
-          {...appointmentFormDefaultProps}
-          onSubmit={(formValues) => {
-            fieldValue = formValues.stylistName
-          }}
-        />
-      )
+      const submitSpy = createSingleArgumentSpy()
+      render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy.fn} />)
       await wait()
       ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
       await wait()
-      expect(fieldValue).toEqual("Not selected")
+      expect(submitSpy.getReceivedArgument().stylistName).toEqual("Not selected")
     })
 
     it("from start, has only 'Suzan' stylistName available, because only she is certified for 'Blow-dry'", async () => {
@@ -248,16 +228,9 @@ describe("AppointmentForm", () => {
     })
 
     it("submits with a newly selected stylistName", async () => {
-      let fieldValue
+      const submitSpy = createSingleArgumentSpy()
       const aNewlySelectedStylistName = "Hanna"
-      render(
-        <AppointmentForm
-          {...appointmentFormDefaultProps}
-          onSubmit={(formValues) => {
-            fieldValue = formValues.stylistName
-          }}
-        />
-      )
+      render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy.fn} />)
       await wait()
       // @ts-ignore
       ReactDomTestUtils.Simulate.change(findSelectField({ fieldName: "serviceName" }), { target: { value: "Cut" } })
@@ -265,7 +238,7 @@ describe("AppointmentForm", () => {
       await selectStylist({ aStylistName: aNewlySelectedStylistName })
       ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
       await wait()
-      expect(fieldValue).toEqual(aNewlySelectedStylistName)
+      expect(submitSpy.getReceivedArgument().stylistName).toEqual(aNewlySelectedStylistName)
     })
   })
 
@@ -339,33 +312,18 @@ describe("AppointmentForm", () => {
     })
 
     it("submits with a undefined value if no value was selected", async () => {
-      let fieldValue
-      render(
-        <AppointmentForm
-          {...appointmentFormDefaultProps}
-          onSubmit={(formValues) => {
-            fieldValue = formValues.startsAtDate
-          }}
-        />
-      )
+      const submitSpy = createSingleArgumentSpy()
+      render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy.fn} />)
       await wait()
       ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
       await wait()
-      expect(fieldValue).toBeUndefined()
+      expect(submitSpy.getReceivedArgument().startsAtDate).toBeUndefined()
     })
 
     it("submits with a newly selected value if a new value was selected.", async () => {
-      let fieldValue: Date | undefined
+      const submitSpy = createSingleArgumentSpy()
       const aNewlySelectedTimeSlotStartsAtValue = aTimeSlotAtHannaTodayAt_13_30.startsAt
-      render(
-        <AppointmentForm
-          {...appointmentFormDefaultProps}
-          defaultServiceName=""
-          onSubmit={(formValues) => {
-            fieldValue = formValues.startsAtDate
-          }}
-        />
-      )
+      render(<AppointmentForm {...appointmentFormDefaultProps} defaultServiceName="" onSubmit={submitSpy.fn} />)
       await wait()
       await selectStylist({ aStylistName: "Hanna" })
       ReactDomTestUtils.Simulate.change(
@@ -374,20 +332,14 @@ describe("AppointmentForm", () => {
       await wait()
       ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
       await wait()
-      assert(fieldValue !== undefined)
-      expect(fieldValue.toString()).toEqual(aNewlySelectedTimeSlotStartsAtValue.toString())
+      expect(submitSpy.getReceivedArgument().startsAtDate.toString()).toEqual(
+        aNewlySelectedTimeSlotStartsAtValue.toString()
+      )
     })
 
     it("submits with a another newly selected value if a new value was selected.", async () => {
-      let fieldValue: Date | undefined
-      render(
-        <AppointmentForm
-          {...appointmentFormDefaultProps}
-          onSubmit={(formValues) => {
-            fieldValue = formValues.startsAtDate
-          }}
-        />
-      )
+      const submitSpy = createSingleArgumentSpy()
+      render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy.fn} />)
       await wait()
       await selectStylist({ aStylistName: "Hanna" })
       ReactDomTestUtils.Simulate.change(
@@ -405,8 +357,9 @@ describe("AppointmentForm", () => {
       await wait()
       ReactDomTestUtils.Simulate.submit(findForm({ id: "appointment" }))
       await wait()
-      assert(fieldValue !== undefined)
-      expect(fieldValue.toString()).toEqual(aTimeSlotAtSuzanTodayAt_12_00.startsAt.toString())
+      expect(submitSpy.getReceivedArgument().startsAtDate.toString()).toEqual(
+        aTimeSlotAtSuzanTodayAt_12_00.startsAt.toString()
+      )
     })
 
     it("renders input radio buttons as checked after click on them.", async () => {

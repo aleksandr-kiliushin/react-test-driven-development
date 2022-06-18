@@ -7,6 +7,7 @@ import ReactDomTestUtils from "react-dom/test-utils"
 import { aCustomer1 } from "#sampleData/someCustomers"
 import { ICustomer } from "#types/ICustomer"
 import { createContainer } from "#utils/testing/createContainer"
+import { createSingleArgumentSpy } from "#utils/testing/createSingleArgumentSpy"
 import { wait } from "#utils/testing/wait"
 
 import { CustomerForm } from "./index"
@@ -79,20 +80,12 @@ describe("CustomerForm", () => {
 
   const itSubmitsWithThePassedInitialValueAtStart = ({ fieldName }: { fieldName: IFieldName }) => {
     it("submits existing value.", async () => {
-      let fieldValue
-      render(
-        <CustomerForm
-          initialCustomerData={aCustomer1}
-          onSubmit={(formValues) => {
-            fieldValue = formValues[fieldName]
-          }}
-        />
-      )
+      const submitSpy = createSingleArgumentSpy()
+      render(<CustomerForm initialCustomerData={aCustomer1} onSubmit={submitSpy.fn} />)
       await wait()
       ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
       await wait()
-      expect(fieldValue).toBeDefined()
-      expect(fieldValue).toEqual(aCustomer1[fieldName])
+      expect(submitSpy.getReceivedArgument()[fieldName]).toEqual(aCustomer1[fieldName])
     })
   }
 
@@ -104,22 +97,15 @@ describe("CustomerForm", () => {
     newValue: string
   }) => {
     it("saves new value when submitted.", async () => {
-      let fieldValue
-      render(
-        <CustomerForm
-          initialCustomerData={aCustomer1}
-          onSubmit={(formValues) => {
-            fieldValue = formValues[fieldName]
-          }}
-        />
-      )
+      const submitSpy = createSingleArgumentSpy()
+      render(<CustomerForm initialCustomerData={aCustomer1} onSubmit={submitSpy.fn} />)
       await wait()
       // @ts-ignore
       ReactDomTestUtils.Simulate.change(findField({ fieldName }), { target: { value: newValue } })
       await wait()
       ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
       await wait()
-      expect(fieldValue).toEqual(newValue)
+      expect(submitSpy.getReceivedArgument()[fieldName]).toEqual(newValue)
     })
   }
 
