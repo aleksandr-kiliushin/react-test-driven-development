@@ -34,6 +34,6 @@
     "types": ["jest", "node"]
   },
   "exclude": [".vscode", "dist", "node_modules"],
-  "files": ["./declarations/css-modules.d.ts", "./declarations/jest.d.ts"],
+  "files": ["./declarations/css-modules.d.ts", "declarations/tests.d.ts"],
   "include": ["src/**/*.ts", "src/**/*.tsx"]
 }
