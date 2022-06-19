@@ -1,6 +1,9 @@
 import React from "react"
 import "whatwg-fetch"
 
+import { aCustomer1, aCustomer2 } from "#sampleData/someCustomers"
+import { aTimeSlotAtHannaTodayAt_13_30, aTimeSlotAtSuzanTodayAt_12_00 } from "#sampleData/someTimeSlots"
+import { IAppointment } from "#types/IAppointment"
 import { IRenderContainer, createContainer } from "#utils/testing/createContainer"
 import { createFetchSuccessfulResponse } from "#utils/testing/spyHelpers"
 
@@ -12,7 +15,31 @@ globalThis.IS_REACT_ACT_ENVIRONMENT = true // TODO: Move to test setup file.
 type IAppointmentsDayViewLoaderRenderContainer = IRenderContainer<{ formIds: []; fieldNames: [] }>
 
 const today = new Date()
-const appointments = [{ startsAt: today.setHours(9, 0, 0, 0) }, { startsAt: today.setHours(10, 0, 0, 0) }]
+const from = today.setHours(0, 0, 0, 0)
+const to = today.setHours(23, 59, 59, 999)
+
+const appointments: IAppointment[] = [
+  {
+    customer: aCustomer1,
+    notes: "Some notes 123123123",
+    serviceName: "Cut",
+    timeSlot: aTimeSlotAtSuzanTodayAt_12_00,
+  },
+  {
+    customer: aCustomer2,
+    notes: "Some notes 989485495843",
+    serviceName: "Blow-dry",
+    timeSlot: aTimeSlotAtHannaTodayAt_13_30,
+  },
+]
+
+const appointmentsServerResponse = appointments.map((anAppointment) => ({
+  ...anAppointment,
+  timeSlot: {
+    ...anAppointment.timeSlot,
+    startsAt: anAppointment.timeSlot.startsAt.toString(),
+  },
+}))
 
 describe("AppointmentsDayViewLoader", () => {
   let renderAndWait: IAppointmentsDayViewLoaderRenderContainer["renderAndWait"]
@@ -20,7 +47,7 @@ describe("AppointmentsDayViewLoader", () => {
   beforeEach(() => {
     ;({ renderAndWait } = createContainer())
     // @ts-ignore
-    jest.spyOn(globalThis, "fetch").mockReturnValue(createFetchSuccessfulResponse(appointments))
+    jest.spyOn(globalThis, "fetch").mockReturnValue(createFetchSuccessfulResponse(appointmentsServerResponse))
     jest.spyOn(AppointmentsDayViewExports, "AppointmentsDayView").mockReturnValue(null)
   })
   afterEach(() => {
@@ -29,15 +56,13 @@ describe("AppointmentsDayViewLoader", () => {
   })
 
   it("fetches appointments happening today when component is mounted", async () => {
-    const from = today.setHours(0, 0, 0, 0)
-    const to = today.setHours(23, 59, 59, 999)
     await renderAndWait(<AppointmentsDayViewLoader today={today} />)
     expect(window.fetch).toHaveBeenCalledWith(
       `/appointments/${from}-${to}`,
       expect.objectContaining({
-        method: "GET",
         credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
+        method: "GET",
       })
     )
   })
