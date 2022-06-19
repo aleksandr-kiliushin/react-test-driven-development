@@ -1,6 +1,12 @@
 import React from "react"
 import "whatwg-fetch"
 
+import {
+  aTimeSlotAtHannaIn6DaysAt_13_00,
+  aTimeSlotAtHannaTodayAt_13_30,
+  aTimeSlotAtSuzanInTwoDaysAt_12_00,
+  aTimeSlotAtSuzanTodayAt_12_00,
+} from "#sampleData/someTimeSlots"
 import { IRenderContainer, createContainer } from "#utils/testing/createContainer"
 import { createFetchSuccessfulResponse } from "#utils/testing/spyHelpers"
 
@@ -11,8 +17,17 @@ globalThis.IS_REACT_ACT_ENVIRONMENT = true // TODO: Move to test setup file.
 
 type IAppointmentFormLoaderRenderContainer = IRenderContainer<{ formIds: []; fieldNames: [] }>
 
-const today = new Date()
-const availableTimeSlots = [{ startsAt: today.setHours(9, 0, 0, 0) }]
+const availableTimeSlots = [
+  aTimeSlotAtSuzanTodayAt_12_00,
+  aTimeSlotAtHannaTodayAt_13_30,
+  aTimeSlotAtSuzanInTwoDaysAt_12_00,
+  aTimeSlotAtHannaIn6DaysAt_13_00,
+]
+
+const availableTimeSlotsServerResponse = availableTimeSlots.map((aTimeSlot) => ({
+  startsAt: aTimeSlot.startsAt.toString(),
+  stylist: aTimeSlot.stylist,
+}))
 
 describe("AppointmentFormLoader", () => {
   let renderAndWait: IAppointmentFormLoaderRenderContainer["renderAndWait"]
@@ -20,7 +35,7 @@ describe("AppointmentFormLoader", () => {
   beforeEach(() => {
     ;({ renderAndWait } = createContainer())
     // @ts-ignore
-    jest.spyOn(globalThis, "fetch").mockReturnValue(createFetchSuccessfulResponse(availableTimeSlots))
+    jest.spyOn(globalThis, "fetch").mockReturnValue(createFetchSuccessfulResponse(availableTimeSlotsServerResponse))
     jest.spyOn(AppointmentFormExports, "AppointmentForm").mockReturnValue(null)
   })
 

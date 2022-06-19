@@ -1,8 +1,10 @@
 import { AppointmentForm } from "."
 import React from "react"
 
+import { ITimeSlot } from "#types/ITimeSlot"
+
 export const AppointmentFormLoader = () => {
-  const [availableTimeSlots, setAvailableTimeSlots] = React.useState([])
+  const [availableTimeSlots, setAvailableTimeSlots] = React.useState<ITimeSlot[]>([])
 
   React.useEffect(() => {
     globalThis
@@ -12,6 +14,12 @@ export const AppointmentFormLoader = () => {
         method: "GET",
       })
       .then((response) => response.json())
+      .then((availableTimeSlots) => {
+        return availableTimeSlots.map((aTimeSlot: { startsAt: string; stylist: ITimeSlot["stylist"] }) => ({
+          startsAt: new Date(aTimeSlot.startsAt.toString()),
+          stylist: aTimeSlot.stylist,
+        }))
+      })
       .then(setAvailableTimeSlots)
   }, [])
 
