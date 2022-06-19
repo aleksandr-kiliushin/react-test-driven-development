@@ -7,7 +7,7 @@ import ReactDomTestUtils, { act } from "react-dom/test-utils"
 import { aCustomer1 } from "#sampleData/someCustomers"
 import { ICustomer } from "#types/ICustomer"
 import { createContainer } from "#utils/testing/createContainer"
-import { createFetchErrorResponse, createFetchSuccessfulResponse } from "#utils/testing/createFetchResponse"
+import { createFetchErrorResponse, createFetchSuccessfulResponse, getRequestBodyOf } from "#utils/testing/spyHelpers"
 
 import { CustomerForm, ICustomerFormProps } from "./index"
 
@@ -54,10 +54,6 @@ describe("CustomerForm", () => {
     const label = container.querySelector(`label[for="${fieldName}"]`)
     assert(label instanceof HTMLLabelElement, `Cannot find a label with a [for] attribute of [${fieldName}].`)
     return label
-  }
-
-  const getFetchRequestBody = () => {
-    return JSON.parse(fetchSpy.mock.calls[0][1].body)
   }
 
   const itRendersAsATextBox = ({ fieldName }: { fieldName: IFieldName }) => {
@@ -108,7 +104,7 @@ describe("CustomerForm", () => {
         render(<CustomerForm {...defaultProps} />)
       })
       ReactDomTestUtils.Simulate.submit(findForm())
-      expect(getFetchRequestBody()).toMatchObject({ [fieldName]: aCustomer1[fieldName] })
+      expect(getRequestBodyOf(fetchSpy)).toMatchObject({ [fieldName]: aCustomer1[fieldName] })
     })
   }
 
@@ -128,7 +124,7 @@ describe("CustomerForm", () => {
         ReactDomTestUtils.Simulate.change(findField({ fieldName }), { target: { value: newValue } })
       })
       ReactDomTestUtils.Simulate.submit(findForm())
-      expect(getFetchRequestBody()).toMatchObject({ [fieldName]: newValue })
+      expect(getRequestBodyOf(fetchSpy)).toMatchObject({ [fieldName]: newValue })
     })
   }
 

@@ -10,3 +10,7 @@ export const createFetchSuccessfulResponse = (body: unknown) => {
 export const createFetchErrorResponse = () => {
   return Promise.resolve({ ok: false })
 }
+
+export const getRequestBodyOf = (fetchSpy: jest.Mock) => {
+  return JSON.parse(fetchSpy.mock.calls[0][1].body)
+}
