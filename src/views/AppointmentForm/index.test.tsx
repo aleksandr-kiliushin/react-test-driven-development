@@ -85,9 +85,14 @@ describe("AppointmentForm", () => {
     return theInput
   }
 
-  const selectStylist = ({ aStylistName }: { aStylistName: "Hanna" | "Suzan" }): void => {
+  const selectStylist = (aStylistName: "Hanna" | "Suzan"): void => {
     // @ts-ignore
     simulateChange(findField({ fieldName: "stylistName", formId: "appointment" }), { target: { value: aStylistName } })
+  }
+
+  const selectService = (aServiceName: "Cut" | "Blow-dry"): void => {
+    // @ts-ignore
+    simulateChange(findField({ fieldName: "serviceName", formId: "appointment" }), { target: { value: aServiceName } })
   }
 
   it("renders a form.", () => {
@@ -143,10 +148,7 @@ describe("AppointmentForm", () => {
       const submitSpy = jest.fn()
       const aNewEnteredServiceName = "Cut"
       render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
-      simulateChange(findField({ fieldName: "serviceName", formId: "appointment" }), {
-        // @ts-ignore
-        target: { value: aNewEnteredServiceName },
-      })
+      selectService(aNewEnteredServiceName)
       simulateSubmit(findForm({ id: "appointment" }))
       expect(submitSpy).toHaveBeenCalledWith(expect.objectContaining({ serviceName: aNewEnteredServiceName }))
     })
@@ -191,8 +193,7 @@ describe("AppointmentForm", () => {
 
     it("allows selecting 'Hanna' and 'Suzan' serviceNames when 'Cut' service is choosen, because they both are certified for 'Cut'", () => {
       render(<AppointmentForm {...appointmentFormDefaultProps} />)
-      // @ts-ignore
-      simulateChange(findField({ fieldName: "serviceName", formId: "appointment" }), { target: { value: "Cut" } })
+      selectService("Cut")
       const optionNodes = Array.from(findField({ fieldName: "stylistName", formId: "appointment" }).childNodes)
       const availableStylistsNames = optionNodes.map((node) => node.textContent)
       expect(availableStylistsNames).toEqual(["Not selected", "Hanna", "Suzan"])
@@ -202,9 +203,8 @@ describe("AppointmentForm", () => {
       const submitSpy = jest.fn()
       const aNewlySelectedStylistName = "Hanna"
       render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
-      // @ts-ignore
-      simulateChange(findField({ fieldName: "serviceName", formId: "appointment" }), { target: { value: "Cut" } })
-      selectStylist({ aStylistName: aNewlySelectedStylistName })
+      selectService("Cut")
+      selectStylist(aNewlySelectedStylistName)
       simulateSubmit(findForm({ id: "appointment" }))
       expect(submitSpy).toHaveBeenCalledWith(expect.objectContaining({ stylistName: aNewlySelectedStylistName }))
     })
@@ -260,7 +260,7 @@ describe("AppointmentForm", () => {
 
     it("for each provided availableDate renders a radio button with the corresponding `value` attribute", () => {
       render(<AppointmentForm {...appointmentFormDefaultProps} />)
-      selectStylist({ aStylistName: "Hanna" })
+      selectStylist("Hanna")
       expect(findElements('input[type="radio"]')).toHaveLength(2)
     })
 
@@ -275,7 +275,7 @@ describe("AppointmentForm", () => {
       const submitSpy = jest.fn()
       const aNewlySelectedTimeSlotStartsAtValue = aTimeSlotAtHannaTodayAt_13_30.startsAt
       render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
-      selectStylist({ aStylistName: "Hanna" })
+      selectStylist("Hanna")
       simulateChange(findTimeSlotRadioButton({ inputValue: aNewlySelectedTimeSlotStartsAtValue.toString() }))
       simulateSubmit(findForm({ id: "appointment" }))
       expect(submitSpy.mock.calls[0][0].startsAtDate.toString()).toEqual(aNewlySelectedTimeSlotStartsAtValue.toString())
@@ -284,10 +284,10 @@ describe("AppointmentForm", () => {
     it("submits with a another newly selected value if a new value was selected.", () => {
       const submitSpy = jest.fn()
       render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
-      selectStylist({ aStylistName: "Hanna" })
+      selectStylist("Hanna")
       simulateChange(findTimeSlotRadioButton({ inputValue: aTimeSlotAtHannaTodayAt_13_30.startsAt.toString() }))
       simulateChange(findTimeSlotRadioButton({ inputValue: aTimeSlotAtHannaIn6DaysAt_13_00.startsAt.toString() }))
-      selectStylist({ aStylistName: "Suzan" })
+      selectStylist("Suzan")
       simulateChange(findTimeSlotRadioButton({ inputValue: aTimeSlotAtSuzanTodayAt_12_00.startsAt.toString() }))
       simulateSubmit(findForm({ id: "appointment" }))
       expect(submitSpy.mock.calls[0][0].startsAtDate.toString()).toEqual(
@@ -298,7 +298,7 @@ describe("AppointmentForm", () => {
     it("renders input radio buttons as checked after click on them.", () => {
       render(<AppointmentForm {...appointmentFormDefaultProps} />)
 
-      selectStylist({ aStylistName: "Suzan" })
+      selectStylist("Suzan")
       const radioButton1 = findTimeSlotRadioButton({ inputValue: aTimeSlotAtSuzanTodayAt_12_00.startsAt.toString() })
       const radioButton2 = findTimeSlotRadioButton({
         inputValue: aTimeSlotAtSuzanInTwoDaysAt_12_00.startsAt.toString(),
@@ -312,7 +312,7 @@ describe("AppointmentForm", () => {
       expect(radioButton1.checked).toEqual(false)
       expect(radioButton2.checked).toEqual(true)
 
-      selectStylist({ aStylistName: "Hanna" })
+      selectStylist("Hanna")
       const radioButton3 = findTimeSlotRadioButton({ inputValue: aTimeSlotAtHannaTodayAt_13_30.startsAt.toString() })
       const radioButton4 = findTimeSlotRadioButton({ inputValue: aTimeSlotAtHannaIn6DaysAt_13_00.startsAt.toString() })
       expect(radioButton3.checked).toEqual(false)
@@ -327,10 +327,8 @@ describe("AppointmentForm", () => {
 
     it("sends entered data to '/appointments' via POST", () => {
       render(<AppointmentForm {...appointmentFormDefaultProps} />)
-      // TODO: Extract selectServiceName like id done with stylistName.
-      // @ts-ignore
-      simulateChange(findField({ fieldName: "serviceName", formId: "appointment" }), { target: { value: "Cut" } })
-      selectStylist({ aStylistName: "Hanna" })
+      selectService("Cut")
+      selectStylist("Hanna")
       simulateChange(findTimeSlotRadioButton({ inputValue: aTimeSlotAtHannaIn6DaysAt_13_00.startsAt.toString() }))
       simulateSubmit(findForm({ id: "appointment" }))
       expect(globalThis.fetch).toHaveBeenCalledWith(

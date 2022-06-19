@@ -1,4 +1,3 @@
-// Remove passing undefined body everywhere.
 export const createFetchSuccessfulResponse = (body?: unknown) => {
   return Promise.resolve({
     ok: true,
