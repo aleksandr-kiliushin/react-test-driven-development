@@ -57,7 +57,7 @@ describe("AppointmentsDayViewLoader", () => {
 
   it("fetches appointments happening today when component is mounted", async () => {
     await renderAndWait(<AppointmentsDayViewLoader today={today} />)
-    expect(window.fetch).toHaveBeenCalledWith(
+    expect(globalThis.fetch).toHaveBeenCalledWith(
       `/appointments/${from}-${to}`,
       expect.objectContaining({
         credentials: "same-origin",
@@ -68,12 +68,12 @@ describe("AppointmentsDayViewLoader", () => {
   })
 
   it("initially passes no data to AppointmentsDayView", async () => {
-    await renderAndWait(<AppointmentsDayViewLoader today={new Date()} />)
+    await renderAndWait(<AppointmentsDayViewLoader today={today} />)
     expect(AppointmentsDayViewExports.AppointmentsDayView).toHaveBeenCalledWith({ appointments: [] }, expect.anything())
   })
 
   it("displays time slots that are fetched on mount", async () => {
-    await renderAndWait(<AppointmentsDayViewLoader today={new Date()} />)
+    await renderAndWait(<AppointmentsDayViewLoader today={today} />)
     expect(AppointmentsDayViewExports.AppointmentsDayView).toHaveBeenLastCalledWith({ appointments }, expect.anything())
   })
 
@@ -84,6 +84,12 @@ describe("AppointmentsDayViewLoader", () => {
     const to = tomorrow.setHours(23, 59, 59, 999)
     await renderAndWait(<AppointmentsDayViewLoader today={today} />)
     await renderAndWait(<AppointmentsDayViewLoader today={tomorrow} />)
-    expect(window.fetch).toHaveBeenLastCalledWith(`/appointments/${from}-${to}`, expect.anything())
+    expect(globalThis.fetch).toHaveBeenLastCalledWith(`/appointments/${from}-${to}`, expect.anything())
+  })
+
+  it("calls globalThis.fetch just once", async () => {
+    await renderAndWait(<AppointmentsDayViewLoader today={today} />)
+    await renderAndWait(<AppointmentsDayViewLoader today={today} />)
+    expect(globalThis.fetch).toHaveBeenCalledTimes(1)
   })
 })
