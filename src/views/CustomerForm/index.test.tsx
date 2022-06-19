@@ -1,5 +1,7 @@
 import { noop } from "lodash"
+import assert from "node:assert"
 import React from "react"
+import { act } from "react-dom/test-utils"
 import "whatwg-fetch"
 
 import { aCustomer1 } from "#sampleData/someCustomers"
@@ -100,11 +102,11 @@ describe("CustomerForm", () => {
     fieldName: IFieldName
     newValue: string
   }) => {
-    it("saves new value when submitted.", () => {
+    it("saves new value when submitted.", async () => {
       render(<CustomerForm {...defaultProps} />)
       // @ts-ignore
       simulateChange(findField({ fieldName, formId: "customer" }), { target: { value: newValue } })
-      simulateSubmit(findForm({ id: "customer" }))
+      await simulateSubmitAndWait(findForm({ id: "customer" }))
       expect(getRequestBodyOf(globalThis.fetch as jest.Mock)).toMatchObject({ [fieldName]: newValue })
     })
   }
@@ -190,6 +192,20 @@ describe("CustomerForm", () => {
     ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchErrorResponse())
     render(<CustomerForm {...defaultProps} />)
     await simulateSubmitAndWait(findForm({ id: "customer" }))
-    expect(findElement("p.error").textContent).toMatch("An error occurred during save.")
+    const errorMessageNode = findElement("p.error")
+    assert(errorMessageNode !== null, "Error node is not appear after failed form submission.")
+    expect(errorMessageNode.textContent).toMatch("An error occurred during save.")
+  })
+
+  it("unmounts error message after successful submitting.", async () => {
+    ;(globalThis.fetch as jest.Mock).mockReturnValueOnce(createFetchErrorResponse())
+    ;(globalThis.fetch as jest.Mock).mockReturnValueOnce(createFetchSuccessfulResponse(aCustomer1))
+    act(() => {
+      render(<CustomerForm {...defaultProps} />)
+    })
+    await simulateSubmitAndWait(findForm({ id: "customer" }))
+    expect(findElement("p.error")).not.toBeNull()
+    await simulateSubmitAndWait(findForm({ id: "customer" }))
+    expect(findElement("p.error")).toBeNull()
   })
 })

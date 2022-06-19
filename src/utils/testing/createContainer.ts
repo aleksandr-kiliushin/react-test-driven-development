@@ -4,7 +4,7 @@ import ReactDomTestUtils, { act } from "react-dom/test-utils"
 
 export interface IRenderContainer<ContainerContentConfig extends { fieldNames: string[]; formIds: string[] }> {
   container: HTMLDivElement
-  findElement(selector: string): Element
+  findElement(selector: string): Element | null
   findElements(selector: string): Element[]
   findField: (params: {
     formId: ContainerContentConfig["formIds"][keyof ContainerContentConfig["formIds"]]
@@ -37,9 +37,7 @@ export const createContainer = (): IAbstractRenderContainer => {
   }
 
   const findElement: IAbstractRenderContainer["findElement"] = (selector: string) => {
-    const element = container.querySelector(selector)
-    assert(element instanceof Element, `Cannot find an element with selector of [${selector}].`)
-    return element
+    return container.querySelector(selector)
   }
 
   const findElements: IAbstractRenderContainer["findElements"] = (selector: string) => {

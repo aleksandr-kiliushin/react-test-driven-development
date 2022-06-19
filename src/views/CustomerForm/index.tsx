@@ -26,6 +26,7 @@ export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData
       return
     }
     const createdCustomer = await response.json()
+    setErrorMessage("")
     onCustomerCreated(createdCustomer)
   }
 
