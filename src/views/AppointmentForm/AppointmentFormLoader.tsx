@@ -2,15 +2,17 @@ import { AppointmentForm } from "."
 import React from "react"
 
 export const AppointmentFormLoader = () => {
+  const [availableTimeSlots, setAvailableTimeSlots] = React.useState([])
+
   React.useEffect(() => {
-    const fetchAvailableTimeSlots = () => {
-      globalThis.fetch("/availableTimeSlots", {
+    globalThis
+      .fetch("/availableTimeSlots", {
         credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
         method: "GET",
       })
-    }
-    fetchAvailableTimeSlots()
+      .then((response) => response.json())
+      .then(setAvailableTimeSlots)
   }, [])
 
   return (
@@ -18,7 +20,7 @@ export const AppointmentFormLoader = () => {
     <AppointmentForm
       // availableServiceNames={[]}
       // availableStylists={[]}
-      availableTimeSlots={[]}
+      availableTimeSlots={availableTimeSlots}
       // defaultServiceName={""}
       // onSubmit={function (formValues: {
       //   serviceName: string

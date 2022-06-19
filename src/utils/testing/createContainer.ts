@@ -18,6 +18,7 @@ export interface IRenderContainer<ContainerContentConfig extends { fieldNames: s
     id: ContainerContentConfig["formIds"][keyof ContainerContentConfig["formIds"]]
   }) => HTMLFormElement
   render: ReactDom.Root["render"]
+  renderAndWait(children: React.ReactNode): Promise<void>
   simulateChange(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): void
   simulateClick(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): void
   simulateSubmit(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): void
@@ -32,6 +33,12 @@ export const createContainer = (): IAbstractRenderContainer => {
 
   const render: IAbstractRenderContainer["render"] = (aComponent) => {
     act(() => {
+      root.render(aComponent)
+    })
+  }
+
+  const renderAndWait: IAbstractRenderContainer["renderAndWait"] = async (aComponent) => {
+    await act(async () => {
       root.render(aComponent)
     })
   }
@@ -90,6 +97,7 @@ export const createContainer = (): IAbstractRenderContainer => {
     findFieldLabel,
     findForm,
     render,
+    renderAndWait,
     simulateChange: createEventSimulator("change"),
     simulateClick: createEventSimulator("click"),
     simulateSubmit: createEventSimulator("submit"),
