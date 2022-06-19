@@ -37,12 +37,11 @@ describe("CustomerForm", () => {
   let render: ReactDom.Root["render"]
 
   const originalFetch = window.fetch
-  let fetchSpy: ReturnType<typeof jest.fn>
+  let fetchSpy: jest.Mock
 
   beforeEach(() => {
     ;({ container, render } = createContainer())
     fetchSpy = jest.fn()
-    // @ts-ignore // TODO: Fix TS issue.
     window.fetch = fetchSpy
     fetchSpy.mockReturnValue(createCustomerCreationSuccessfullResponse(undefined))
   })
