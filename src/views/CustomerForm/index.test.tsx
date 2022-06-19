@@ -3,6 +3,7 @@ import assert from "node:assert"
 import React from "react"
 import ReactDom from "react-dom/client"
 import ReactDomTestUtils, { act } from "react-dom/test-utils"
+import "whatwg-fetch"
 
 import { aCustomer1 } from "#sampleData/someCustomers"
 import { ICustomer } from "#types/ICustomer"
@@ -24,18 +25,14 @@ describe("CustomerForm", () => {
   let container: HTMLDivElement
   let render: ReactDom.Root["render"]
 
-  const originalFetch = window.fetch
-  let fetchSpy: jest.Mock
-
   beforeEach(() => {
     ;({ container, render } = createContainer())
-    fetchSpy = jest.fn()
-    window.fetch = fetchSpy
-    fetchSpy.mockReturnValue(createFetchSuccessfulResponse(undefined))
+    // @ts-ignore
+    jest.spyOn(globalThis, "fetch").mockReturnValue(createFetchSuccessfulResponse(undefined))
   })
 
   afterEach(() => {
-    window.fetch = originalFetch
+    ;(globalThis.fetch as jest.Mock).mockRestore()
   })
 
   const findForm = (): HTMLFormElement => {
@@ -104,7 +101,7 @@ describe("CustomerForm", () => {
         render(<CustomerForm {...defaultProps} />)
       })
       ReactDomTestUtils.Simulate.submit(findForm())
-      expect(getRequestBodyOf(fetchSpy)).toMatchObject({ [fieldName]: aCustomer1[fieldName] })
+      expect(getRequestBodyOf(globalThis.fetch as jest.Mock)).toMatchObject({ [fieldName]: aCustomer1[fieldName] })
     })
   }
 
@@ -124,7 +121,7 @@ describe("CustomerForm", () => {
         ReactDomTestUtils.Simulate.change(findField({ fieldName }), { target: { value: newValue } })
       })
       ReactDomTestUtils.Simulate.submit(findForm())
-      expect(getRequestBodyOf(fetchSpy)).toMatchObject({ [fieldName]: newValue })
+      expect(getRequestBodyOf(globalThis.fetch as jest.Mock)).toMatchObject({ [fieldName]: newValue })
     })
   }
 
@@ -178,7 +175,7 @@ describe("CustomerForm", () => {
       render(<CustomerForm {...defaultProps} />)
     })
     ReactDomTestUtils.Simulate.submit(findForm())
-    expect(fetchSpy).toHaveBeenCalledWith(
+    expect(globalThis.fetch).toHaveBeenCalledWith(
       "/customers",
       expect.objectContaining({
         credentials: "same-origin",
@@ -190,7 +187,7 @@ describe("CustomerForm", () => {
 
   it("notifies onCustomerCreated when form is submitted", async () => {
     const onCustomerCreatedSpy = jest.fn()
-    fetchSpy.mockReturnValue(createFetchSuccessfulResponse(aCustomer1))
+    ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(aCustomer1))
     act(() => {
       render(<CustomerForm {...defaultProps} onCustomerCreated={onCustomerCreatedSpy} />)
     })
@@ -202,7 +199,7 @@ describe("CustomerForm", () => {
 
   it("does not notify onCustomerCreated if the POST request returns an error", async () => {
     const onCustomerCreatedSpy = jest.fn()
-    fetchSpy.mockReturnValue(createFetchErrorResponse())
+    ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchErrorResponse())
     act(() => {
       render(<CustomerForm {...defaultProps} onCustomerCreated={onCustomerCreatedSpy} />)
     })
@@ -214,7 +211,7 @@ describe("CustomerForm", () => {
 
   it("prevents the default action when submitting the form", () => {
     const preventFormDefaultActionSpy = jest.fn()
-    fetchSpy.mockReturnValue(createFetchSuccessfulResponse(aCustomer1))
+    ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(aCustomer1))
     act(() => {
       render(<CustomerForm {...defaultProps} />)
     })
@@ -223,7 +220,7 @@ describe("CustomerForm", () => {
   })
 
   it("renders error message when fetch call fails", async () => {
-    fetchSpy.mockReturnValue(createFetchErrorResponse())
+    ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchErrorResponse())
     act(() => {
       render(<CustomerForm {...defaultProps} />)
     })
