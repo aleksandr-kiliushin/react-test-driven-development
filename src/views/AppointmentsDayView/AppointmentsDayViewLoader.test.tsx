@@ -71,4 +71,9 @@ describe("AppointmentsDayViewLoader", () => {
     await renderAndWait(<AppointmentsDayViewLoader today={new Date()} />)
     expect(AppointmentsDayViewExports.AppointmentsDayView).toHaveBeenCalledWith({ appointments: [] }, expect.anything())
   })
+
+  it("displays time slots that are fetched on mount", async () => {
+    await renderAndWait(<AppointmentsDayViewLoader today={new Date()} />)
+    expect(AppointmentsDayViewExports.AppointmentsDayView).toHaveBeenLastCalledWith({ appointments }, expect.anything())
+  })
 })
