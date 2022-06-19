@@ -40,4 +40,9 @@ describe("AppointmentFormLoader", () => {
       })
     )
   })
+
+  it("initially passes no data to AppointmentForm", () => {
+    render(<AppointmentFormLoader />)
+    expect(AppointmentFormExports.AppointmentForm).toHaveBeenCalledWith({ availableTimeSlots: [] }, expect.anything())
+  })
 })
