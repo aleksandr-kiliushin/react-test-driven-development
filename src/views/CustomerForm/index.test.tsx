@@ -1,6 +1,5 @@
 import { noop } from "lodash"
 import React from "react"
-import { act } from "react-dom/test-utils"
 import "whatwg-fetch"
 
 import { aCustomer1 } from "#sampleData/someCustomers"
@@ -52,18 +51,14 @@ describe("CustomerForm", () => {
 
   const itRendersAsATextBox = ({ fieldName }: { fieldName: IFieldName }) => {
     it("renders as a text box.", () => {
-      act(() => {
-        render(<CustomerForm {...defaultProps} />)
-      })
+      render(<CustomerForm {...defaultProps} />)
       expect(findField({ fieldName, formId: "customer" }).type).toEqual("text")
     })
   }
 
   const itHasThePassedInitialValueAtStart = ({ fieldName }: { fieldName: IFieldName }) => {
     it("includes the existing value", () => {
-      act(() => {
-        render(<CustomerForm {...defaultProps} />)
-      })
+      render(<CustomerForm {...defaultProps} />)
       expect(findField({ fieldName, formId: "customer" }).value).toEqual(aCustomer1[fieldName])
     })
   }
@@ -76,18 +71,14 @@ describe("CustomerForm", () => {
     labelText: string
   }) => {
     it("renders a label.", () => {
-      act(() => {
-        render(<CustomerForm {...defaultProps} />)
-      })
+      render(<CustomerForm {...defaultProps} />)
       expect(findFieldLabel({ fieldName, formId: "customer" }).textContent).toEqual(labelText)
     })
   }
 
   const itAssignsAFieldAnIdThatMatchesTheCorrespondingLabelId = ({ fieldName }: { fieldName: IFieldName }) => {
     it("assigns an id that matches the label id.", () => {
-      act(() => {
-        render(<CustomerForm {...defaultProps} />)
-      })
+      render(<CustomerForm {...defaultProps} />)
       expect(findFieldLabel({ fieldName, formId: "customer" }).htmlFor).toEqual(
         findField({ fieldName, formId: "customer" }).id
       )
@@ -96,9 +87,7 @@ describe("CustomerForm", () => {
 
   const itSubmitsWithThePassedInitialValueAtStart = ({ fieldName }: { fieldName: IFieldName }) => {
     it("submits existing value when submitted.", () => {
-      act(() => {
-        render(<CustomerForm {...defaultProps} />)
-      })
+      render(<CustomerForm {...defaultProps} />)
       simulateSubmit(findForm({ id: "customer" }))
       expect(getRequestBodyOf(globalThis.fetch as jest.Mock)).toMatchObject({ [fieldName]: aCustomer1[fieldName] })
     })
@@ -112,9 +101,7 @@ describe("CustomerForm", () => {
     newValue: string
   }) => {
     it("saves new value when submitted.", () => {
-      act(() => {
-        render(<CustomerForm {...defaultProps} />)
-      })
+      render(<CustomerForm {...defaultProps} />)
       // @ts-ignore
       simulateChange(findField({ fieldName, formId: "customer" }), { target: { value: newValue } })
       simulateSubmit(findForm({ id: "customer" }))
@@ -123,9 +110,7 @@ describe("CustomerForm", () => {
   }
 
   it("renders a form.", () => {
-    act(() => {
-      render(<CustomerForm {...defaultProps} />)
-    })
+    render(<CustomerForm {...defaultProps} />)
     expect(findForm({ id: "customer" })).not.toBeNull()
   })
 
@@ -160,16 +145,12 @@ describe("CustomerForm", () => {
   })
 
   it("has a submit button", () => {
-    act(() => {
-      render(<CustomerForm {...defaultProps} />)
-    })
+    render(<CustomerForm {...defaultProps} />)
     expect(findElement('input[type="submit"]')).not.toBeNull()
   })
 
   it("calls fetch with the right properties when submitting data", () => {
-    act(() => {
-      render(<CustomerForm {...defaultProps} />)
-    })
+    render(<CustomerForm {...defaultProps} />)
     simulateSubmit(findForm({ id: "customer" }))
     expect(globalThis.fetch).toHaveBeenCalledWith(
       "/customers",
@@ -184,9 +165,7 @@ describe("CustomerForm", () => {
   it("notifies onCustomerCreated when form is submitted", async () => {
     const onCustomerCreatedSpy = jest.fn()
     ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(aCustomer1))
-    act(() => {
-      render(<CustomerForm {...defaultProps} onCustomerCreated={onCustomerCreatedSpy} />)
-    })
+    render(<CustomerForm {...defaultProps} onCustomerCreated={onCustomerCreatedSpy} />)
     await simulateSubmitAndWait(findForm({ id: "customer" }))
     expect(onCustomerCreatedSpy).toHaveBeenCalledWith(aCustomer1)
   })
@@ -194,9 +173,7 @@ describe("CustomerForm", () => {
   it("does not notify onCustomerCreated if the POST request returns an error", async () => {
     const onCustomerCreatedSpy = jest.fn()
     ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchErrorResponse())
-    act(() => {
-      render(<CustomerForm {...defaultProps} onCustomerCreated={onCustomerCreatedSpy} />)
-    })
+    render(<CustomerForm {...defaultProps} onCustomerCreated={onCustomerCreatedSpy} />)
     await simulateSubmitAndWait(findForm({ id: "customer" }))
     expect(onCustomerCreatedSpy).not.toHaveBeenCalled()
   })
@@ -204,18 +181,14 @@ describe("CustomerForm", () => {
   it("prevents the default action when submitting the form", () => {
     const preventFormDefaultActionSpy = jest.fn()
     ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(aCustomer1))
-    act(() => {
-      render(<CustomerForm {...defaultProps} />)
-    })
+    render(<CustomerForm {...defaultProps} />)
     simulateSubmit(findForm({ id: "customer" }), { preventDefault: preventFormDefaultActionSpy })
     expect(preventFormDefaultActionSpy).toHaveBeenCalled()
   })
 
   it("renders error message when fetch call fails", async () => {
     ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchErrorResponse())
-    act(() => {
-      render(<CustomerForm {...defaultProps} />)
-    })
+    render(<CustomerForm {...defaultProps} />)
     await simulateSubmitAndWait(findForm({ id: "customer" }))
     expect(findElement("p.error").textContent).toMatch("An error occurred during save.")
   })

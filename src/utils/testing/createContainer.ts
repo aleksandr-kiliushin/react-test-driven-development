@@ -30,6 +30,12 @@ export const createContainer = (): IAbstractRenderContainer => {
   const container = document.createElement("div")
   const root = ReactDom.createRoot(container)
 
+  const render: IAbstractRenderContainer["render"] = (aComponent) => {
+    act(() => {
+      root.render(aComponent)
+    })
+  }
+
   const findElement: IAbstractRenderContainer["findElement"] = (selector: string) => {
     const element = container.querySelector(selector)
     assert(element instanceof Element, `Cannot find an element with selector of [${selector}].`)
@@ -82,9 +88,7 @@ export const createContainer = (): IAbstractRenderContainer => {
     findField,
     findFieldLabel,
     findForm,
-    render: (aComponent) => {
-      root.render(aComponent)
-    },
+    render,
     simulateChange: createEventSimulator("change"),
     simulateClick: createEventSimulator("click"),
     simulateSubmit: createEventSimulator("submit"),
