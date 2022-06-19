@@ -5,8 +5,7 @@ import { ITimeSlot } from "#types/ITimeSlot"
 
 import { TimeSlotTable } from "./TimeSlotTable"
 
-// TODO: Rename timeSlot with startsAtDate.
-export type IFieldName = "serviceName" | "stylistName" | "timeSlot"
+export type IFieldName = "serviceName" | "startsAtDate" | "stylistName"
 
 export interface IAppointmentFormProps {
   availableServiceNames: string[]

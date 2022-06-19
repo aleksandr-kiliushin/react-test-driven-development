@@ -78,7 +78,10 @@ describe("AppointmentForm", () => {
 
   const findTimeSlotRadioButton = ({ inputValue }: { inputValue: string }): HTMLInputElement => {
     const theInput = findElement(`input[type="radio"][name="startsAt"][value="${inputValue}"]`)
-    assert(theInput instanceof HTMLInputElement, `Could not find a timeSlot radio input with value of ${inputValue}.`)
+    assert(
+      theInput instanceof HTMLInputElement,
+      `Could not find a startsAtDate radio input with value of ${inputValue}.`
+    )
     return theInput
   }
 
