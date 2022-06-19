@@ -11,7 +11,6 @@ import {
   aTimeSlotAtSuzanTodayAt_12_00,
 } from "#sampleData/someTimeSlots"
 import { createContainer } from "#utils/testing/createContainer"
-import { createSpy } from "#utils/testing/createSpy"
 
 import { AppointmentForm, IAppointmentFormProps, IFieldName } from "./index"
 
@@ -156,19 +155,21 @@ describe("AppointmentForm", () => {
     })
 
     it("saves the default service name when the form is submitted", () => {
-      const submitSpy = createSpy()
+      const submitSpy = jest.fn()
       act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy.fn} />)
+        render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
       })
       ReactDomTestUtils.Simulate.submit(findForm())
-      expect(submitSpy.getReceivedArguments()[0].serviceName).toEqual(appointmentFormDefaultProps.defaultServiceName)
+      expect(submitSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ serviceName: appointmentFormDefaultProps.defaultServiceName })
+      )
     })
 
     it("saves the new entered service name when the form is submitted", () => {
-      const submitSpy = createSpy()
+      const submitSpy = jest.fn()
       const aNewEnteredServiceName = "Cut"
       act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy.fn} />)
+        render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
       })
       act(() => {
         ReactDomTestUtils.Simulate.change(findSelectField({ fieldName: "serviceName" }), {
@@ -177,8 +178,7 @@ describe("AppointmentForm", () => {
         })
       })
       ReactDomTestUtils.Simulate.submit(findForm())
-      expect(submitSpy).CUSTOM_toHaveBeenCalled()
-      expect(submitSpy.getReceivedArguments()[0].serviceName).toEqual(aNewEnteredServiceName)
+      expect(submitSpy).toHaveBeenCalledWith(expect.objectContaining({ serviceName: aNewEnteredServiceName }))
     })
   })
 
@@ -214,13 +214,12 @@ describe("AppointmentForm", () => {
     })
 
     it("onSubmit contains 'Not selected' stylist when the form is submitted with no stylist selected", () => {
-      const submitSpy = createSpy()
+      const submitSpy = jest.fn()
       act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy.fn} />)
+        render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
       })
       ReactDomTestUtils.Simulate.submit(findForm())
-      expect(submitSpy).CUSTOM_toHaveBeenCalled()
-      expect(submitSpy.getReceivedArguments()[0].stylistName).toEqual("Not selected")
+      expect(submitSpy).toHaveBeenCalledWith(expect.objectContaining({ stylistName: "Not selected" }))
     })
 
     it("from start, has only 'Suzan' stylistName available, because only she is certified for 'Blow-dry'", () => {
@@ -246,10 +245,10 @@ describe("AppointmentForm", () => {
     })
 
     it("submits with a newly selected stylistName", () => {
-      const submitSpy = createSpy()
+      const submitSpy = jest.fn()
       const aNewlySelectedStylistName = "Hanna"
       act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy.fn} />)
+        render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
       })
       act(() => {
         // @ts-ignore
@@ -257,8 +256,7 @@ describe("AppointmentForm", () => {
       })
       selectStylist({ aStylistName: aNewlySelectedStylistName })
       ReactDomTestUtils.Simulate.submit(findForm())
-      expect(submitSpy).CUSTOM_toHaveBeenCalled()
-      expect(submitSpy.getReceivedArguments()[0].stylistName).toEqual(aNewlySelectedStylistName)
+      expect(submitSpy).toHaveBeenCalledWith(expect.objectContaining({ stylistName: aNewlySelectedStylistName }))
     })
   })
 
@@ -342,20 +340,19 @@ describe("AppointmentForm", () => {
     })
 
     it("submits with a undefined value if no value was selected", () => {
-      const submitSpy = createSpy()
+      const submitSpy = jest.fn()
       act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy.fn} />)
+        render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
       })
       ReactDomTestUtils.Simulate.submit(findForm())
-      expect(submitSpy).CUSTOM_toHaveBeenCalled()
-      expect(submitSpy.getReceivedArguments()[0].startsAtDate).toBeUndefined()
+      expect(submitSpy.mock.calls[0][0].startsAtDate).toBeUndefined()
     })
 
     it("submits with a newly selected value if a new value was selected.", () => {
-      const submitSpy = createSpy()
+      const submitSpy = jest.fn()
       const aNewlySelectedTimeSlotStartsAtValue = aTimeSlotAtHannaTodayAt_13_30.startsAt
       act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} defaultServiceName="" onSubmit={submitSpy.fn} />)
+        render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
       })
       selectStylist({ aStylistName: "Hanna" })
       act(() => {
@@ -364,16 +361,13 @@ describe("AppointmentForm", () => {
         )
       })
       ReactDomTestUtils.Simulate.submit(findForm())
-      expect(submitSpy).CUSTOM_toHaveBeenCalled()
-      expect(submitSpy.getReceivedArguments()[0].startsAtDate.toString()).toEqual(
-        aNewlySelectedTimeSlotStartsAtValue.toString()
-      )
+      expect(submitSpy.mock.calls[0][0].startsAtDate.toString()).toEqual(aNewlySelectedTimeSlotStartsAtValue.toString())
     })
 
     it("submits with a another newly selected value if a new value was selected.", () => {
-      const submitSpy = createSpy()
+      const submitSpy = jest.fn()
       act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy.fn} />)
+        render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
       })
       selectStylist({ aStylistName: "Hanna" })
       act(() => {
@@ -393,8 +387,7 @@ describe("AppointmentForm", () => {
         )
       })
       ReactDomTestUtils.Simulate.submit(findForm())
-      expect(submitSpy).CUSTOM_toHaveBeenCalled()
-      expect(submitSpy.getReceivedArguments()[0].startsAtDate.toString()).toEqual(
+      expect(submitSpy.mock.calls[0][0].startsAtDate.toString()).toEqual(
         aTimeSlotAtSuzanTodayAt_12_00.startsAt.toString()
       )
     })
