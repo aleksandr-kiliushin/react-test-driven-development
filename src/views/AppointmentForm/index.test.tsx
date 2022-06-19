@@ -1,8 +1,6 @@
 import { noop } from "lodash"
 import assert from "node:assert"
 import React from "react"
-import ReactDom from "react-dom/client"
-import ReactDomTestUtils, { act } from "react-dom/test-utils"
 
 import {
   aTimeSlotAtHannaIn6DaysAt_13_00,
@@ -10,7 +8,7 @@ import {
   aTimeSlotAtSuzanInTwoDaysAt_12_00,
   aTimeSlotAtSuzanTodayAt_12_00,
 } from "#sampleData/someTimeSlots"
-import { createContainer } from "#utils/testing/createContainer"
+import { IRenderContainer, createContainer } from "#utils/testing/createContainer"
 
 import { AppointmentForm, IAppointmentFormProps, IFieldName } from "./index"
 
@@ -35,26 +33,22 @@ const appointmentFormDefaultProps: IAppointmentFormProps = {
   today: new Date(),
 }
 
+type IAppointmentFormRenderContainer = IRenderContainer<{ formIds: ["appointment"]; fieldNames: IFieldName[] }>
+
 describe("AppointmentForm", () => {
-  let container: HTMLDivElement
-  let render: ReactDom.Root["render"]
+  let findElement: IAppointmentFormRenderContainer["findElement"]
+  let findElements: IAppointmentFormRenderContainer["findElements"]
+  let findField: IAppointmentFormRenderContainer["findField"]
+  let findFieldLabel: IAppointmentFormRenderContainer["findFieldLabel"]
+  let findForm: IAppointmentFormRenderContainer["findForm"]
+  let render: IAppointmentFormRenderContainer["render"]
+  let simulateChange: IAppointmentFormRenderContainer["simulateChange"]
+  let simulateSubmit: IAppointmentFormRenderContainer["simulateSubmit"]
 
   beforeEach(() => {
-    ;({ container, render } = createContainer())
+    ;({ findElement, findElements, findField, findFieldLabel, findForm, render, simulateChange, simulateSubmit } =
+      createContainer())
   })
-
-  const findForm = (): HTMLFormElement => {
-    const form = container.querySelector(`form#appointment`)
-    assert(form !== null, "form#appointment not found")
-    assert(form instanceof HTMLFormElement, "Found element is not a form.")
-    return form
-  }
-
-  const findSelectField = ({ fieldName }: { fieldName: IFieldName }): HTMLSelectElement => {
-    const field = findForm().elements.namedItem(fieldName)
-    assert(field instanceof HTMLSelectElement, "firstNameField is not a select")
-    return field
-  }
 
   const findSelectOption = ({
     optionTextContent,
@@ -63,7 +57,7 @@ describe("AppointmentForm", () => {
     optionTextContent: string
     selectFieldName: IFieldName
   }): HTMLOptionElement => {
-    const selectField = findSelectField({ fieldName: selectFieldName })
+    const selectField = findField({ fieldName: selectFieldName, formId: "appointment" })
     const options = Array.from(selectField.children)
     const foundOption = options.find((option) => option.textContent === optionTextContent)
     assert(foundOption !== undefined, `An option with specified textContent (${optionTextContent}) not found.`)
@@ -74,62 +68,37 @@ describe("AppointmentForm", () => {
     return foundOption
   }
 
-  const findLabelFor = ({ fieldName }: { fieldName: IFieldName }): HTMLLabelElement => {
-    const label = container.querySelector(`label[for="${fieldName}"]`)
-    assert(label instanceof HTMLLabelElement, `label for ${fieldName} field not found.`)
-    return label
-  }
-
-  const findTimeSlotTable = (): HTMLTableElement => {
-    const table = container.querySelector("table#time-slots")
-    assert(table !== null, "Time slots table not found.")
-    assert(table instanceof HTMLTableElement, "Found element is not an instance of HTMLTableElement.")
-    return table
-  }
-
   const findTimeSlotRadioButton = ({ inputValue }: { inputValue: string }): HTMLInputElement => {
-    const theInput = container.querySelector(`input[type="radio"][name="startsAt"][value="${inputValue}"]`)
+    const theInput = findElement(`input[type="radio"][name="startsAt"][value="${inputValue}"]`)
     assert(theInput instanceof HTMLInputElement, `Could not find a timeSlot radio input with value of ${inputValue}.`)
     return theInput
   }
 
   const selectStylist = ({ aStylistName }: { aStylistName: "Hanna" | "Suzan" }): void => {
-    act(() => {
-      ReactDomTestUtils.Simulate.change(findSelectField({ fieldName: "stylistName" }), {
-        // @ts-ignore
-        target: { value: aStylistName },
-      })
-    })
+    // @ts-ignore
+    simulateChange(findField({ fieldName: "stylistName", formId: "appointment" }), { target: { value: aStylistName } })
   }
 
   it("renders a form.", () => {
-    act(() => {
-      render(<AppointmentForm {...appointmentFormDefaultProps} />)
-    })
-    expect(findForm()).not.toBeNull()
+    render(<AppointmentForm {...appointmentFormDefaultProps} />)
+    expect(findForm({ id: "appointment" })).not.toBeNull()
   })
 
   describe("service field", () => {
     it("renders as a select box", () => {
-      act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} />)
-      })
-      expect(findSelectField({ fieldName: "serviceName" })).not.toBeNull()
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
+      expect(findField({ fieldName: "serviceName", formId: "appointment" })).not.toBeNull()
     })
 
     it("lists all salon services", () => {
-      act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} />)
-      })
-      const optionNodes = Array.from(findSelectField({ fieldName: "serviceName" }).childNodes)
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
+      const optionNodes = Array.from(findField({ fieldName: "serviceName", formId: "appointment" }).childNodes)
       const renderedServices = optionNodes.map((node) => node.textContent)
       expect(renderedServices).toEqual(expect.arrayContaining(appointmentFormDefaultProps.availableServiceNames))
     })
 
     it("pre-selects the existing value", () => {
-      act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} />)
-      })
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
       const selectOption = findSelectOption({
         optionTextContent: appointmentFormDefaultProps.defaultServiceName,
         selectFieldName: "serviceName",
@@ -139,27 +108,21 @@ describe("AppointmentForm", () => {
     })
 
     it("renders a field label with an appropriate htmlFor attribute", () => {
-      act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} />)
-      })
-      expect(findLabelFor({ fieldName: "serviceName" })).not.toBeNull()
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
+      expect(findFieldLabel({ fieldName: "serviceName", formId: "appointment" })).not.toBeNull()
     })
 
     it("assign label htmlFor matching to the select field ID", () => {
-      act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} />)
-      })
-      const field = findSelectField({ fieldName: "serviceName" })
-      const label = findLabelFor({ fieldName: "serviceName" })
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
+      const field = findField({ fieldName: "serviceName", formId: "appointment" })
+      const label = findFieldLabel({ fieldName: "serviceName", formId: "appointment" })
       expect(label.htmlFor).toEqual(field.id)
     })
 
     it("saves the default service name when the form is submitted", () => {
       const submitSpy = jest.fn()
-      act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
-      })
-      ReactDomTestUtils.Simulate.submit(findForm())
+      render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
+      simulateSubmit(findForm({ id: "appointment" }))
       expect(submitSpy).toHaveBeenCalledWith(
         expect.objectContaining({ serviceName: appointmentFormDefaultProps.defaultServiceName })
       )
@@ -168,78 +131,58 @@ describe("AppointmentForm", () => {
     it("saves the new entered service name when the form is submitted", () => {
       const submitSpy = jest.fn()
       const aNewEnteredServiceName = "Cut"
-      act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
+      render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
+      simulateChange(findField({ fieldName: "serviceName", formId: "appointment" }), {
+        // @ts-ignore
+        target: { value: aNewEnteredServiceName },
       })
-      act(() => {
-        ReactDomTestUtils.Simulate.change(findSelectField({ fieldName: "serviceName" }), {
-          // @ts-ignore
-          target: { value: aNewEnteredServiceName },
-        })
-      })
-      ReactDomTestUtils.Simulate.submit(findForm())
+      simulateSubmit(findForm({ id: "appointment" }))
       expect(submitSpy).toHaveBeenCalledWith(expect.objectContaining({ serviceName: aNewEnteredServiceName }))
     })
   })
 
   describe("stylist field", () => {
     it("renders as a select box", () => {
-      act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} />)
-      })
-      expect(findSelectField({ fieldName: "stylistName" })).not.toBeNull()
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
+      expect(findField({ fieldName: "stylistName", formId: "appointment" })).not.toBeNull()
     })
 
     it("renders a field label with an appropriate htmlFor attribute", () => {
-      act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} />)
-      })
-      expect(findLabelFor({ fieldName: "stylistName" })).not.toBeNull()
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
+      expect(findFieldLabel({ fieldName: "stylistName", formId: "appointment" })).not.toBeNull()
     })
 
     it("assign label htmlFor matching to the select field ID", () => {
-      act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} />)
-      })
-      const field = findSelectField({ fieldName: "serviceName" })
-      const label = findLabelFor({ fieldName: "serviceName" })
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
+      const field = findField({ fieldName: "serviceName", formId: "appointment" })
+      const label = findFieldLabel({ fieldName: "serviceName", formId: "appointment" })
       expect(label.htmlFor).toEqual(field.id)
     })
 
     it("initialized with the 'Not selected' option", () => {
-      act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} />)
-      })
-      expect(findSelectField({ fieldName: "stylistName" }).value).toEqual("Not selected")
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
+      expect(findField({ fieldName: "stylistName", formId: "appointment" }).value).toEqual("Not selected")
     })
 
     it("onSubmit contains 'Not selected' stylist when the form is submitted with no stylist selected", () => {
       const submitSpy = jest.fn()
-      act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
-      })
-      ReactDomTestUtils.Simulate.submit(findForm())
+      render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
+      simulateSubmit(findForm({ id: "appointment" }))
       expect(submitSpy).toHaveBeenCalledWith(expect.objectContaining({ stylistName: "Not selected" }))
     })
 
     it("from start, has only 'Suzan' stylistName available, because only she is certified for 'Blow-dry'", () => {
-      act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} />)
-      })
-      const optionNodes = Array.from(findSelectField({ fieldName: "stylistName" }).childNodes)
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
+      const optionNodes = Array.from(findField({ fieldName: "stylistName", formId: "appointment" }).childNodes)
       const availableStylistsNames = optionNodes.map((node) => node.textContent)
       expect(availableStylistsNames).toEqual(["Not selected", "Suzan"])
     })
 
     it("allows selecting 'Hanna' and 'Suzan' serviceNames when 'Cut' service is choosen, because they both are certified for 'Cut'", () => {
-      act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} />)
-      })
-      act(() => {
-        // @ts-ignore
-        ReactDomTestUtils.Simulate.change(findSelectField({ fieldName: "serviceName" }), { target: { value: "Cut" } })
-      })
-      const optionNodes = Array.from(findSelectField({ fieldName: "stylistName" }).childNodes)
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
+      // @ts-ignore
+      simulateChange(findField({ fieldName: "serviceName", formId: "appointment" }), { target: { value: "Cut" } })
+      const optionNodes = Array.from(findField({ fieldName: "stylistName", formId: "appointment" }).childNodes)
       const availableStylistsNames = optionNodes.map((node) => node.textContent)
       expect(availableStylistsNames).toEqual(["Not selected", "Hanna", "Suzan"])
     })
@@ -247,32 +190,24 @@ describe("AppointmentForm", () => {
     it("submits with a newly selected stylistName", () => {
       const submitSpy = jest.fn()
       const aNewlySelectedStylistName = "Hanna"
-      act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
-      })
-      act(() => {
-        // @ts-ignore
-        ReactDomTestUtils.Simulate.change(findSelectField({ fieldName: "serviceName" }), { target: { value: "Cut" } })
-      })
+      render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
+      // @ts-ignore
+      simulateChange(findField({ fieldName: "serviceName", formId: "appointment" }), { target: { value: "Cut" } })
       selectStylist({ aStylistName: aNewlySelectedStylistName })
-      ReactDomTestUtils.Simulate.submit(findForm())
+      simulateSubmit(findForm({ id: "appointment" }))
       expect(submitSpy).toHaveBeenCalledWith(expect.objectContaining({ stylistName: aNewlySelectedStylistName }))
     })
   })
 
   describe("timeslots table", () => {
     it("renders", () => {
-      act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} />)
-      })
-      expect(findTimeSlotTable()).not.toBeNull()
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
+      expect(findElement("table#time-slots")).not.toBeNull()
     })
 
     it("renders a time slot for every half an hour between open and close times", () => {
-      act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} />)
-      })
-      const timesOfDay = findTimeSlotTable().querySelectorAll("tbody >* th")
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
+      const timesOfDay = findElements("tbody >* th")
       expect(timesOfDay).toHaveLength(4)
       expect(timesOfDay[0].textContent).toEqual("12:00")
       expect(timesOfDay[1].textContent).toEqual("12:30")
@@ -285,18 +220,13 @@ describe("AppointmentForm", () => {
       const daysAmount = 7
       const slotsPerADayAmount = (salonClosesAt - salonOpensAt) / anAppointmentDuration
       const cellsAmount = slotsPerADayAmount * daysAmount
-      act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} />)
-      })
-      const cells = container.querySelectorAll("td")
-      expect(cells).toHaveLength(cellsAmount)
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
+      expect(findElements("td")).toHaveLength(cellsAmount)
     })
 
     it("renders an empty cell at the start of the header row", () => {
-      act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} />)
-      })
-      const headerRow = findTimeSlotTable().querySelector("thead > tr")
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
+      const headerRow = findElement("thead > tr")
       assert(headerRow instanceof HTMLTableRowElement)
       assert(headerRow.firstChild instanceof HTMLTableCellElement)
       expect(headerRow.firstChild.tagName).toEqual("TH")
@@ -304,10 +234,8 @@ describe("AppointmentForm", () => {
     })
 
     it("renders a week of available dates", () => {
-      act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} today={new Date(2018, 11, 1)} />)
-      })
-      const dates = findTimeSlotTable().querySelectorAll("thead >* th:not(:first-child)")
+      render(<AppointmentForm {...appointmentFormDefaultProps} today={new Date(2018, 11, 1)} />)
+      const dates = findElements("thead >* th:not(:first-child)")
       expect(dates).toHaveLength(7)
       expect(dates[0].textContent).toEqual("Sat 01")
       expect(dates[1].textContent).toEqual("Sun 02")
@@ -315,87 +243,49 @@ describe("AppointmentForm", () => {
     })
 
     it("does not render radio buttons stylistName is not selected", () => {
-      act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} />)
-      })
-      const timesOfDay = findTimeSlotTable().querySelectorAll("input")
-      expect(timesOfDay).toHaveLength(0)
-    })
-
-    it("does not render radio buttons when availableDates is empty", () => {
-      act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} availableTimeSlots={[]} />)
-      })
-      const timesOfDay = findTimeSlotTable().querySelectorAll("input")
-      expect(timesOfDay).toHaveLength(0)
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
+      expect(findElements("table input")).toHaveLength(0)
     })
 
     it("for each provided availableDate renders a radio button with the corresponding `value` attribute", () => {
-      act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} />)
-      })
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
       selectStylist({ aStylistName: "Hanna" })
-      const radioButtons = container.querySelectorAll('input[type="radio"]')
-      expect(radioButtons).toHaveLength(2)
+      expect(findElements('input[type="radio"]')).toHaveLength(2)
     })
 
     it("submits with a undefined value if no value was selected", () => {
       const submitSpy = jest.fn()
-      act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
-      })
-      ReactDomTestUtils.Simulate.submit(findForm())
+      render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
+      simulateSubmit(findForm({ id: "appointment" }))
       expect(submitSpy.mock.calls[0][0].startsAtDate).toBeUndefined()
     })
 
     it("submits with a newly selected value if a new value was selected.", () => {
       const submitSpy = jest.fn()
       const aNewlySelectedTimeSlotStartsAtValue = aTimeSlotAtHannaTodayAt_13_30.startsAt
-      act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
-      })
+      render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
       selectStylist({ aStylistName: "Hanna" })
-      act(() => {
-        ReactDomTestUtils.Simulate.change(
-          findTimeSlotRadioButton({ inputValue: aNewlySelectedTimeSlotStartsAtValue.toString() })
-        )
-      })
-      ReactDomTestUtils.Simulate.submit(findForm())
+      simulateChange(findTimeSlotRadioButton({ inputValue: aNewlySelectedTimeSlotStartsAtValue.toString() }))
+      simulateSubmit(findForm({ id: "appointment" }))
       expect(submitSpy.mock.calls[0][0].startsAtDate.toString()).toEqual(aNewlySelectedTimeSlotStartsAtValue.toString())
     })
 
     it("submits with a another newly selected value if a new value was selected.", () => {
       const submitSpy = jest.fn()
-      act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
-      })
+      render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
       selectStylist({ aStylistName: "Hanna" })
-      act(() => {
-        ReactDomTestUtils.Simulate.change(
-          findTimeSlotRadioButton({ inputValue: aTimeSlotAtHannaTodayAt_13_30.startsAt.toString() })
-        )
-      })
-      act(() => {
-        ReactDomTestUtils.Simulate.change(
-          findTimeSlotRadioButton({ inputValue: aTimeSlotAtHannaIn6DaysAt_13_00.startsAt.toString() })
-        )
-      })
+      simulateChange(findTimeSlotRadioButton({ inputValue: aTimeSlotAtHannaTodayAt_13_30.startsAt.toString() }))
+      simulateChange(findTimeSlotRadioButton({ inputValue: aTimeSlotAtHannaIn6DaysAt_13_00.startsAt.toString() }))
       selectStylist({ aStylistName: "Suzan" })
-      act(() => {
-        ReactDomTestUtils.Simulate.change(
-          findTimeSlotRadioButton({ inputValue: aTimeSlotAtSuzanTodayAt_12_00.startsAt.toString() })
-        )
-      })
-      ReactDomTestUtils.Simulate.submit(findForm())
+      simulateChange(findTimeSlotRadioButton({ inputValue: aTimeSlotAtSuzanTodayAt_12_00.startsAt.toString() }))
+      simulateSubmit(findForm({ id: "appointment" }))
       expect(submitSpy.mock.calls[0][0].startsAtDate.toString()).toEqual(
         aTimeSlotAtSuzanTodayAt_12_00.startsAt.toString()
       )
     })
 
     it("renders input radio buttons as checked after click on them.", () => {
-      act(() => {
-        render(<AppointmentForm {...appointmentFormDefaultProps} />)
-      })
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
 
       selectStylist({ aStylistName: "Suzan" })
       const radioButton1 = findTimeSlotRadioButton({ inputValue: aTimeSlotAtSuzanTodayAt_12_00.startsAt.toString() })
@@ -404,14 +294,10 @@ describe("AppointmentForm", () => {
       })
       expect(radioButton1.checked).toEqual(false)
       expect(radioButton2.checked).toEqual(false)
-      act(() => {
-        ReactDomTestUtils.Simulate.change(radioButton1)
-      })
+      simulateChange(radioButton1)
       expect(radioButton1.checked).toEqual(true)
       expect(radioButton2.checked).toEqual(false)
-      act(() => {
-        ReactDomTestUtils.Simulate.change(radioButton2)
-      })
+      simulateChange(radioButton2)
       expect(radioButton1.checked).toEqual(false)
       expect(radioButton2.checked).toEqual(true)
 
@@ -420,14 +306,10 @@ describe("AppointmentForm", () => {
       const radioButton4 = findTimeSlotRadioButton({ inputValue: aTimeSlotAtHannaIn6DaysAt_13_00.startsAt.toString() })
       expect(radioButton3.checked).toEqual(false)
       expect(radioButton4.checked).toEqual(false)
-      act(() => {
-        ReactDomTestUtils.Simulate.change(radioButton3)
-      })
+      simulateChange(radioButton3)
       expect(radioButton3.checked).toEqual(true)
       expect(radioButton4.checked).toEqual(false)
-      act(() => {
-        ReactDomTestUtils.Simulate.change(radioButton4)
-      })
+      simulateChange(radioButton4)
       expect(radioButton3.checked).toEqual(false)
       expect(radioButton4.checked).toEqual(true)
     })

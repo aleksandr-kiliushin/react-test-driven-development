@@ -9,7 +9,7 @@ export interface IRenderContainer<ContainerContentConfig extends { fieldNames: s
   findField: (params: {
     formId: ContainerContentConfig["formIds"][keyof ContainerContentConfig["formIds"]]
     fieldName: ContainerContentConfig["fieldNames"][keyof ContainerContentConfig["fieldNames"]]
-  }) => HTMLInputElement
+  }) => HTMLInputElement | HTMLSelectElement
   findFieldLabel: (params: {
     formId: ContainerContentConfig["formIds"][keyof ContainerContentConfig["formIds"]]
     fieldName: ContainerContentConfig["fieldNames"][keyof ContainerContentConfig["fieldNames"]]
@@ -47,11 +47,15 @@ export const createContainer = (): IAbstractRenderContainer => {
 
   const findField: IAbstractRenderContainer["findField"] = ({ fieldName, formId }) => {
     const field = findForm({ id: formId }).elements.namedItem(fieldName)
-    assert(field instanceof HTMLInputElement, `Cannot find a field with fieldName of [${fieldName}].`)
+    assert(
+      field instanceof HTMLInputElement || field instanceof HTMLSelectElement,
+      `Cannot find a field with fieldName of [${fieldName}].`
+    )
     return field
   }
 
-  const findFieldLabel: IAbstractRenderContainer["findFieldLabel"] = ({ fieldName }) => {
+  // TODO: Remove formId parameter because label can be outside a form.
+  const findFieldLabel: IAbstractRenderContainer["findFieldLabel"] = ({ fieldName, formId }) => {
     const label = container.querySelector(`label[for="${fieldName}"]`)
     assert(label instanceof HTMLLabelElement, `Cannot find a label with a [for] attribute of [${fieldName}].`)
     return label
