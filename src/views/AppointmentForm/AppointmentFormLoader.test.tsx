@@ -65,4 +65,10 @@ describe("AppointmentFormLoader", () => {
     await renderAndWait(<AppointmentFormLoader />)
     expect(AppointmentFormExports.AppointmentForm).toHaveBeenLastCalledWith({ availableTimeSlots }, expect.anything())
   })
+
+  it("calls globalThis.fetch just once", async () => {
+    await renderAndWait(<AppointmentFormLoader />)
+    await renderAndWait(<AppointmentFormLoader />)
+    expect(globalThis.fetch).toHaveBeenCalledTimes(1)
+  })
 })
