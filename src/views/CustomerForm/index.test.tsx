@@ -4,11 +4,9 @@ import React from "react"
 import ReactDom from "react-dom/client"
 import ReactDomTestUtils, { act } from "react-dom/test-utils"
 
-import { ISpy } from "#declarations/jest"
 import { aCustomer1 } from "#sampleData/someCustomers"
 import { ICustomer } from "#types/ICustomer"
 import { createContainer } from "#utils/testing/createContainer"
-import { createSpy } from "#utils/testing/createSpy"
 
 import { CustomerForm, ICustomerFormProps } from "./index"
 
@@ -31,9 +29,7 @@ const createCustomerCreationSuccessfullResponse = (body: unknown) => {
 }
 
 const createCustomerCreationErrorResponse = () => {
-  return Promise.resolve({
-    ok: false,
-  })
+  return Promise.resolve({ ok: false })
 }
 
 describe("CustomerForm", () => {
@@ -41,13 +37,14 @@ describe("CustomerForm", () => {
   let render: ReactDom.Root["render"]
 
   const originalFetch = window.fetch
-  let fetchSpy: ISpy
+  let fetchSpy: ReturnType<typeof jest.fn>
 
   beforeEach(() => {
     ;({ container, render } = createContainer())
-    fetchSpy = createSpy()
-    window.fetch = fetchSpy.fn
-    fetchSpy.stubReturnValue(createCustomerCreationSuccessfullResponse(undefined))
+    fetchSpy = jest.fn()
+    // @ts-ignore // TODO: Fix TS issue.
+    window.fetch = fetchSpy
+    fetchSpy.mockReturnValue(createCustomerCreationSuccessfullResponse(undefined))
   })
 
   afterEach(() => {
@@ -70,6 +67,10 @@ describe("CustomerForm", () => {
     const label = container.querySelector(`label[for="${fieldName}"]`)
     assert(label instanceof HTMLLabelElement, `Cannot find a label with a [for] attribute of [${fieldName}].`)
     return label
+  }
+
+  const getFetchRequestBody = () => {
+    return JSON.parse(fetchSpy.mock.calls[0][1].body)
   }
 
   const itRendersAsATextBox = ({ fieldName }: { fieldName: IFieldName }) => {
@@ -120,8 +121,7 @@ describe("CustomerForm", () => {
         render(<CustomerForm {...defaultProps} />)
       })
       ReactDomTestUtils.Simulate.submit(findForm())
-      expect(fetchSpy).CUSTOM_toHaveBeenCalled()
-      expect(JSON.parse(fetchSpy.getReceivedArguments()[1].body)[fieldName]).toEqual(aCustomer1[fieldName])
+      expect(getFetchRequestBody()).toMatchObject({ [fieldName]: aCustomer1[fieldName] })
     })
   }
 
@@ -141,9 +141,7 @@ describe("CustomerForm", () => {
         ReactDomTestUtils.Simulate.change(findField({ fieldName }), { target: { value: newValue } })
       })
       ReactDomTestUtils.Simulate.submit(findForm())
-      expect(fetchSpy).CUSTOM_toHaveBeenCalled()
-      const optionsBodyFetchHasBeenCalledWith = JSON.parse(fetchSpy.getReceivedArguments()[1].body)
-      expect(optionsBodyFetchHasBeenCalledWith[fieldName]).toEqual(newValue)
+      expect(getFetchRequestBody()).toMatchObject({ [fieldName]: newValue })
     })
   }
 
@@ -197,51 +195,52 @@ describe("CustomerForm", () => {
       render(<CustomerForm {...defaultProps} />)
     })
     ReactDomTestUtils.Simulate.submit(findForm())
-    expect(fetchSpy).CUSTOM_toHaveBeenCalled()
-    expect(fetchSpy.getReceivedArguments()[0]).toEqual("/customers")
-    const fetchOptions: RequestInit = fetchSpy.getReceivedArguments()[1]
-    expect(fetchOptions.method).toEqual("POST")
-    expect(fetchOptions.credentials).toEqual("same-origin")
-    expect(fetchOptions.headers).toEqual({ "Content-Type": "application/json" })
+    expect(fetchSpy).toHaveBeenCalledWith(
+      "/customers",
+      expect.objectContaining({
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+      })
+    )
   })
 
   it("notifies onCustomerCreated when form is submitted", async () => {
-    const onCustomerSuccessfullyCreatedSpy = createSpy()
-    fetchSpy.stubReturnValue(createCustomerCreationSuccessfullResponse(aCustomer1))
+    const onCustomerCreatedSpy = jest.fn()
+    fetchSpy.mockReturnValue(createCustomerCreationSuccessfullResponse(aCustomer1))
     act(() => {
-      render(<CustomerForm {...defaultProps} onCustomerCreated={onCustomerSuccessfullyCreatedSpy.fn} />)
+      render(<CustomerForm {...defaultProps} onCustomerCreated={onCustomerCreatedSpy} />)
     })
     await act(async () => {
       ReactDomTestUtils.Simulate.submit(findForm())
     })
-    expect(onCustomerSuccessfullyCreatedSpy).CUSTOM_toHaveBeenCalled()
-    expect(onCustomerSuccessfullyCreatedSpy.getReceivedArguments()[0]).toEqual(aCustomer1)
+    expect(onCustomerCreatedSpy).toHaveBeenCalledWith(aCustomer1)
   })
 
   it("does not notify onCustomerCreated if the POST request returns an error", async () => {
-    const onCustomerSuccessfullyCreatedSpy = createSpy()
-    fetchSpy.stubReturnValue(createCustomerCreationErrorResponse())
+    const onCustomerCreatedSpy = jest.fn()
+    fetchSpy.mockReturnValue(createCustomerCreationErrorResponse())
     act(() => {
-      render(<CustomerForm {...defaultProps} onCustomerCreated={onCustomerSuccessfullyCreatedSpy.fn} />)
+      render(<CustomerForm {...defaultProps} onCustomerCreated={onCustomerCreatedSpy} />)
     })
     await act(async () => {
       ReactDomTestUtils.Simulate.submit(findForm())
     })
-    expect(onCustomerSuccessfullyCreatedSpy).not.CUSTOM_toHaveBeenCalled()
+    expect(onCustomerCreatedSpy).not.toHaveBeenCalled()
   })
 
   it("prevents the default action when submitting the form", () => {
-    const preventFormDefaultActionSpy = createSpy()
-    fetchSpy.stubReturnValue(createCustomerCreationSuccessfullResponse(aCustomer1))
+    const preventFormDefaultActionSpy = jest.fn()
+    fetchSpy.mockReturnValue(createCustomerCreationSuccessfullResponse(aCustomer1))
     act(() => {
       render(<CustomerForm {...defaultProps} />)
     })
-    ReactDomTestUtils.Simulate.submit(findForm(), { preventDefault: preventFormDefaultActionSpy.fn })
-    expect(preventFormDefaultActionSpy).CUSTOM_toHaveBeenCalled()
+    ReactDomTestUtils.Simulate.submit(findForm(), { preventDefault: preventFormDefaultActionSpy })
+    expect(preventFormDefaultActionSpy).toHaveBeenCalled()
   })
 
   it("renders error message when fetch call fails", async () => {
-    fetchSpy.stubReturnValue(createCustomerCreationErrorResponse())
+    fetchSpy.mockReturnValue(createCustomerCreationErrorResponse())
     act(() => {
       render(<CustomerForm {...defaultProps} />)
     })
