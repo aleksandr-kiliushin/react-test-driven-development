@@ -4,6 +4,7 @@ import ReactDom from "react-dom/client"
 export interface ICreateContainerResult<ContainerContentConfig extends { fieldNames: string[]; formIds: string[] }> {
   container: HTMLDivElement
   findElement(selector: string): Element
+  findElements(selector: string): Element[]
   findField: (params: {
     formId: ContainerContentConfig["formIds"][keyof ContainerContentConfig["formIds"]]
     fieldName: ContainerContentConfig["fieldNames"][keyof ContainerContentConfig["fieldNames"]]
@@ -30,10 +31,9 @@ export const createContainer = (): ICreateContainerResult<any> => {
     return element
   }
 
-  const findForm: ICreateContainerResult<any>["findForm"] = ({ id }) => {
-    const form = container.querySelector(`form#${id}`)
-    assert(form instanceof HTMLFormElement, `Cannot find a form with ID of [${id}].`)
-    return form
+  const findElements: ICreateContainerResult<any>["findElements"] = (selector: string) => {
+    const elements = container.querySelectorAll(selector)
+    return Array.from(elements)
   }
 
   const findField: ICreateContainerResult<any>["findField"] = ({ fieldName, formId }) => {
@@ -48,9 +48,16 @@ export const createContainer = (): ICreateContainerResult<any> => {
     return label
   }
 
+  const findForm: ICreateContainerResult<any>["findForm"] = ({ id }) => {
+    const form = container.querySelector(`form#${id}`)
+    assert(form instanceof HTMLFormElement, `Cannot find a form with ID of [${id}].`)
+    return form
+  }
+
   return {
     container,
     findElement,
+    findElements,
     findField,
     findFieldLabel,
     findForm,
