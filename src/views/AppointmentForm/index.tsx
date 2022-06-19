@@ -5,6 +5,7 @@ import { ITimeSlot } from "#types/ITimeSlot"
 
 import { TimeSlotTable } from "./TimeSlotTable"
 
+// TODO: Rename timeSlot with startsAtDate.
 export type IFieldName = "serviceName" | "stylistName" | "timeSlot"
 
 export interface IAppointmentFormProps {
@@ -52,6 +53,16 @@ export const AppointmentForm: React.FC<IAppointmentFormProps> = ({
           serviceName: selectedServiceName,
           stylistName: selectedStylistName,
           startsAtDate: selectedStartsAtDate,
+        })
+        fetch("/appointments", {
+          body: JSON.stringify({
+            serviceName: selectedServiceName,
+            stylistName: selectedStylistName,
+            startsAtDate: selectedStartsAtDate ? selectedStartsAtDate.toString() : null,
+          }),
+          credentials: "same-origin",
+          headers: { "Content-Type": "application/json" },
+          method: "POST",
         })
       }}
     >

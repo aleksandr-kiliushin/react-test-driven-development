@@ -1,6 +1,7 @@
 import { noop } from "lodash"
 import assert from "node:assert"
 import React from "react"
+import "whatwg-fetch"
 
 import {
   aTimeSlotAtHannaIn6DaysAt_13_00,
@@ -9,6 +10,7 @@ import {
   aTimeSlotAtSuzanTodayAt_12_00,
 } from "#sampleData/someTimeSlots"
 import { IRenderContainer, createContainer } from "#utils/testing/createContainer"
+import { createFetchSuccessfulResponse } from "#utils/testing/spyHelpers"
 
 import { AppointmentForm, IAppointmentFormProps, IFieldName } from "./index"
 
@@ -48,6 +50,12 @@ describe("AppointmentForm", () => {
   beforeEach(() => {
     ;({ findElement, findElements, findField, findFieldLabel, findForm, render, simulateChange, simulateSubmit } =
       createContainer())
+    // @ts-ignore
+    jest.spyOn(globalThis, "fetch").mockReturnValue(createFetchSuccessfulResponse())
+  })
+
+  afterEach(() => {
+    ;(globalThis.fetch as jest.Mock).mockRestore()
   })
 
   const findSelectOption = ({
@@ -312,6 +320,30 @@ describe("AppointmentForm", () => {
       simulateChange(radioButton4)
       expect(radioButton3.checked).toEqual(false)
       expect(radioButton4.checked).toEqual(true)
+    })
+
+    it("sends entered data to '/appointments' via POST", () => {
+      render(<AppointmentForm {...appointmentFormDefaultProps} />)
+      // TODO: Extract selectServiceName like id done with stylistName.
+      // @ts-ignore
+      simulateChange(findField({ fieldName: "serviceName", formId: "appointment" }), { target: { value: "Cut" } })
+      selectStylist({ aStylistName: "Hanna" })
+      simulateChange(findTimeSlotRadioButton({ inputValue: aTimeSlotAtHannaIn6DaysAt_13_00.startsAt.toString() }))
+      simulateSubmit(findForm({ id: "appointment" }))
+      expect(globalThis.fetch).toHaveBeenCalledWith(
+        "/appointments",
+        expect.objectContaining({
+          credentials: "same-origin",
+          headers: { "Content-Type": "application/json" },
+          method: "POST",
+        })
+      )
+      const requestBody = JSON.parse((globalThis.fetch as jest.Mock).mock.calls[0][1].body)
+      expect(requestBody).toMatchObject({
+        serviceName: "Cut",
+        startsAtDate: aTimeSlotAtHannaIn6DaysAt_13_00.startsAt.toString(),
+        stylistName: "Hanna",
+      })
     })
   })
 })
