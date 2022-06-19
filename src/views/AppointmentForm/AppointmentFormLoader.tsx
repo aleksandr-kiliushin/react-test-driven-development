@@ -1,9 +1,10 @@
-import { AppointmentForm } from "."
 import React from "react"
 
 import { ITimeSlot } from "#types/ITimeSlot"
 
-export const AppointmentFormLoader = () => {
+import { AppointmentForm } from "./index"
+
+export const AppointmentFormLoader: React.FC = () => {
   const [availableTimeSlots, setAvailableTimeSlots] = React.useState<ITimeSlot[]>([])
 
   React.useEffect(() => {
