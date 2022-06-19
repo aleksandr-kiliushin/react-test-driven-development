@@ -1,6 +1,6 @@
 import { noop } from "lodash"
 import React from "react"
-import ReactDomTestUtils, { act } from "react-dom/test-utils"
+import { act } from "react-dom/test-utils"
 import "whatwg-fetch"
 
 import { aCustomer1 } from "#sampleData/someCustomers"
@@ -27,9 +27,21 @@ describe("CustomerForm", () => {
   let findFieldLabel: ICustomerFormRenderContainer["findFieldLabel"]
   let findForm: ICustomerFormRenderContainer["findForm"]
   let render: ICustomerFormRenderContainer["render"]
+  let simulateChange: ICustomerFormRenderContainer["simulateChange"]
+  let simulateSubmit: ICustomerFormRenderContainer["simulateSubmit"]
+  let simulateSubmitAndWait: ICustomerFormRenderContainer["simulateSubmitAndWait"]
 
   beforeEach(() => {
-    ;({ findElement, findField, findFieldLabel, findForm, render } = createContainer())
+    ;({
+      findElement,
+      findField,
+      findFieldLabel,
+      findForm,
+      render,
+      simulateChange,
+      simulateSubmit,
+      simulateSubmitAndWait,
+    } = createContainer())
     // @ts-ignore
     jest.spyOn(globalThis, "fetch").mockReturnValue(createFetchSuccessfulResponse(undefined))
   })
@@ -87,7 +99,7 @@ describe("CustomerForm", () => {
       act(() => {
         render(<CustomerForm {...defaultProps} />)
       })
-      ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
+      simulateSubmit(findForm({ id: "customer" }))
       expect(getRequestBodyOf(globalThis.fetch as jest.Mock)).toMatchObject({ [fieldName]: aCustomer1[fieldName] })
     })
   }
@@ -103,13 +115,9 @@ describe("CustomerForm", () => {
       act(() => {
         render(<CustomerForm {...defaultProps} />)
       })
-      act(() => {
-        ReactDomTestUtils.Simulate.change(findField({ fieldName, formId: "customer" }), {
-          // @ts-ignore
-          target: { value: newValue },
-        })
-      })
-      ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
+      // @ts-ignore
+      simulateChange(findField({ fieldName, formId: "customer" }), { target: { value: newValue } })
+      simulateSubmit(findForm({ id: "customer" }))
       expect(getRequestBodyOf(globalThis.fetch as jest.Mock)).toMatchObject({ [fieldName]: newValue })
     })
   }
@@ -162,7 +170,7 @@ describe("CustomerForm", () => {
     act(() => {
       render(<CustomerForm {...defaultProps} />)
     })
-    ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
+    simulateSubmit(findForm({ id: "customer" }))
     expect(globalThis.fetch).toHaveBeenCalledWith(
       "/customers",
       expect.objectContaining({
@@ -179,9 +187,7 @@ describe("CustomerForm", () => {
     act(() => {
       render(<CustomerForm {...defaultProps} onCustomerCreated={onCustomerCreatedSpy} />)
     })
-    await act(async () => {
-      ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
-    })
+    await simulateSubmitAndWait(findForm({ id: "customer" }))
     expect(onCustomerCreatedSpy).toHaveBeenCalledWith(aCustomer1)
   })
 
@@ -191,9 +197,7 @@ describe("CustomerForm", () => {
     act(() => {
       render(<CustomerForm {...defaultProps} onCustomerCreated={onCustomerCreatedSpy} />)
     })
-    await act(async () => {
-      ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
-    })
+    await simulateSubmitAndWait(findForm({ id: "customer" }))
     expect(onCustomerCreatedSpy).not.toHaveBeenCalled()
   })
 
@@ -203,7 +207,7 @@ describe("CustomerForm", () => {
     act(() => {
       render(<CustomerForm {...defaultProps} />)
     })
-    ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }), { preventDefault: preventFormDefaultActionSpy })
+    simulateSubmit(findForm({ id: "customer" }), { preventDefault: preventFormDefaultActionSpy })
     expect(preventFormDefaultActionSpy).toHaveBeenCalled()
   })
 
@@ -212,9 +216,7 @@ describe("CustomerForm", () => {
     act(() => {
       render(<CustomerForm {...defaultProps} />)
     })
-    await act(async () => {
-      ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
-    })
+    await simulateSubmitAndWait(findForm({ id: "customer" }))
     expect(findElement("p.error").textContent).toMatch("An error occurred during save.")
   })
 })

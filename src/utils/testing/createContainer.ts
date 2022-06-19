@@ -1,5 +1,6 @@
 import assert from "node:assert"
 import ReactDom from "react-dom/client"
+import ReactDomTestUtils, { act } from "react-dom/test-utils"
 
 export interface IRenderContainer<ContainerContentConfig extends { fieldNames: string[]; formIds: string[] }> {
   container: HTMLDivElement
@@ -17,6 +18,10 @@ export interface IRenderContainer<ContainerContentConfig extends { fieldNames: s
     id: ContainerContentConfig["formIds"][keyof ContainerContentConfig["formIds"]]
   }) => HTMLFormElement
   render: ReactDom.Root["render"]
+  simulateChange(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): void
+  simulateClick(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): void
+  simulateSubmit(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): void
+  simulateSubmitAndWait(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): Promise<void>
 }
 
 type IAbstractRenderContainer = IRenderContainer<any>
@@ -54,6 +59,22 @@ export const createContainer = (): IAbstractRenderContainer => {
     return form
   }
 
+  const createEventSimulator = (eventName: keyof typeof ReactDomTestUtils.Simulate) => {
+    return (element: Element, eventData?: ReactDomTestUtils.SyntheticEventData) => {
+      act(() => {
+        ReactDomTestUtils.Simulate[eventName](element, eventData)
+      })
+    }
+  }
+
+  const createAsyncEventSimulator = (eventName: keyof typeof ReactDomTestUtils.Simulate) => {
+    return async (element: Element, eventData?: ReactDomTestUtils.SyntheticEventData) => {
+      await act(async () => {
+        ReactDomTestUtils.Simulate[eventName](element, eventData)
+      })
+    }
+  }
+
   return {
     container,
     findElement,
@@ -64,5 +85,9 @@ export const createContainer = (): IAbstractRenderContainer => {
     render: (aComponent) => {
       root.render(aComponent)
     },
+    simulateChange: createEventSimulator("change"),
+    simulateClick: createEventSimulator("click"),
+    simulateSubmit: createEventSimulator("submit"),
+    simulateSubmitAndWait: createAsyncEventSimulator("submit"),
   }
 }
