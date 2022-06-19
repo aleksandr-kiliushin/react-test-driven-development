@@ -54,7 +54,6 @@ export const createContainer = (): IAbstractRenderContainer => {
     return field
   }
 
-  // TODO: Remove formId parameter because label can be outside a form.
   const findFieldLabel: IAbstractRenderContainer["findFieldLabel"] = ({ fieldName, formId }) => {
     const label = container.querySelector(`label[for="${fieldName}"]`)
     assert(label instanceof HTMLLabelElement, `Cannot find a label with a [for] attribute of [${fieldName}].`)
