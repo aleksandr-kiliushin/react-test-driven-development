@@ -7,6 +7,7 @@ import ReactDomTestUtils, { act } from "react-dom/test-utils"
 import { aCustomer1 } from "#sampleData/someCustomers"
 import { ICustomer } from "#types/ICustomer"
 import { createContainer } from "#utils/testing/createContainer"
+import { createFetchErrorResponse, createFetchSuccessfulResponse } from "#utils/testing/createFetchResponse"
 
 import { CustomerForm, ICustomerFormProps } from "./index"
 
@@ -17,19 +18,6 @@ type IFieldName = keyof ICustomer
 const defaultProps: ICustomerFormProps = {
   initialCustomerData: aCustomer1,
   onCustomerCreated: noop,
-}
-
-const createCustomerCreationSuccessfullResponse = (body: unknown) => {
-  return Promise.resolve({
-    ok: true,
-    async json() {
-      return Promise.resolve(body)
-    },
-  })
-}
-
-const createCustomerCreationErrorResponse = () => {
-  return Promise.resolve({ ok: false })
 }
 
 describe("CustomerForm", () => {
@@ -43,7 +31,7 @@ describe("CustomerForm", () => {
     ;({ container, render } = createContainer())
     fetchSpy = jest.fn()
     window.fetch = fetchSpy
-    fetchSpy.mockReturnValue(createCustomerCreationSuccessfullResponse(undefined))
+    fetchSpy.mockReturnValue(createFetchSuccessfulResponse(undefined))
   })
 
   afterEach(() => {
@@ -206,7 +194,7 @@ describe("CustomerForm", () => {
 
   it("notifies onCustomerCreated when form is submitted", async () => {
     const onCustomerCreatedSpy = jest.fn()
-    fetchSpy.mockReturnValue(createCustomerCreationSuccessfullResponse(aCustomer1))
+    fetchSpy.mockReturnValue(createFetchSuccessfulResponse(aCustomer1))
     act(() => {
       render(<CustomerForm {...defaultProps} onCustomerCreated={onCustomerCreatedSpy} />)
     })
@@ -218,7 +206,7 @@ describe("CustomerForm", () => {
 
   it("does not notify onCustomerCreated if the POST request returns an error", async () => {
     const onCustomerCreatedSpy = jest.fn()
-    fetchSpy.mockReturnValue(createCustomerCreationErrorResponse())
+    fetchSpy.mockReturnValue(createFetchErrorResponse())
     act(() => {
       render(<CustomerForm {...defaultProps} onCustomerCreated={onCustomerCreatedSpy} />)
     })
@@ -230,7 +218,7 @@ describe("CustomerForm", () => {
 
   it("prevents the default action when submitting the form", () => {
     const preventFormDefaultActionSpy = jest.fn()
-    fetchSpy.mockReturnValue(createCustomerCreationSuccessfullResponse(aCustomer1))
+    fetchSpy.mockReturnValue(createFetchSuccessfulResponse(aCustomer1))
     act(() => {
       render(<CustomerForm {...defaultProps} />)
     })
@@ -239,7 +227,7 @@ describe("CustomerForm", () => {
   })
 
   it("renders error message when fetch call fails", async () => {
-    fetchSpy.mockReturnValue(createCustomerCreationErrorResponse())
+    fetchSpy.mockReturnValue(createFetchErrorResponse())
     act(() => {
       render(<CustomerForm {...defaultProps} />)
     })
