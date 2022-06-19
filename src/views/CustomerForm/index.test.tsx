@@ -5,7 +5,7 @@ import "whatwg-fetch"
 
 import { aCustomer1 } from "#sampleData/someCustomers"
 import { ICustomer } from "#types/ICustomer"
-import { ICreateContainerResult, createContainer } from "#utils/testing/createContainer"
+import { IRenderContainer, createContainer } from "#utils/testing/createContainer"
 import { createFetchErrorResponse, createFetchSuccessfulResponse, getRequestBodyOf } from "#utils/testing/spyHelpers"
 
 import { CustomerForm, ICustomerFormProps } from "./index"
@@ -19,14 +19,14 @@ const defaultProps: ICustomerFormProps = {
   onCustomerCreated: noop,
 }
 
-type IRenderContainer = ICreateContainerResult<{ formIds: ["customer"]; fieldNames: IFieldName[] }>
+type ICustomerFormRenderContainer = IRenderContainer<{ formIds: ["customer"]; fieldNames: IFieldName[] }>
 
 describe("CustomerForm", () => {
-  let findElement: IRenderContainer["findElement"]
-  let findField: IRenderContainer["findField"]
-  let findFieldLabel: IRenderContainer["findFieldLabel"]
-  let findForm: IRenderContainer["findForm"]
-  let render: IRenderContainer["render"]
+  let findElement: ICustomerFormRenderContainer["findElement"]
+  let findField: ICustomerFormRenderContainer["findField"]
+  let findFieldLabel: ICustomerFormRenderContainer["findFieldLabel"]
+  let findForm: ICustomerFormRenderContainer["findForm"]
+  let render: ICustomerFormRenderContainer["render"]
 
   beforeEach(() => {
     ;({ findElement, findField, findFieldLabel, findForm, render } = createContainer())
