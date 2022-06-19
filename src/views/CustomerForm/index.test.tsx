@@ -20,15 +20,16 @@ const defaultProps: ICustomerFormProps = {
   onCustomerCreated: noop,
 }
 
-type IRenderContainer = ICreateContainerResult<{ formIds: ["customer"] }>
+type IRenderContainer = ICreateContainerResult<{ formIds: ["customer"]; fieldNames: IFieldName[] }>
 
 describe("CustomerForm", () => {
   let container: IRenderContainer["container"]
+  let findField: IRenderContainer["findField"]
   let findForm: IRenderContainer["findForm"]
   let render: IRenderContainer["render"]
 
   beforeEach(() => {
-    ;({ container, findForm, render } = createContainer())
+    ;({ container, findField, findForm, render } = createContainer())
     // @ts-ignore
     jest.spyOn(globalThis, "fetch").mockReturnValue(createFetchSuccessfulResponse(undefined))
   })
@@ -36,12 +37,6 @@ describe("CustomerForm", () => {
   afterEach(() => {
     ;(globalThis.fetch as jest.Mock).mockRestore()
   })
-
-  const findField = ({ fieldName }: { fieldName: IFieldName }): HTMLInputElement => {
-    const field = findForm({ id: "customer" }).elements.namedItem(fieldName)
-    assert(field instanceof HTMLInputElement, `Cannot find a field with fieldName of [${fieldName}].`)
-    return field
-  }
 
   const findLabelFor = ({ fieldName }: { fieldName: IFieldName }): HTMLLabelElement => {
     const label = container.querySelector(`label[for="${fieldName}"]`)
@@ -54,7 +49,7 @@ describe("CustomerForm", () => {
       act(() => {
         render(<CustomerForm {...defaultProps} />)
       })
-      expect(findField({ fieldName }).type).toEqual("text")
+      expect(findField({ fieldName, formId: "customer" }).type).toEqual("text")
     })
   }
 
@@ -63,7 +58,7 @@ describe("CustomerForm", () => {
       act(() => {
         render(<CustomerForm {...defaultProps} />)
       })
-      expect(findField({ fieldName }).value).toEqual(aCustomer1[fieldName])
+      expect(findField({ fieldName, formId: "customer" }).value).toEqual(aCustomer1[fieldName])
     })
   }
 
@@ -87,7 +82,7 @@ describe("CustomerForm", () => {
       act(() => {
         render(<CustomerForm {...defaultProps} />)
       })
-      expect(findLabelFor({ fieldName }).htmlFor).toEqual(findField({ fieldName }).id)
+      expect(findLabelFor({ fieldName }).htmlFor).toEqual(findField({ fieldName, formId: "customer" }).id)
     })
   }
 
@@ -113,8 +108,10 @@ describe("CustomerForm", () => {
         render(<CustomerForm {...defaultProps} />)
       })
       act(() => {
-        // @ts-ignore
-        ReactDomTestUtils.Simulate.change(findField({ fieldName }), { target: { value: newValue } })
+        ReactDomTestUtils.Simulate.change(findField({ fieldName, formId: "customer" }), {
+          // @ts-ignore
+          target: { value: newValue },
+        })
       })
       ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
       expect(getRequestBodyOf(globalThis.fetch as jest.Mock)).toMatchObject({ [fieldName]: newValue })

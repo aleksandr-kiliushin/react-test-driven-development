@@ -1,8 +1,12 @@
 import assert from "node:assert"
 import ReactDom from "react-dom/client"
 
-export interface ICreateContainerResult<ContainerContentConfig extends { formIds: string[] }> {
+export interface ICreateContainerResult<ContainerContentConfig extends { fieldNames: string[]; formIds: string[] }> {
   container: HTMLDivElement
+  findField: (params: {
+    formId: ContainerContentConfig["formIds"][keyof ContainerContentConfig["formIds"]]
+    fieldName: ContainerContentConfig["fieldNames"][keyof ContainerContentConfig["fieldNames"]]
+  }) => HTMLInputElement
   findForm: (params: {
     id: ContainerContentConfig["formIds"][keyof ContainerContentConfig["formIds"]]
   }) => HTMLFormElement
@@ -19,8 +23,15 @@ export const createContainer = (): ICreateContainerResult<any> => {
     return form
   }
 
+  const findField: ICreateContainerResult<any>["findField"] = ({ fieldName, formId }): HTMLInputElement => {
+    const field = findForm({ id: formId }).elements.namedItem(fieldName)
+    assert(field instanceof HTMLInputElement, `Cannot find a field with fieldName of [${fieldName}].`)
+    return field
+  }
+
   return {
     container,
+    findField,
     findForm,
     render: (aComponent) => {
       root.render(aComponent)
