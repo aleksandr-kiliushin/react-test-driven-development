@@ -1,13 +1,12 @@
 import { noop } from "lodash"
 import assert from "node:assert"
 import React from "react"
-import ReactDom from "react-dom/client"
 import ReactDomTestUtils, { act } from "react-dom/test-utils"
 import "whatwg-fetch"
 
 import { aCustomer1 } from "#sampleData/someCustomers"
 import { ICustomer } from "#types/ICustomer"
-import { createContainer } from "#utils/testing/createContainer"
+import { ICreateContainerResult, createContainer } from "#utils/testing/createContainer"
 import { createFetchErrorResponse, createFetchSuccessfulResponse, getRequestBodyOf } from "#utils/testing/spyHelpers"
 
 import { CustomerForm, ICustomerFormProps } from "./index"
@@ -22,11 +21,12 @@ const defaultProps: ICustomerFormProps = {
 }
 
 describe("CustomerForm", () => {
-  let container: HTMLDivElement
-  let render: ReactDom.Root["render"]
+  let container: ICreateContainerResult["container"]
+  let findForm: ICreateContainerResult["findForm"]
+  let render: ICreateContainerResult["render"]
 
   beforeEach(() => {
-    ;({ container, render } = createContainer())
+    ;({ container, findForm, render } = createContainer())
     // @ts-ignore
     jest.spyOn(globalThis, "fetch").mockReturnValue(createFetchSuccessfulResponse(undefined))
   })
@@ -35,14 +35,8 @@ describe("CustomerForm", () => {
     ;(globalThis.fetch as jest.Mock).mockRestore()
   })
 
-  const findForm = (): HTMLFormElement => {
-    const form = container.querySelector(`form#customer`)
-    assert(form instanceof HTMLFormElement, `Cannot find a form with ID of [customer].`)
-    return form
-  }
-
   const findField = ({ fieldName }: { fieldName: IFieldName }): HTMLInputElement => {
-    const field = findForm().elements.namedItem(fieldName)
+    const field = findForm({ id: "customer" }).elements.namedItem(fieldName)
     assert(field instanceof HTMLInputElement, `Cannot find a field with fieldName of [${fieldName}].`)
     return field
   }
@@ -100,7 +94,7 @@ describe("CustomerForm", () => {
       act(() => {
         render(<CustomerForm {...defaultProps} />)
       })
-      ReactDomTestUtils.Simulate.submit(findForm())
+      ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
       expect(getRequestBodyOf(globalThis.fetch as jest.Mock)).toMatchObject({ [fieldName]: aCustomer1[fieldName] })
     })
   }
@@ -120,7 +114,7 @@ describe("CustomerForm", () => {
         // @ts-ignore
         ReactDomTestUtils.Simulate.change(findField({ fieldName }), { target: { value: newValue } })
       })
-      ReactDomTestUtils.Simulate.submit(findForm())
+      ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
       expect(getRequestBodyOf(globalThis.fetch as jest.Mock)).toMatchObject({ [fieldName]: newValue })
     })
   }
@@ -129,7 +123,7 @@ describe("CustomerForm", () => {
     act(() => {
       render(<CustomerForm {...defaultProps} />)
     })
-    expect(findForm()).not.toBeNull()
+    expect(findForm({ id: "customer" })).not.toBeNull()
   })
 
   describe("first name field", () => {
@@ -174,7 +168,7 @@ describe("CustomerForm", () => {
     act(() => {
       render(<CustomerForm {...defaultProps} />)
     })
-    ReactDomTestUtils.Simulate.submit(findForm())
+    ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
     expect(globalThis.fetch).toHaveBeenCalledWith(
       "/customers",
       expect.objectContaining({
@@ -192,7 +186,7 @@ describe("CustomerForm", () => {
       render(<CustomerForm {...defaultProps} onCustomerCreated={onCustomerCreatedSpy} />)
     })
     await act(async () => {
-      ReactDomTestUtils.Simulate.submit(findForm())
+      ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
     })
     expect(onCustomerCreatedSpy).toHaveBeenCalledWith(aCustomer1)
   })
@@ -204,7 +198,7 @@ describe("CustomerForm", () => {
       render(<CustomerForm {...defaultProps} onCustomerCreated={onCustomerCreatedSpy} />)
     })
     await act(async () => {
-      ReactDomTestUtils.Simulate.submit(findForm())
+      ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
     })
     expect(onCustomerCreatedSpy).not.toHaveBeenCalled()
   })
@@ -215,7 +209,7 @@ describe("CustomerForm", () => {
     act(() => {
       render(<CustomerForm {...defaultProps} />)
     })
-    ReactDomTestUtils.Simulate.submit(findForm(), { preventDefault: preventFormDefaultActionSpy })
+    ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }), { preventDefault: preventFormDefaultActionSpy })
     expect(preventFormDefaultActionSpy).toHaveBeenCalled()
   })
 
@@ -225,7 +219,7 @@ describe("CustomerForm", () => {
       render(<CustomerForm {...defaultProps} />)
     })
     await act(async () => {
-      ReactDomTestUtils.Simulate.submit(findForm())
+      ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
     })
     const errorMessage = container.querySelector("p.error")
     assert(errorMessage !== null, "Could not find errorMessage node.")
