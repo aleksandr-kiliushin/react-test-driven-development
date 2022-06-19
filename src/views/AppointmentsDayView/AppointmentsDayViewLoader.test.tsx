@@ -66,4 +66,9 @@ describe("AppointmentsDayViewLoader", () => {
       })
     )
   })
+
+  it("initially passes no data to AppointmentsDayView", async () => {
+    await renderAndWait(<AppointmentsDayViewLoader today={new Date()} />)
+    expect(AppointmentsDayViewExports.AppointmentsDayView).toHaveBeenCalledWith({ appointments: [] }, expect.anything())
+  })
 })

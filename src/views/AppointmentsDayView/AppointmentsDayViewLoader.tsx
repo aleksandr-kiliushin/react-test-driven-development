@@ -1,5 +1,7 @@
 import React from "react"
 
+import { AppointmentsDayView } from "./index"
+
 interface IAppointmentsDayViewLoaderProps {
   today: Date
 }
@@ -19,5 +21,5 @@ export const AppointmentsDayViewLoader: React.FC<IAppointmentsDayViewLoaderProps
     fetchAppointments()
   }, [from, to])
 
-  return null
+  return <AppointmentsDayView appointments={[]} />
 }
