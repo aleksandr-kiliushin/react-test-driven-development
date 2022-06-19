@@ -11,10 +11,10 @@ interface IAppointmentsDayViewLoaderProps {
 export const AppointmentsDayViewLoader: React.FC<IAppointmentsDayViewLoaderProps> = ({ today }) => {
   const [appointments, setAppointments] = React.useState<IAppointment[]>([])
 
-  const from = today.setHours(0, 0, 0, 0)
-  const to = today.setHours(23, 59, 59, 999)
-
   React.useEffect(() => {
+    const from = today.setHours(0, 0, 0, 0)
+    const to = today.setHours(23, 59, 59, 999)
+
     globalThis
       .fetch(`/appointments/${from}-${to}`, {
         method: "GET",
@@ -33,7 +33,7 @@ export const AppointmentsDayViewLoader: React.FC<IAppointmentsDayViewLoaderProps
         }))
       })
       .then(setAppointments)
-  }, [from, to])
+  }, [today])
 
   return <AppointmentsDayView appointments={appointments} />
 }
