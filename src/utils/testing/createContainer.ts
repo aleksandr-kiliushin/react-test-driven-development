@@ -3,6 +3,7 @@ import ReactDom from "react-dom/client"
 
 export interface ICreateContainerResult<ContainerContentConfig extends { fieldNames: string[]; formIds: string[] }> {
   container: HTMLDivElement
+  findElement(selector: string): Element
   findField: (params: {
     formId: ContainerContentConfig["formIds"][keyof ContainerContentConfig["formIds"]]
     fieldName: ContainerContentConfig["fieldNames"][keyof ContainerContentConfig["fieldNames"]]
@@ -17,9 +18,17 @@ export interface ICreateContainerResult<ContainerContentConfig extends { fieldNa
   render: ReactDom.Root["render"]
 }
 
+// ICreateAbstractContainer = ICreateContainerResult<any>
+
 export const createContainer = (): ICreateContainerResult<any> => {
   const container = document.createElement("div")
   const root = ReactDom.createRoot(container)
+
+  const findElement: ICreateContainerResult<any>["findElement"] = (selector: string) => {
+    const element = container.querySelector(selector)
+    assert(element instanceof Element, `Cannot find an element with selector of [${selector}].`)
+    return element
+  }
 
   const findForm: ICreateContainerResult<any>["findForm"] = ({ id }) => {
     const form = container.querySelector(`form#${id}`)
@@ -41,6 +50,7 @@ export const createContainer = (): ICreateContainerResult<any> => {
 
   return {
     container,
+    findElement,
     findField,
     findFieldLabel,
     findForm,

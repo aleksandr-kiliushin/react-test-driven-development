@@ -1,5 +1,4 @@
 import { noop } from "lodash"
-import assert from "node:assert"
 import React from "react"
 import ReactDomTestUtils, { act } from "react-dom/test-utils"
 import "whatwg-fetch"
@@ -23,14 +22,14 @@ const defaultProps: ICustomerFormProps = {
 type IRenderContainer = ICreateContainerResult<{ formIds: ["customer"]; fieldNames: IFieldName[] }>
 
 describe("CustomerForm", () => {
-  let container: IRenderContainer["container"]
+  let findElement: IRenderContainer["findElement"]
   let findField: IRenderContainer["findField"]
   let findFieldLabel: IRenderContainer["findFieldLabel"]
   let findForm: IRenderContainer["findForm"]
   let render: IRenderContainer["render"]
 
   beforeEach(() => {
-    ;({ container, findField, findFieldLabel, findForm, render } = createContainer())
+    ;({ findElement, findField, findFieldLabel, findForm, render } = createContainer())
     // @ts-ignore
     jest.spyOn(globalThis, "fetch").mockReturnValue(createFetchSuccessfulResponse(undefined))
   })
@@ -156,8 +155,7 @@ describe("CustomerForm", () => {
     act(() => {
       render(<CustomerForm {...defaultProps} />)
     })
-    const submitButton = container.querySelector('input[type="submit"]')
-    expect(submitButton).not.toBeNull()
+    expect(findElement('input[type="submit"]')).not.toBeNull()
   })
 
   it("calls fetch with the right properties when submitting data", () => {
@@ -217,8 +215,6 @@ describe("CustomerForm", () => {
     await act(async () => {
       ReactDomTestUtils.Simulate.submit(findForm({ id: "customer" }))
     })
-    const errorMessage = container.querySelector("p.error")
-    assert(errorMessage !== null, "Could not find errorMessage node.")
-    expect(errorMessage.textContent).toMatch("An error occurred during save.")
+    expect(findElement("p.error").textContent).toMatch("An error occurred during save.")
   })
 })
