@@ -25,11 +25,12 @@ type IRenderContainer = ICreateContainerResult<{ formIds: ["customer"]; fieldNam
 describe("CustomerForm", () => {
   let container: IRenderContainer["container"]
   let findField: IRenderContainer["findField"]
+  let findFieldLabel: IRenderContainer["findFieldLabel"]
   let findForm: IRenderContainer["findForm"]
   let render: IRenderContainer["render"]
 
   beforeEach(() => {
-    ;({ container, findField, findForm, render } = createContainer())
+    ;({ container, findField, findFieldLabel, findForm, render } = createContainer())
     // @ts-ignore
     jest.spyOn(globalThis, "fetch").mockReturnValue(createFetchSuccessfulResponse(undefined))
   })
@@ -37,12 +38,6 @@ describe("CustomerForm", () => {
   afterEach(() => {
     ;(globalThis.fetch as jest.Mock).mockRestore()
   })
-
-  const findLabelFor = ({ fieldName }: { fieldName: IFieldName }): HTMLLabelElement => {
-    const label = container.querySelector(`label[for="${fieldName}"]`)
-    assert(label instanceof HTMLLabelElement, `Cannot find a label with a [for] attribute of [${fieldName}].`)
-    return label
-  }
 
   const itRendersAsATextBox = ({ fieldName }: { fieldName: IFieldName }) => {
     it("renders as a text box.", () => {
@@ -73,7 +68,7 @@ describe("CustomerForm", () => {
       act(() => {
         render(<CustomerForm {...defaultProps} />)
       })
-      expect(findLabelFor({ fieldName }).textContent).toEqual(labelText)
+      expect(findFieldLabel({ fieldName, formId: "customer" }).textContent).toEqual(labelText)
     })
   }
 
@@ -82,7 +77,9 @@ describe("CustomerForm", () => {
       act(() => {
         render(<CustomerForm {...defaultProps} />)
       })
-      expect(findLabelFor({ fieldName }).htmlFor).toEqual(findField({ fieldName, formId: "customer" }).id)
+      expect(findFieldLabel({ fieldName, formId: "customer" }).htmlFor).toEqual(
+        findField({ fieldName, formId: "customer" }).id
+      )
     })
   }
 
