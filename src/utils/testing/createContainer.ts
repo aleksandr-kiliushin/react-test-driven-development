@@ -1,21 +1,19 @@
 import assert from "node:assert"
 import ReactDom from "react-dom/client"
 
-export type IFindForm<AllowedFormsIds extends string[]> = (params: {
-  id: AllowedFormsIds[keyof AllowedFormsIds]
-}) => HTMLFormElement
-
-export interface ICreateContainerResult {
+export interface ICreateContainerResult<ContainerContentConfig extends { formIds: string[] }> {
   container: HTMLDivElement
-  findForm: IFindForm<any>
+  findForm: (params: {
+    id: ContainerContentConfig["formIds"][keyof ContainerContentConfig["formIds"]]
+  }) => HTMLFormElement
   render: ReactDom.Root["render"]
 }
 
-export const createContainer = (): ICreateContainerResult => {
+export const createContainer = (): ICreateContainerResult<any> => {
   const container = document.createElement("div")
   const root = ReactDom.createRoot(container)
 
-  const findForm: ICreateContainerResult["findForm"] = ({ id }) => {
+  const findForm: ICreateContainerResult<any>["findForm"] = ({ id }) => {
     const form = container.querySelector(`form#${id}`)
     assert(form instanceof HTMLFormElement, `Cannot find a form with ID of [${id}].`)
     return form

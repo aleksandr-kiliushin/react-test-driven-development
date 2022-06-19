@@ -6,7 +6,7 @@ import "whatwg-fetch"
 
 import { aCustomer1 } from "#sampleData/someCustomers"
 import { ICustomer } from "#types/ICustomer"
-import { ICreateContainerResult, IFindForm, createContainer } from "#utils/testing/createContainer"
+import { ICreateContainerResult, createContainer } from "#utils/testing/createContainer"
 import { createFetchErrorResponse, createFetchSuccessfulResponse, getRequestBodyOf } from "#utils/testing/spyHelpers"
 
 import { CustomerForm, ICustomerFormProps } from "./index"
@@ -20,10 +20,12 @@ const defaultProps: ICustomerFormProps = {
   onCustomerCreated: noop,
 }
 
+type IRenderContainer = ICreateContainerResult<{ formIds: ["customer"] }>
+
 describe("CustomerForm", () => {
-  let container: ICreateContainerResult["container"]
-  let findForm: IFindForm<["customer"]>
-  let render: ICreateContainerResult["render"]
+  let container: IRenderContainer["container"]
+  let findForm: IRenderContainer["findForm"]
+  let render: IRenderContainer["render"]
 
   beforeEach(() => {
     ;({ container, findForm, render } = createContainer())
