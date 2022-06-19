@@ -21,9 +21,9 @@ const defaultProps: ICustomerFormProps = {
 }
 
 describe("CustomerForm", () => {
-  let container: ICreateContainerResult["container"]
-  let findForm: ICreateContainerResult["findForm"]
-  let render: ICreateContainerResult["render"]
+  let container: ICreateContainerResult<["customer"]>["container"]
+  let findForm: ICreateContainerResult<["customer"]>["findForm"]
+  let render: ICreateContainerResult<["customer"]>["render"]
 
   beforeEach(() => {
     ;({ container, findForm, render } = createContainer())
