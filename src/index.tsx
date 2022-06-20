@@ -2,6 +2,8 @@ import React from "react"
 import ReactDOM from "react-dom/client"
 import { BrowserRouter } from "react-router-dom"
 
+import { getRandomTimeSlots } from "#sampleData/getRandomTimeSlots"
+
 import { App } from "./views/App"
 
 import "./index.css"
@@ -19,3 +21,4 @@ root.render(
     <App />
   </BrowserRouter>
 )
+console.log("getRandomTimeSlots() >>", getRandomTimeSlots())

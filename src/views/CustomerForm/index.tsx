@@ -15,7 +15,7 @@ export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    const response = await fetch("/customers", {
+    const response = await fetch("/api/customers", {
       body: JSON.stringify({ firstName, lastName, phoneNumber }),
       credentials: "same-origin",
       headers: { "Content-Type": "application/json" },
@@ -28,7 +28,6 @@ export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData
     const createdCustomer = await response.json()
     setErrorMessage("")
     onCustomerCreated(createdCustomer)
-    // onCustomerCreated({ firstName, lastName, phoneNumber })
   }
 
   return (

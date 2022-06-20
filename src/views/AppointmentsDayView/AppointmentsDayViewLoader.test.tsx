@@ -58,7 +58,7 @@ describe("AppointmentsDayViewLoader", () => {
   it("fetches appointments happening today when component is mounted", async () => {
     await renderAndWait(<AppointmentsDayViewLoader today={today} />)
     expect(globalThis.fetch).toHaveBeenCalledWith(
-      `/appointments/${from}-${to}`,
+      `/api/appointments/${from}-${to}`,
       expect.objectContaining({
         credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
@@ -79,7 +79,7 @@ describe("AppointmentsDayViewLoader", () => {
     const to = tomorrow.setHours(23, 59, 59, 999)
     await renderAndWait(<AppointmentsDayViewLoader today={today} />)
     await renderAndWait(<AppointmentsDayViewLoader today={tomorrow} />)
-    expect(globalThis.fetch).toHaveBeenLastCalledWith(`/appointments/${from}-${to}`, expect.anything())
+    expect(globalThis.fetch).toHaveBeenLastCalledWith(`/api/appointments/${from}-${to}`, expect.anything())
   })
 
   it("calls globalThis.fetch just once", async () => {

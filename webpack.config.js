@@ -6,6 +6,9 @@ module.exports = {
   devServer: {
     historyApiFallback: true,
     port: 3456,
+    proxy: {
+      "/api": "http://localhost:3600",
+    },
   },
   devtool: "source-map",
   entry: "./src/index.tsx",

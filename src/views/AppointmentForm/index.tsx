@@ -58,7 +58,7 @@ export const AppointmentForm: React.FC<IAppointmentFormProps> = ({
           startsAtDate: selectedStartsAtDate,
           stylistName: selectedStylistName,
         })
-        fetch("/appointments", {
+        fetch("/api/appointments", {
           body: JSON.stringify({
             customerId: customer.id,
             serviceName: selectedServiceName,

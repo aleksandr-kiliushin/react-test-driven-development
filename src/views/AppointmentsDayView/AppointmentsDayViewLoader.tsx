@@ -16,7 +16,7 @@ export const AppointmentsDayViewLoader: React.FC<IAppointmentsDayViewLoaderProps
     const to = today.setHours(23, 59, 59, 999)
 
     globalThis
-      .fetch(`/appointments/${from}-${to}`, {
+      .fetch(`/api/appointments/${from}-${to}`, {
         method: "GET",
         credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
@@ -33,7 +33,6 @@ export const AppointmentsDayViewLoader: React.FC<IAppointmentsDayViewLoaderProps
         }))
       })
       .then(setAppointments)
-    // setAppointments(randomAppointmentsForToday)
   }, [today])
 
   return <AppointmentsDayView appointments={appointments} />

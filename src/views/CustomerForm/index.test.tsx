@@ -155,7 +155,7 @@ describe("CustomerForm", () => {
     render(<CustomerForm {...defaultProps} />)
     simulateSubmit(findForm({ id: "customer" }))
     expect(globalThis.fetch).toHaveBeenCalledWith(
-      "/customers",
+      "/api/customers",
       expect.objectContaining({
         credentials: "same-origin",
         headers: { "Content-Type": "application/json" },

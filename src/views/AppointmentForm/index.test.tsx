@@ -328,14 +328,14 @@ describe("AppointmentForm", () => {
     })
   })
 
-  it("sends entered data to '/appointments' via POST", () => {
+  it("sends entered data to '/api/appointments' via POST", () => {
     render(<AppointmentForm {...appointmentFormDefaultProps} />)
     selectService("Cut")
     selectStylist("Hanna")
     simulateChange(findTimeSlotRadioButton({ inputValue: aTimeSlotAtHannaIn6DaysAt_13_00.startsAt.toString() }))
     simulateSubmit(findForm({ id: "appointment" }))
     expect(globalThis.fetch).toHaveBeenCalledWith(
-      "/appointments",
+      "/api/appointments",
       expect.objectContaining({
         credentials: "same-origin",
         headers: { "Content-Type": "application/json" },

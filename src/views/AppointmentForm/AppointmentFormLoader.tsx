@@ -17,7 +17,7 @@ export const AppointmentFormLoader: React.FC<IAppointmentFormLoaderProps> = ({ c
 
   React.useEffect(() => {
     globalThis
-      .fetch("/availableTimeSlots", {
+      .fetch("/api/availableTimeSlots", {
         credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
         method: "GET",
@@ -30,15 +30,16 @@ export const AppointmentFormLoader: React.FC<IAppointmentFormLoaderProps> = ({ c
         }))
       })
       .then(setAvailableTimeSlots)
-    // setAvailableTimeSlots(getRandomTimeSlots())
   }, [])
 
   return (
     <AppointmentForm
-      availableServiceNames={["Blow-dry", "Cut"]}
+      availableServiceNames={["Blow-dry", "Cut", "Cut & color", "Beard trim", "Extensions"]}
       availableStylists={[
-        { name: "Hanna", sertifiedServicesNames: ["Cut"] },
+        { name: "Hanna", sertifiedServicesNames: ["Cut", "Cut & color"] },
         { name: "Suzan", sertifiedServicesNames: ["Cut", "Blow-dry"] },
+        { name: "George", sertifiedServicesNames: ["Beard trim"] },
+        { name: "Rebecca", sertifiedServicesNames: ["Extensions", "Blow-dry"] },
       ]}
       availableTimeSlots={availableTimeSlots}
       defaultServiceName="Cut"

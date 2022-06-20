@@ -54,7 +54,7 @@ describe("AppointmentFormLoader", () => {
   it("fetches data when component is mounted", async () => {
     await renderAndWait(<AppointmentFormLoader {...appointmentFormLoaderDefaultProps} />)
     expect(globalThis.fetch).toHaveBeenCalledWith(
-      "/availableTimeSlots",
+      "/api/availableTimeSlots",
       expect.objectContaining({
         credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
