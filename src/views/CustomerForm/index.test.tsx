@@ -175,7 +175,7 @@ describe("CustomerForm", () => {
 
   it("does not notify onCustomerCreated if the POST request returns an error", async () => {
     const onCustomerCreatedSpy = jest.fn()
-    ;(globalThis.fetch as jest.Mock).mockReturnValueOnce(createFetchErrorResponse({ body: {}, status: 500 }))
+    ;(globalThis.fetch as jest.Mock).mockReturnValueOnce(createFetchErrorResponse({ body: undefined, status: 500 }))
     render(<CustomerForm {...defaultProps} onCustomerCreated={onCustomerCreatedSpy} />)
     await simulateSubmitAndWait(findForm({ id: "customer" }))
     expect(onCustomerCreatedSpy).not.toHaveBeenCalled()
@@ -190,7 +190,7 @@ describe("CustomerForm", () => {
   })
 
   it("renders error message when fetch call fails", async () => {
-    ;(globalThis.fetch as jest.Mock).mockReturnValueOnce(createFetchErrorResponse({ body: {}, status: 500 }))
+    ;(globalThis.fetch as jest.Mock).mockReturnValueOnce(createFetchErrorResponse({ body: undefined, status: 500 }))
     render(<CustomerForm {...defaultProps} />)
     await simulateSubmitAndWait(findForm({ id: "customer" }))
     const errorMessageNode = findElement("p.error")
@@ -199,7 +199,7 @@ describe("CustomerForm", () => {
   })
 
   it("unmounts error message after successful submitting.", async () => {
-    ;(globalThis.fetch as jest.Mock).mockReturnValueOnce(createFetchErrorResponse({ body: {}, status: 500 }))
+    ;(globalThis.fetch as jest.Mock).mockReturnValueOnce(createFetchErrorResponse({ body: undefined, status: 500 }))
     ;(globalThis.fetch as jest.Mock).mockReturnValueOnce(createFetchSuccessfulResponse(aCustomer1))
     render(<CustomerForm {...defaultProps} />)
     await simulateSubmitAndWait(findForm({ id: "customer" }))
@@ -288,5 +288,6 @@ describe("CustomerForm", () => {
     const phoneNumberFieldErrorMessageNode = findElement("input[name='phoneNumber'] ~ p.error")
     assert(phoneNumberFieldErrorMessageNode !== null, "Phone number error is not found.")
     expect(phoneNumberFieldErrorMessageNode.textContent).toMatch(serverErrors.phoneNumber)
+    // expect("input[type='submit'] + p.error").toBeNull()
   })
 })

@@ -49,8 +49,12 @@ export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData
       headers: { "Content-Type": "application/json" },
       method: "POST",
     })
-    if (response.ok === false) {
+    if (response.ok === false && response.status === 500) {
       setErrorMessage("An error occurred during save.")
+      setValidationErrors(errors)
+      return
+    }
+    if (response.ok === false && response.status !== 500) {
       const serverErrors = (await response.json()).errors
       for (const fieldName in serverErrors) {
         errors[fieldName as IFieldName] = serverErrors[fieldName as IFieldName]
