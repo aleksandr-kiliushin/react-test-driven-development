@@ -12,7 +12,7 @@ import { CustomerForm, ICustomerFormProps } from "./index"
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true // TODO: Move to test setup file.
 
-type IFieldName = keyof ICustomer
+type IFieldName = keyof Omit<ICustomer, "id">
 
 const defaultProps: ICustomerFormProps = {
   initialCustomerData: aCustomer1,
@@ -258,7 +258,7 @@ describe("CustomerForm", () => {
     render(
       <CustomerForm
         {...defaultProps}
-        initialCustomerData={{ firstName: "", id: 1, lastName: "Johnson", phoneNumber: "123wef" }}
+        initialCustomerData={{ firstName: "", lastName: "Johnson", phoneNumber: "123wef" }}
       />
     )
     simulateSubmit(findForm({ id: "customer" }))

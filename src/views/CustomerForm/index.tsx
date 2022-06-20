@@ -4,7 +4,7 @@ import { ErrorMessage } from "#components/ErrorMessage"
 import { ICustomer } from "#types/ICustomer"
 
 export interface ICustomerFormProps {
-  initialCustomerData: ICustomer
+  initialCustomerData: Omit<ICustomer, "id">
   onCustomerCreated(responseData: unknown): void
 }
 
@@ -12,7 +12,9 @@ export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData
   const [firstName, setFirstName] = React.useState<string>(initialCustomerData.firstName)
   const [lastName, setLastName] = React.useState<string>(initialCustomerData.lastName)
   const [phoneNumber, setPhoneNumber] = React.useState<string>(initialCustomerData.phoneNumber)
-  const [validationErrors, setValidationErrors] = React.useState<Partial<Record<keyof ICustomer, string | undefined>>>({
+  const [validationErrors, setValidationErrors] = React.useState<
+    Record<keyof Omit<ICustomer, "id">, string | undefined>
+  >({
     firstName: undefined,
     lastName: undefined,
     phoneNumber: undefined,
