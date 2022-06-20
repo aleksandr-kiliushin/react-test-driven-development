@@ -56,10 +56,11 @@ export const App: React.FC = () => {
                 { name: "Suzan", sertifiedServicesNames: ["Cut", "Blow-dry"] },
               ]}
               availableTimeSlots={getRandomTimeSlots()}
+              customer={aCustomer1}
+              defaultServiceName="Cut"
               onSubmit={(formValues) => {
                 console.log(JSON.stringify(formValues, null, 2))
               }}
-              defaultServiceName="Cut"
               salonClosesAt={19}
               salonOpensAt={9}
               today={new Date()}

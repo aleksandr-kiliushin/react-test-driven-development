@@ -13,6 +13,7 @@ const todayAt = ({ hours }: { hours: number }) => {
 export const randomAppointmentsForToday: IAppointment[] = [10, 11, 12, 13, 14, 15, 16].map<IAppointment>((hours) => ({
   customer: {
     firstName: faker.name.firstName(),
+    id: parseFloat(faker.random.numeric()),
     lastName: faker.name.lastName(),
     phoneNumber: faker.phone.phoneNumber(),
   },

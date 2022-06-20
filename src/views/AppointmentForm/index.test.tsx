@@ -3,6 +3,7 @@ import assert from "node:assert"
 import React from "react"
 import "whatwg-fetch"
 
+import { aCustomer1 } from "#sampleData/someCustomers"
 import {
   aTimeSlotAtHannaIn6DaysAt_13_00,
   aTimeSlotAtHannaTodayAt_13_30,
@@ -10,7 +11,7 @@ import {
   aTimeSlotAtSuzanTodayAt_12_00,
 } from "#sampleData/someTimeSlots"
 import { IRenderContainer, createContainer } from "#utils/testing/createContainer"
-import { createFetchSuccessfulResponse } from "#utils/testing/spyHelpers"
+import { createFetchSuccessfulResponse, getRequestBodyOf } from "#utils/testing/spyHelpers"
 
 import { AppointmentForm, IAppointmentFormProps, IFieldName } from "./index"
 
@@ -28,6 +29,7 @@ const appointmentFormDefaultProps: IAppointmentFormProps = {
     aTimeSlotAtSuzanInTwoDaysAt_12_00,
     aTimeSlotAtHannaIn6DaysAt_13_00,
   ],
+  customer: aCustomer1,
   defaultServiceName: "Blow-dry",
   onSubmit: noop,
   salonClosesAt: 14,
@@ -324,27 +326,33 @@ describe("AppointmentForm", () => {
       expect(radioButton3.checked).toEqual(false)
       expect(radioButton4.checked).toEqual(true)
     })
+  })
 
-    it("sends entered data to '/appointments' via POST", () => {
-      render(<AppointmentForm {...appointmentFormDefaultProps} />)
-      selectService("Cut")
-      selectStylist("Hanna")
-      simulateChange(findTimeSlotRadioButton({ inputValue: aTimeSlotAtHannaIn6DaysAt_13_00.startsAt.toString() }))
-      simulateSubmit(findForm({ id: "appointment" }))
-      expect(globalThis.fetch).toHaveBeenCalledWith(
-        "/appointments",
-        expect.objectContaining({
-          credentials: "same-origin",
-          headers: { "Content-Type": "application/json" },
-          method: "POST",
-        })
-      )
-      const requestBody = JSON.parse((globalThis.fetch as jest.Mock).mock.calls[0][1].body)
-      expect(requestBody).toMatchObject({
-        serviceName: "Cut",
-        startsAtDate: aTimeSlotAtHannaIn6DaysAt_13_00.startsAt.toString(),
-        stylistName: "Hanna",
+  it("sends entered data to '/appointments' via POST", () => {
+    render(<AppointmentForm {...appointmentFormDefaultProps} />)
+    selectService("Cut")
+    selectStylist("Hanna")
+    simulateChange(findTimeSlotRadioButton({ inputValue: aTimeSlotAtHannaIn6DaysAt_13_00.startsAt.toString() }))
+    simulateSubmit(findForm({ id: "appointment" }))
+    expect(globalThis.fetch).toHaveBeenCalledWith(
+      "/appointments",
+      expect.objectContaining({
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
       })
+    )
+    const requestBody = JSON.parse((globalThis.fetch as jest.Mock).mock.calls[0][1].body)
+    expect(requestBody).toMatchObject({
+      serviceName: "Cut",
+      startsAtDate: aTimeSlotAtHannaIn6DaysAt_13_00.startsAt.toString(),
+      stylistName: "Hanna",
     })
+  })
+
+  it("passes the customer id to fetch when submitting", () => {
+    render(<AppointmentForm {...appointmentFormDefaultProps} />)
+    simulateSubmit(findForm({ id: "appointment" }))
+    expect(getRequestBodyOf(globalThis.fetch as jest.Mock)).toMatchObject({ customerId: aCustomer1.id })
   })
 })

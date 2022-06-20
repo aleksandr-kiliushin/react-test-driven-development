@@ -1,5 +1,6 @@
 import React from "react"
 
+import { ICustomer } from "#types/ICustomer"
 import { IStylist } from "#types/IStylist"
 import { ITimeSlot } from "#types/ITimeSlot"
 
@@ -11,8 +12,10 @@ export interface IAppointmentFormProps {
   availableServiceNames: string[]
   availableStylists: IStylist[]
   availableTimeSlots: ITimeSlot[]
+  customer: ICustomer
   defaultServiceName: string
   onSubmit(formValues: {
+    customerId: ICustomer["id"]
     serviceName: string
     startsAtDate: ITimeSlot["startsAt"] | undefined
     stylistName: IStylist["name"] | "Not selected"
@@ -26,6 +29,7 @@ export const AppointmentForm: React.FC<IAppointmentFormProps> = ({
   availableServiceNames,
   availableStylists,
   availableTimeSlots,
+  customer,
   defaultServiceName,
   onSubmit,
   salonClosesAt,
@@ -49,12 +53,14 @@ export const AppointmentForm: React.FC<IAppointmentFormProps> = ({
       onSubmit={(event) => {
         event.preventDefault()
         onSubmit({
+          customerId: customer.id,
           serviceName: selectedServiceName,
-          stylistName: selectedStylistName,
           startsAtDate: selectedStartsAtDate,
+          stylistName: selectedStylistName,
         })
         fetch("/appointments", {
           body: JSON.stringify({
+            customerId: customer.id,
             serviceName: selectedServiceName,
             stylistName: selectedStylistName,
             startsAtDate: selectedStartsAtDate ? selectedStartsAtDate.toString() : null,
