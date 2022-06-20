@@ -33,6 +33,7 @@ export const AppointmentsDayViewLoader: React.FC<IAppointmentsDayViewLoaderProps
         }))
       })
       .then(setAppointments)
+    // setAppointments(randomAppointmentsForToday)
   }, [today])
 
   return <AppointmentsDayView appointments={appointments} />

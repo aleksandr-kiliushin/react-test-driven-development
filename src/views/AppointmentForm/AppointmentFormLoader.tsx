@@ -1,6 +1,5 @@
 import React from "react"
 
-import { aTimeSlotAtHannaIn6DaysAt_13_00, aTimeSlotAtHannaTodayAt_13_30 } from "#sampleData/someTimeSlots"
 import { ICustomer } from "#types/ICustomer"
 import { ITimeSlot } from "#types/ITimeSlot"
 
@@ -31,17 +30,21 @@ export const AppointmentFormLoader: React.FC<IAppointmentFormLoaderProps> = ({ c
         }))
       })
       .then(setAvailableTimeSlots)
+    // setAvailableTimeSlots(getRandomTimeSlots())
   }, [])
 
   return (
     <AppointmentForm
       availableServiceNames={["Blow-dry", "Cut"]}
-      availableStylists={[aTimeSlotAtHannaIn6DaysAt_13_00.stylist, aTimeSlotAtHannaTodayAt_13_30.stylist]}
+      availableStylists={[
+        { name: "Hanna", sertifiedServicesNames: ["Cut"] },
+        { name: "Suzan", sertifiedServicesNames: ["Cut", "Blow-dry"] },
+      ]}
       availableTimeSlots={availableTimeSlots}
       defaultServiceName="Cut"
       onSubmit={onSave}
-      salonClosesAt={9}
-      salonOpensAt={19}
+      salonClosesAt={19}
+      salonOpensAt={9}
       today={today}
       customer={customer}
     />

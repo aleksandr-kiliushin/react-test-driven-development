@@ -1,5 +1,6 @@
 import React from "react"
 
+import { aCustomer1 } from "#sampleData/someCustomers"
 import { ICustomer } from "#types/ICustomer"
 
 import { AppointmentFormLoader } from "./AppointmentForm/AppointmentFormLoader"
@@ -28,8 +29,7 @@ export const App: React.FC = () => {
       if (customer === undefined) return null
       return <AppointmentFormLoader customer={customer} onSave={transitionToDayView} />
     case "addCustomer":
-      if (customer === undefined) return null
-      return <CustomerForm initialCustomerData={customer} onCustomerCreated={transitionToAddAppointment} />
+      return <CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={transitionToAddAppointment} />
     default:
       return (
         <React.Fragment>

@@ -28,6 +28,7 @@ export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData
     const createdCustomer = await response.json()
     setErrorMessage("")
     onCustomerCreated(createdCustomer)
+    // onCustomerCreated({ firstName, lastName, phoneNumber })
   }
 
   return (
@@ -63,7 +64,7 @@ export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData
         />
       </div>
       <input type="submit" value="Add" />
-      {errorMessage !== "" && <p className="error">{errorMessage}</p>}
+      {errorMessage !== "" && <p className="error text-red-700">{errorMessage}</p>}
     </form>
   )
 }
