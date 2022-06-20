@@ -18,6 +18,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": false,
     "paths": {
+      "#components/*": ["src/components/*"],
       "#declarations/*": ["declarations/*"],
       "#sampleData/*": ["src/sampleData/*"],
       "#types/*": ["src/types/*"],

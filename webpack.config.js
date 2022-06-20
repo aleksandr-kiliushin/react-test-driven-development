@@ -61,6 +61,7 @@ module.exports = {
   ],
   resolve: {
     alias: {
+      "#components": path.resolve(process.cwd(), "src/components"),
       "#sampleData": path.resolve(process.cwd(), "src/sampleData"),
       "#utils": path.resolve(process.cwd(), "src/utils"),
     },

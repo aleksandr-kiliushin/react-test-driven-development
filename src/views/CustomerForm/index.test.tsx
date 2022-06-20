@@ -1,7 +1,6 @@
 import { noop } from "lodash"
 import assert from "node:assert"
 import React from "react"
-import { act } from "react-dom/test-utils"
 import "whatwg-fetch"
 
 import { aCustomer1 } from "#sampleData/someCustomers"
@@ -28,6 +27,7 @@ describe("CustomerForm", () => {
   let findFieldLabel: ICustomerFormRenderContainer["findFieldLabel"]
   let findForm: ICustomerFormRenderContainer["findForm"]
   let render: ICustomerFormRenderContainer["render"]
+  let simulateBlur: ICustomerFormRenderContainer["simulateBlur"]
   let simulateChange: ICustomerFormRenderContainer["simulateChange"]
   let simulateSubmit: ICustomerFormRenderContainer["simulateSubmit"]
   let simulateSubmitAndWait: ICustomerFormRenderContainer["simulateSubmitAndWait"]
@@ -39,6 +39,7 @@ describe("CustomerForm", () => {
       findFieldLabel,
       findForm,
       render,
+      simulateBlur,
       simulateChange,
       simulateSubmit,
       simulateSubmitAndWait,
@@ -200,12 +201,56 @@ describe("CustomerForm", () => {
   it("unmounts error message after successful submitting.", async () => {
     ;(globalThis.fetch as jest.Mock).mockReturnValueOnce(createFetchErrorResponse())
     ;(globalThis.fetch as jest.Mock).mockReturnValueOnce(createFetchSuccessfulResponse(aCustomer1))
-    act(() => {
-      render(<CustomerForm {...defaultProps} />)
-    })
+    render(<CustomerForm {...defaultProps} />)
     await simulateSubmitAndWait(findForm({ id: "customer" }))
     expect(findElement("p.error")).not.toBeNull()
     await simulateSubmitAndWait(findForm({ id: "customer" }))
     expect(findElement("p.error")).toBeNull()
+  })
+
+  describe("validation", () => {
+    it("displays error after blur when first name field is blank", () => {
+      render(<CustomerForm {...defaultProps} />)
+      const firstNameField = findField({ fieldName: "firstName", formId: "customer" })
+      // @ts-ignore
+      simulateChange(firstNameField, { target: { value: "    " } })
+      simulateBlur(firstNameField)
+      const errorMessageNode = findElement(".error")
+      assert(errorMessageNode !== null, "Field error message for firstName is not found.")
+      expect(errorMessageNode.textContent).toMatch("Required.")
+    })
+
+    it("displays error after blur when last name field is blank", () => {
+      render(<CustomerForm {...defaultProps} />)
+      const lastNameField = findField({ fieldName: "lastName", formId: "customer" })
+      // @ts-ignore
+      simulateChange(lastNameField, { target: { value: "    " } })
+      simulateBlur(lastNameField)
+      const errorMessageNode = findElement(".error")
+      assert(errorMessageNode !== null, "Field error message for firstName is not found.")
+      expect(errorMessageNode.textContent).toMatch("Required.")
+    })
+
+    it("displays error after blur when phone number field is blank", () => {
+      render(<CustomerForm {...defaultProps} />)
+      const phoneNumberField = findField({ fieldName: "phoneNumber", formId: "customer" })
+      // @ts-ignore
+      simulateChange(phoneNumberField, { target: { value: "    " } })
+      simulateBlur(phoneNumberField)
+      const errorMessageNode = findElement(".error")
+      assert(errorMessageNode !== null, "Field error message for phoneNumber is not found.")
+      expect(errorMessageNode.textContent).toMatch("Required.")
+    })
+
+    it("displays error after blur when phone number field is filled with not acceptable characters", () => {
+      render(<CustomerForm {...defaultProps} />)
+      const phoneNumberField = findField({ fieldName: "phoneNumber", formId: "customer" })
+      // @ts-ignore
+      simulateChange(phoneNumberField, { target: { value: "+7 123 456 789 hehe" } })
+      simulateBlur(phoneNumberField)
+      const errorMessageNode = findElement(".error")
+      assert(errorMessageNode !== null, "Field error message for phoneNumber is not found.")
+      expect(errorMessageNode.textContent).toMatch("Only numbers, spaces and these symbols are allowed: ( ) + -.")
+    })
   })
 })

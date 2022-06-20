@@ -19,6 +19,7 @@ export interface IRenderContainer<ContainerContentConfig extends { fieldNames: s
   }) => HTMLFormElement
   render: ReactDom.Root["render"]
   renderAndWait(children: React.ReactNode): Promise<void>
+  simulateBlur(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): void
   simulateChange(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): void
   simulateClick(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): void
   simulateSubmit(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): void
@@ -98,6 +99,7 @@ export const createContainer = (): IAbstractRenderContainer => {
     findForm,
     render,
     renderAndWait,
+    simulateBlur: createEventSimulator("blur"),
     simulateChange: createEventSimulator("change"),
     simulateClick: createEventSimulator("click"),
     simulateSubmit: createEventSimulator("submit"),
