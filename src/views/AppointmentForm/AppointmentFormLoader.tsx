@@ -1,10 +1,19 @@
 import React from "react"
 
+import { aTimeSlotAtHannaIn6DaysAt_13_00, aTimeSlotAtHannaTodayAt_13_30 } from "#sampleData/someTimeSlots"
+import { ICustomer } from "#types/ICustomer"
 import { ITimeSlot } from "#types/ITimeSlot"
 
 import { AppointmentForm } from "./index"
 
-export const AppointmentFormLoader: React.FC = () => {
+const today = new Date()
+
+export interface IAppointmentFormLoaderProps {
+  customer: ICustomer
+  onSave(): void
+}
+
+export const AppointmentFormLoader: React.FC<IAppointmentFormLoaderProps> = ({ customer, onSave }) => {
   const [availableTimeSlots, setAvailableTimeSlots] = React.useState<ITimeSlot[]>([])
 
   React.useEffect(() => {
@@ -25,22 +34,16 @@ export const AppointmentFormLoader: React.FC = () => {
   }, [])
 
   return (
-    // @ts-ignore
     <AppointmentForm
-      // availableServiceNames={[]}
-      // availableStylists={[]}
+      availableServiceNames={["Blow-dry", "Cut"]}
+      availableStylists={[aTimeSlotAtHannaIn6DaysAt_13_00.stylist, aTimeSlotAtHannaTodayAt_13_30.stylist]}
       availableTimeSlots={availableTimeSlots}
-      // defaultServiceName={""}
-      // onSubmit={function (formValues: {
-      //   serviceName: string
-      //   startsAtDate: Date | undefined
-      //   stylistName: string
-      // }): void {
-      //   throw new Error("Function not implemented.")
-      // }}
-      // salonClosesAt={0}
-      // salonOpensAt={0}
-      // today={new Date()}
+      defaultServiceName="Cut"
+      onSubmit={onSave}
+      salonClosesAt={9}
+      salonOpensAt={19}
+      today={today}
+      customer={customer}
     />
   )
 }

@@ -1,6 +1,8 @@
+import { noop } from "lodash"
 import React from "react"
 import "whatwg-fetch"
 
+import { aCustomer1 } from "#sampleData/someCustomers"
 import {
   aTimeSlotAtHannaIn6DaysAt_13_00,
   aTimeSlotAtHannaTodayAt_13_30,
@@ -10,7 +12,7 @@ import {
 import { IRenderContainer, createContainer } from "#utils/testing/createContainer"
 import { createFetchSuccessfulResponse } from "#utils/testing/spyHelpers"
 
-import { AppointmentFormLoader } from "./AppointmentFormLoader"
+import { AppointmentFormLoader, IAppointmentFormLoaderProps } from "./AppointmentFormLoader"
 import * as AppointmentFormExports from "./index"
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true // TODO: Move to test setup file.
@@ -29,6 +31,11 @@ const availableTimeSlotsServerResponse = availableTimeSlots.map((aTimeSlot) => (
   stylist: aTimeSlot.stylist,
 }))
 
+const appointmentFormLoaderDefaultProps: IAppointmentFormLoaderProps = {
+  customer: aCustomer1,
+  onSave: noop,
+}
+
 describe("AppointmentFormLoader", () => {
   let renderAndWait: IAppointmentFormLoaderRenderContainer["renderAndWait"]
 
@@ -45,7 +52,7 @@ describe("AppointmentFormLoader", () => {
   })
 
   it("fetches data when component is mounted", async () => {
-    await renderAndWait(<AppointmentFormLoader />)
+    await renderAndWait(<AppointmentFormLoader {...appointmentFormLoaderDefaultProps} />)
     expect(globalThis.fetch).toHaveBeenCalledWith(
       "/availableTimeSlots",
       expect.objectContaining({
@@ -56,19 +63,9 @@ describe("AppointmentFormLoader", () => {
     )
   })
 
-  it("initially passes no data to AppointmentForm", async () => {
-    await renderAndWait(<AppointmentFormLoader />)
-    expect(AppointmentFormExports.AppointmentForm).toHaveBeenCalledWith({ availableTimeSlots: [] }, expect.anything())
-  })
-
-  it("displays time slots that are fetched on mount", async () => {
-    await renderAndWait(<AppointmentFormLoader />)
-    expect(AppointmentFormExports.AppointmentForm).toHaveBeenLastCalledWith({ availableTimeSlots }, expect.anything())
-  })
-
   it("calls globalThis.fetch just once", async () => {
-    await renderAndWait(<AppointmentFormLoader />)
-    await renderAndWait(<AppointmentFormLoader />)
+    await renderAndWait(<AppointmentFormLoader {...appointmentFormLoaderDefaultProps} />)
+    await renderAndWait(<AppointmentFormLoader {...appointmentFormLoaderDefaultProps} />)
     expect(globalThis.fetch).toHaveBeenCalledTimes(1)
   })
 })
