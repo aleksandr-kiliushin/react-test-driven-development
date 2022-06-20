@@ -21,6 +21,27 @@ export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+
+    const errors = { ...validationErrors }
+
+    if (firstName.trim() === "") {
+      errors.firstName = "Required."
+      setValidationErrors(errors)
+    }
+    if (lastName.trim() === "") {
+      errors.lastName = "Required."
+      setValidationErrors(errors)
+    }
+    if (phoneNumber.trim() === "") {
+      errors.phoneNumber = "Required."
+      setValidationErrors(errors)
+    } else if (/^[0-9+()\- ]*$/.test(phoneNumber) === false) {
+      errors.phoneNumber = "Only numbers, spaces and these symbols are allowed: ( ) + -."
+      setValidationErrors(errors)
+    }
+
+    if (Object.values(errors).some((aFieldError) => aFieldError !== undefined)) return
+
     const response = await fetch("/api/customers", {
       body: JSON.stringify({ firstName, lastName, phoneNumber }),
       credentials: "same-origin",
@@ -55,7 +76,6 @@ export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData
           value={firstName}
         />
         <ErrorMessage message={validationErrors.firstName} />
-        {validationErrors.firstName !== undefined && <p className="error text-red-700">{validationErrors.firstName}</p>}
       </div>
       <div>
         <label htmlFor="lastName">Last name</label>
@@ -64,7 +84,7 @@ export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData
           name="lastName"
           onBlur={(event) => {
             if (event.target.value.trim() === "") {
-              setValidationErrors({ ...validationErrors, firstName: "Required." })
+              setValidationErrors({ ...validationErrors, lastName: "Required." })
             }
           }}
           onChange={(event) => {

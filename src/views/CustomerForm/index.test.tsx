@@ -253,4 +253,28 @@ describe("CustomerForm", () => {
       expect(errorMessageNode.textContent).toMatch("Only numbers, spaces and these symbols are allowed: ( ) + -.")
     })
   })
+
+  it("does not submit the form and sets error messages when there are validation errors", () => {
+    render(
+      <CustomerForm
+        {...defaultProps}
+        initialCustomerData={{ firstName: "", id: 1, lastName: "Johnson", phoneNumber: "123wef" }}
+      />
+    )
+    simulateSubmit(findForm({ id: "customer" }))
+    expect(globalThis.fetch).not.toHaveBeenCalled()
+
+    const firstNameFieldErrorMessageNode = findElement("input[name='firstName'] ~ p.error")
+    assert(firstNameFieldErrorMessageNode !== null, "firstName field error not found")
+    expect(firstNameFieldErrorMessageNode.textContent).toMatch("Required.")
+
+    const lastNameFieldErrorMessageNode = findElement("input[name='lastName'] ~ p.error")
+    expect(lastNameFieldErrorMessageNode).toBeNull()
+
+    const phoneNumberFieldErrorMessageNode = findElement("input[name='phoneNumber'] ~ p.error")
+    assert(phoneNumberFieldErrorMessageNode !== null, "phoneNumber field error not found")
+    expect(phoneNumberFieldErrorMessageNode.textContent).toMatch(
+      "Only numbers, spaces and these symbols are allowed: ( ) + -."
+    )
+  })
 })
