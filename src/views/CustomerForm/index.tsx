@@ -3,6 +3,8 @@ import React from "react"
 import { ErrorMessage } from "#components/ErrorMessage"
 import { ICustomer } from "#types/ICustomer"
 
+type IFieldName = keyof Omit<ICustomer, "id">
+
 export interface ICustomerFormProps {
   initialCustomerData: Omit<ICustomer, "id">
   onCustomerCreated(responseData: unknown): void
@@ -12,9 +14,7 @@ export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData
   const [firstName, setFirstName] = React.useState<string>(initialCustomerData.firstName)
   const [lastName, setLastName] = React.useState<string>(initialCustomerData.lastName)
   const [phoneNumber, setPhoneNumber] = React.useState<string>(initialCustomerData.phoneNumber)
-  const [validationErrors, setValidationErrors] = React.useState<
-    Record<keyof Omit<ICustomer, "id">, string | undefined>
-  >({
+  const [validationErrors, setValidationErrors] = React.useState<Record<IFieldName, string | undefined>>({
     firstName: undefined,
     lastName: undefined,
     phoneNumber: undefined,
@@ -51,6 +51,11 @@ export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData
     })
     if (response.ok === false) {
       setErrorMessage("An error occurred during save.")
+      const serverErrors = (await response.json()).errors
+      for (const fieldName in serverErrors) {
+        errors[fieldName as IFieldName] = serverErrors[fieldName as IFieldName]
+      }
+      setValidationErrors(errors)
       return
     }
     const createdCustomer = await response.json()
