@@ -26,21 +26,20 @@ export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData
 
     if (firstName.trim() === "") {
       errors.firstName = "Required."
-      setValidationErrors(errors)
     }
     if (lastName.trim() === "") {
       errors.lastName = "Required."
-      setValidationErrors(errors)
     }
     if (phoneNumber.trim() === "") {
       errors.phoneNumber = "Required."
-      setValidationErrors(errors)
     } else if (/^[0-9+()\- ]*$/.test(phoneNumber) === false) {
       errors.phoneNumber = "Only numbers, spaces and these symbols are allowed: ( ) + -."
-      setValidationErrors(errors)
     }
 
-    if (Object.values(errors).some((aFieldError) => aFieldError !== undefined)) return
+    if (Object.values(errors).some((aFieldError) => aFieldError !== undefined)) {
+      setValidationErrors(errors)
+      return
+    }
 
     const response = await fetch("/api/customers", {
       body: JSON.stringify({ firstName, lastName, phoneNumber }),
