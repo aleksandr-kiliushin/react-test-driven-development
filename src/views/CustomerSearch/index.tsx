@@ -7,30 +7,31 @@ import { NavigationButtons } from "./NavigationButtons"
 
 export const CustomerSearch: React.FC = () => {
   const [customers, setCustomers] = React.useState<ICustomer[]>([])
-  const [queryString, setQueryString] = React.useState<string>("")
-  const [previousQueryString, setPreviousQueryString] = React.useState<string>("")
+  const [queryStrings, setQueryStrings] = React.useState<string[]>([])
 
   React.useEffect(() => {
-    globalThis
-      .fetch(`/customers${queryString}`, {
-        method: "GET",
+    const fetchData = async () => {
+      let queryString = ""
+      if (queryStrings.length > 0) queryString = queryStrings[queryStrings.length - 1]
+      const result = await globalThis.fetch(`/customers${queryString}`, {
         credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
+        method: "GET",
       })
-      .then((response) => response.json())
-      .then(setCustomers)
-  }, [queryString])
+      setCustomers(await result.json())
+    }
+    fetchData()
+  }, [queryStrings])
 
   const onNextButtonClick = React.useCallback(() => {
     const after = customers[customers.length - 1].id
-    const newQueryString = `?after=${after}`
-    setPreviousQueryString(queryString)
-    setQueryString(newQueryString)
-  }, [customers])
+    const queryString = `?after=${after}`
+    setQueryStrings([...queryStrings, queryString])
+  }, [customers, queryStrings])
 
   const onPreviousButtonClick = React.useCallback(() => {
-    setQueryString(previousQueryString)
-  }, [previousQueryString])
+    setQueryStrings(queryStrings.slice(0, -1))
+  }, [queryStrings])
 
   return (
     <>
