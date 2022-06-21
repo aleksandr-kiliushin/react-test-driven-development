@@ -74,7 +74,7 @@ describe("CustomerSearch", () => {
 
   it("fetches all customer data when component mounts", async () => {
     await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
-    expect(globalThis.fetch).toHaveBeenCalledWith("/customers", {
+    expect(globalThis.fetch).toHaveBeenCalledWith("/api/customers", {
       method: "GET",
       credentials: "same-origin",
       headers: { "Content-Type": "application/json" },
@@ -105,7 +105,7 @@ describe("CustomerSearch", () => {
     const nextPageButton = findElement("button#next-page")
     assert(nextPageButton !== null, "Next page button not found.")
     await simulateClickAndWait(nextPageButton)
-    expect(globalThis.fetch).toHaveBeenLastCalledWith(`/customers?after=${lastLoadedCustomerId}`, expect.anything())
+    expect(globalThis.fetch).toHaveBeenLastCalledWith(`/api/customers?after=${lastLoadedCustomerId}`, expect.anything())
   })
 
   it("has a previous button", async () => {
@@ -122,7 +122,7 @@ describe("CustomerSearch", () => {
     assert(previousPageButton !== null, "previous-page button not found")
     await simulateClickAndWait(nextPageButton)
     await simulateClickAndWait(previousPageButton)
-    expect(globalThis.fetch).toHaveBeenLastCalledWith("/customers", expect.anything())
+    expect(globalThis.fetch).toHaveBeenLastCalledWith("/api/customers", expect.anything())
   })
 
   it("moves back one page when clicking previous after multiple clicks of the next button", async () => {
@@ -137,7 +137,7 @@ describe("CustomerSearch", () => {
     await simulateClickAndWait(nextPageButton)
     await simulateClickAndWait(nextPageButton)
     await simulateClickAndWait(previousPageButton)
-    expect(globalThis.fetch).toHaveBeenLastCalledWith("/customers?after=9", expect.anything())
+    expect(globalThis.fetch).toHaveBeenLastCalledWith("/api/customers?after=9", expect.anything())
   })
 
   it("moves back multiple pages", async () => {
@@ -153,7 +153,7 @@ describe("CustomerSearch", () => {
     await simulateClickAndWait(nextPageButton)
     await simulateClickAndWait(previousPageButton)
     await simulateClickAndWait(previousPageButton)
-    expect(globalThis.fetch).toHaveBeenLastCalledWith("/customers", expect.anything())
+    expect(globalThis.fetch).toHaveBeenLastCalledWith("/api/customers", expect.anything())
   })
 
   it("has a search input field with a placeholder", async () => {
@@ -169,7 +169,7 @@ describe("CustomerSearch", () => {
     assert(searchField !== null, "SearchField is not found.")
     // @ts-ignore
     await simulateChangeAndWait(searchField, { target: { value: "name" } })
-    expect(globalThis.fetch).toHaveBeenLastCalledWith("/customers?searchTerm=name", expect.anything())
+    expect(globalThis.fetch).toHaveBeenLastCalledWith("/api/customers?searchTerm=name", expect.anything())
   })
 
   it("includes search term when moving to next page", async () => {
@@ -182,7 +182,7 @@ describe("CustomerSearch", () => {
     // @ts-ignore
     await simulateChangeAndWait(searchField, { target: { value: "name" } })
     await simulateClickAndWait(nextPageButton)
-    expect(globalThis.fetch).toHaveBeenLastCalledWith("/customers?after=9&searchTerm=name", expect.anything())
+    expect(globalThis.fetch).toHaveBeenLastCalledWith("/api/customers?after=9&searchTerm=name", expect.anything())
   })
 
   it("displays provided action buttons for each customer", async () => {

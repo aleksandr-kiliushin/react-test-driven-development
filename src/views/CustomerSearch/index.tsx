@@ -27,7 +27,7 @@ export const CustomerSearch: React.FC<ICustomerSearchProps> = ({ renderCustomerA
       let after = 0
       if (lastRowIds.length > 0) after = lastRowIds[lastRowIds.length - 1]
       const queryString = getSearchParams({ after, searchTerm })
-      const result = await globalThis.fetch(`/customers${queryString}`, {
+      const result = await globalThis.fetch(`/api/customers${queryString}`, {
         credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
         method: "GET",
