@@ -2,6 +2,8 @@ import React from "react"
 
 import { ICustomer } from "#types/ICustomer"
 
+import { CustomerRow } from "./CustomerRow"
+
 export const CustomerSearch: React.FC = () => {
   const [customers, setCustomers] = React.useState<ICustomer[]>([])
 
@@ -28,11 +30,7 @@ export const CustomerSearch: React.FC = () => {
       </thead>
       <tbody>
         {customers.map((aCustomer) => (
-          <tr key={aCustomer.id}>
-            <td>{aCustomer.firstName}</td>
-            <td>{aCustomer.lastName}</td>
-            <td>{aCustomer.phoneNumber}</td>
-          </tr>
+          <CustomerRow customer={aCustomer} key={aCustomer.id} />
         ))}
       </tbody>
     </table>
