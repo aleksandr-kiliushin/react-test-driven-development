@@ -1,7 +1,7 @@
 import React from "react"
 import "whatwg-fetch"
 
-import { aCustomer1 } from "#sampleData/someCustomers"
+import { aCustomer1, aCustomer2 } from "#sampleData/someCustomers"
 import { ICustomer } from "#types/ICustomer"
 import { IRenderContainer, createContainer } from "#utils/testing/createContainer"
 import { createFetchSuccessfulResponse } from "#utils/testing/spyHelpers"
@@ -10,7 +10,7 @@ import { CustomerSearch } from "./index"
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true // TODO: Move to test setup file.
 
-const customersResponse: ICustomer[] = [aCustomer1]
+const customersResponse: ICustomer[] = [aCustomer1, aCustomer2]
 
 type ICustomerSearchRenderContainer = IRenderContainer<{ formIds: []; fieldNames: [] }>
 
@@ -70,9 +70,13 @@ describe("CustomerSearch", () => {
 
   it("renders all customer data in a table row", async () => {
     await renderAndWait(<CustomerSearch />)
-    const columns = findElements("table tbody td")
-    expect(columns[0].textContent).toEqual(aCustomer1.firstName)
-    expect(columns[1].textContent).toEqual(aCustomer1.lastName)
-    expect(columns[2].textContent).toEqual(aCustomer1.phoneNumber)
+    const aCustomer1RowCells = findElements("table tbody tr:nth-child(1) td")
+    expect(aCustomer1RowCells[0].textContent).toEqual(aCustomer1.firstName)
+    expect(aCustomer1RowCells[1].textContent).toEqual(aCustomer1.lastName)
+    expect(aCustomer1RowCells[2].textContent).toEqual(aCustomer1.phoneNumber)
+    const aCustomer2RowCells = findElements("table tbody tr:nth-child(2) td")
+    expect(aCustomer2RowCells[0].textContent).toEqual(aCustomer2.firstName)
+    expect(aCustomer2RowCells[1].textContent).toEqual(aCustomer2.lastName)
+    expect(aCustomer2RowCells[2].textContent).toEqual(aCustomer2.phoneNumber)
   })
 })
