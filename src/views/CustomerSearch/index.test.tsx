@@ -90,11 +90,12 @@ describe("CustomerSearch", () => {
   })
 
   it("requests next page of data when next button is clicked", async () => {
+    const lastLoadedCustomerId = 9
     ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(tenCustomersResponse))
     await renderAndWait(<CustomerSearch />)
     const nextPageButton = findElement("button#next-page")
     assert(nextPageButton !== null, "Next page button not found.")
     await simulateClickAndWait(nextPageButton)
-    expect(globalThis.fetch).toHaveBeenLastCalledWith("/customers?after=9", expect.anything())
+    expect(globalThis.fetch).toHaveBeenLastCalledWith(`/customers?after=${lastLoadedCustomerId}`, expect.anything())
   })
 })
