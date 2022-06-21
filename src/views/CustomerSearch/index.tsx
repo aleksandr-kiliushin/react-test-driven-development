@@ -1,6 +1,14 @@
 import React from "react"
 
 export const CustomerSearch: React.FC = () => {
+  React.useEffect(() => {
+    globalThis.fetch("/customers", {
+      method: "GET",
+      credentials: "same-origin",
+      headers: { "Content-Type": "application/json" },
+    })
+  }, [])
+
   return (
     <table>
       <thead>
