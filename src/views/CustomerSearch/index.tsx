@@ -5,19 +5,24 @@ import { ICustomer } from "#types/ICustomer"
 import { CustomerRow } from "./CustomerRow"
 import { NavigationButtons } from "./NavigationButtons"
 
+const getSearchParams = ({ after, searchTerm }: { after: ICustomer["id"]; searchTerm: string }) => {
+  let pairs = []
+  if (after) pairs.push(`after=${after}`)
+  if (searchTerm) pairs.push(`searchTerm=${searchTerm}`)
+  if (pairs.length > 0) return `?${pairs.join("&")}`
+  return ""
+}
+
 export const CustomerSearch: React.FC = () => {
   const [customers, setCustomers] = React.useState<ICustomer[]>([])
-  const [queryStrings, setQueryStrings] = React.useState<string[]>([])
+  const [lastRowIds, setLastRowIds] = React.useState<number[]>([])
   const [searchTerm, setSearchTerm] = React.useState<string>("")
 
   React.useEffect(() => {
     const fetchData = async () => {
-      let queryString = ""
-      if (queryStrings.length > 0 && searchTerm !== "") {
-        queryString = queryStrings[queryStrings.length - 1] + "&searchTerm=" + searchTerm
-      } else if (searchTerm !== "") {
-        queryString = `?searchTerm=${searchTerm}`
-      } else if (queryStrings.length > 0) queryString = queryStrings[queryStrings.length - 1]
+      let after = 0
+      if (lastRowIds.length > 0) after = lastRowIds[lastRowIds.length - 1]
+      const queryString = getSearchParams({ after, searchTerm })
       const result = await globalThis.fetch(`/customers${queryString}`, {
         credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
@@ -26,17 +31,16 @@ export const CustomerSearch: React.FC = () => {
       setCustomers(await result.json())
     }
     fetchData()
-  }, [queryStrings, searchTerm])
+  }, [lastRowIds, searchTerm])
 
   const onNextButtonClick = React.useCallback(() => {
-    const after = customers[customers.length - 1].id
-    const queryString = `?after=${after}`
-    setQueryStrings([...queryStrings, queryString])
-  }, [customers, queryStrings])
+    const currentLastRowId = customers[customers.length - 1].id
+    setLastRowIds([...lastRowIds, currentLastRowId])
+  }, [customers, lastRowIds])
 
   const onPreviousButtonClick = React.useCallback(() => {
-    setQueryStrings(queryStrings.slice(0, -1))
-  }, [queryStrings])
+    setLastRowIds(lastRowIds.slice(0, -1))
+  }, [lastRowIds])
 
   return (
     <>
