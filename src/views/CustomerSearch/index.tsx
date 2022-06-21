@@ -19,9 +19,18 @@ export const CustomerSearch: React.FC = () => {
       .then(setCustomers)
   }, [])
 
+  const onNextButtonClick = React.useCallback(() => {
+    const after = customers[customers.length - 1].id
+    globalThis.fetch(`/customers?after=${after}`, {
+      method: "GET",
+      credentials: "same-origin",
+      headers: { "Content-Type": "application/json" },
+    })
+  }, [customers])
+
   return (
     <>
-      <NavigationButtons />
+      <NavigationButtons onNextButtonClick={onNextButtonClick} />
       <table>
         <thead>
           <tr>

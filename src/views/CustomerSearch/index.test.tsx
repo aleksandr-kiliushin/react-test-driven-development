@@ -1,3 +1,4 @@
+import assert from "node:assert"
 import React from "react"
 import "whatwg-fetch"
 
@@ -11,6 +12,7 @@ import { CustomerSearch } from "./index"
 globalThis.IS_REACT_ACT_ENVIRONMENT = true // TODO: Move to test setup file.
 
 const customersResponse: ICustomer[] = [aCustomer1, aCustomer2]
+const tenCustomersResponse = Array.from("0123456789", (id) => ({ id }))
 
 type ICustomerSearchRenderContainer = IRenderContainer<{ formIds: []; fieldNames: [] }>
 
@@ -23,6 +25,7 @@ describe("CustomerSearch", () => {
   let renderAndWait: ICustomerSearchRenderContainer["renderAndWait"]
   // let simulateBlur: ICustomerSearchRenderContainer["simulateBlur"]
   // let simulateChange: ICustomerSearchRenderContainer["simulateChange"]
+  let simulateClickAndWait: ICustomerSearchRenderContainer["simulateClickAndWait"]
   // let simulateSubmit: ICustomerSearchRenderContainer["simulateSubmit"]
   // let simulateSubmitAndWait: ICustomerSearchRenderContainer["simulateSubmitAndWait"]
 
@@ -36,12 +39,13 @@ describe("CustomerSearch", () => {
       renderAndWait,
       // simulateBlur,
       // simulateChange,
+      simulateClickAndWait,
       // simulateSubmit,
       // simulateSubmitAndWait,
     } = createContainer())
     // @ts-ignore
     jest.spyOn(globalThis, "fetch").mockReturnValue(createFetchSuccessfulResponse())
-    ;(globalThis.fetch as jest.Mock).mockReturnValueOnce(createFetchSuccessfulResponse(customersResponse))
+    ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(customersResponse))
   })
 
   afterEach(() => {
@@ -83,5 +87,14 @@ describe("CustomerSearch", () => {
   it("has a next button", async () => {
     await renderAndWait(<CustomerSearch />)
     expect(findElement("button#next-page")).not.toBeNull()
+  })
+
+  it("requests next page of data when next button is clicked", async () => {
+    ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(tenCustomersResponse))
+    await renderAndWait(<CustomerSearch />)
+    const nextPageButton = findElement("button#next-page")
+    assert(nextPageButton !== null, "Next page button not found.")
+    await simulateClickAndWait(nextPageButton)
+    expect(globalThis.fetch).toHaveBeenLastCalledWith("/customers?after=9", expect.anything())
   })
 })

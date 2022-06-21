@@ -1,8 +1,12 @@
 import React from "react"
 
-export const NavigationButtons = () => (
+interface INavigationButtonsProps {
+  onNextButtonClick(): void
+}
+
+export const NavigationButtons: React.FC<INavigationButtonsProps> = ({ onNextButtonClick }) => (
   <div className="button-bar">
-    <button role="button" id="next-page">
+    <button id="next-page" onClick={onNextButtonClick} role="button">
       Next
     </button>
   </div>
