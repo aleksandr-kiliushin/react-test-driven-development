@@ -7,13 +7,19 @@ import { ICustomer } from "#types/ICustomer"
 import { IRenderContainer, createContainer } from "#utils/testing/createContainer"
 import { createFetchSuccessfulResponse } from "#utils/testing/spyHelpers"
 
-import { CustomerSearch } from "./index"
+import { CustomerSearch, ICustomerSearchProps } from "./index"
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true // TODO: Move to test setup file.
 
-const customersResponse: ICustomer[] = [aCustomer1, aCustomer2]
+const twoCustomersResponse: ICustomer[] = [aCustomer1, aCustomer2]
 const tenCustomersResponse = Array.from("0123456789", (id) => ({ id }))
 const anotherTenCustomersResponse = Array.from("ABCDEFGHIJ", (id) => ({ id }))
+
+const customerSearchDefaultProps: ICustomerSearchProps = {
+  renderCustomerActions() {
+    return null
+  },
+}
 
 type ICustomerSearchRenderContainer = IRenderContainer<{ formIds: []; fieldNames: [] }>
 
@@ -48,7 +54,7 @@ describe("CustomerSearch", () => {
     } = createContainer())
     // @ts-ignore
     jest.spyOn(globalThis, "fetch").mockReturnValue(createFetchSuccessfulResponse())
-    ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(customersResponse))
+    ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(twoCustomersResponse))
   })
 
   afterEach(() => {
@@ -56,7 +62,7 @@ describe("CustomerSearch", () => {
   })
 
   it("renders a table with four headings", async () => {
-    await renderAndWait(<CustomerSearch />)
+    await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
     const headings = findElements("table th")
     expect(headings.map((aHeader) => aHeader.textContent)).toEqual([
       "First name",
@@ -67,7 +73,7 @@ describe("CustomerSearch", () => {
   })
 
   it("fetches all customer data when component mounts", async () => {
-    await renderAndWait(<CustomerSearch />)
+    await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
     expect(globalThis.fetch).toHaveBeenCalledWith("/customers", {
       method: "GET",
       credentials: "same-origin",
@@ -76,7 +82,7 @@ describe("CustomerSearch", () => {
   })
 
   it("renders all customer data in a table row", async () => {
-    await renderAndWait(<CustomerSearch />)
+    await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
     const aCustomer1RowCells = findElements("table tbody tr:nth-child(1) td")
     expect(aCustomer1RowCells[0].textContent).toEqual(aCustomer1.firstName)
     expect(aCustomer1RowCells[1].textContent).toEqual(aCustomer1.lastName)
@@ -88,14 +94,14 @@ describe("CustomerSearch", () => {
   })
 
   it("has a next button", async () => {
-    await renderAndWait(<CustomerSearch />)
+    await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
     expect(findElement("button#next-page")).not.toBeNull()
   })
 
   it("requests next page of data when next button is clicked", async () => {
     const lastLoadedCustomerId = 9
     ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(tenCustomersResponse))
-    await renderAndWait(<CustomerSearch />)
+    await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
     const nextPageButton = findElement("button#next-page")
     assert(nextPageButton !== null, "Next page button not found.")
     await simulateClickAndWait(nextPageButton)
@@ -103,13 +109,13 @@ describe("CustomerSearch", () => {
   })
 
   it("has a previous button", async () => {
-    await renderAndWait(<CustomerSearch />)
+    await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
     expect(findElement("button#previous-page")).not.toBeNull()
   })
 
   it("moves back to first page when previous button is clicked", async () => {
     ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(tenCustomersResponse))
-    await renderAndWait(<CustomerSearch />)
+    await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
     const nextPageButton = findElement("button#next-page")
     const previousPageButton = findElement("button#previous-page")
     assert(nextPageButton !== null, "next-page button not found")
@@ -123,7 +129,7 @@ describe("CustomerSearch", () => {
     ;(globalThis.fetch as jest.Mock)
       .mockReturnValueOnce(createFetchSuccessfulResponse(tenCustomersResponse))
       .mockReturnValue(createFetchSuccessfulResponse(anotherTenCustomersResponse))
-    await renderAndWait(<CustomerSearch />)
+    await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
     const nextPageButton = findElement("button#next-page")
     const previousPageButton = findElement("button#previous-page")
     assert(nextPageButton !== null, "next-page button not found")
@@ -138,7 +144,7 @@ describe("CustomerSearch", () => {
     ;(globalThis.fetch as jest.Mock)
       .mockReturnValueOnce(createFetchSuccessfulResponse(tenCustomersResponse))
       .mockReturnValue(createFetchSuccessfulResponse(anotherTenCustomersResponse))
-    await renderAndWait(<CustomerSearch />)
+    await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
     const nextPageButton = findElement("button#next-page")
     const previousPageButton = findElement("button#previous-page")
     assert(nextPageButton !== null, "next-page button not found")
@@ -151,14 +157,14 @@ describe("CustomerSearch", () => {
   })
 
   it("has a search input field with a placeholder", async () => {
-    await renderAndWait(<CustomerSearch />)
+    await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
     const searchField = findElement("input")
     assert(searchField !== null, "SearchField is not found.")
     expect(searchField.getAttribute("placeholder")).toEqual("Enter filter text")
   })
 
   it("performs search when search term is changed", async () => {
-    await renderAndWait(<CustomerSearch />)
+    await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
     const searchField = findElement("input")
     assert(searchField !== null, "SearchField is not found.")
     // @ts-ignore
@@ -168,7 +174,7 @@ describe("CustomerSearch", () => {
 
   it("includes search term when moving to next page", async () => {
     ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(tenCustomersResponse))
-    await renderAndWait(<CustomerSearch />)
+    await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
     const searchField = findElement("input")
     const nextPageButton = findElement("button#next-page")
     assert(searchField !== null, "SearchField is not found.")
@@ -177,5 +183,14 @@ describe("CustomerSearch", () => {
     await simulateChangeAndWait(searchField, { target: { value: "name" } })
     await simulateClickAndWait(nextPageButton)
     expect(globalThis.fetch).toHaveBeenLastCalledWith("/customers?after=9&searchTerm=name", expect.anything())
+  })
+
+  it("displays provided action buttons for each customer", async () => {
+    const actionSpy = jest.fn()
+    actionSpy.mockReturnValue("actions")
+    ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(twoCustomersResponse))
+    await renderAndWait(<CustomerSearch renderCustomerActions={actionSpy} />)
+    const rows = findElements("table tbody td")
+    expect(rows[rows.length - 1].textContent).toEqual("actions")
   })
 })

@@ -13,7 +13,11 @@ const getSearchParams = ({ after, searchTerm }: { after: ICustomer["id"]; search
   return ""
 }
 
-export const CustomerSearch: React.FC = () => {
+export interface ICustomerSearchProps {
+  renderCustomerActions(): React.ReactNode
+}
+
+export const CustomerSearch: React.FC<ICustomerSearchProps> = ({ renderCustomerActions }) => {
   const [customers, setCustomers] = React.useState<ICustomer[]>([])
   const [lastRowIds, setLastRowIds] = React.useState<number[]>([])
   const [searchTerm, setSearchTerm] = React.useState<string>("")
@@ -63,7 +67,7 @@ export const CustomerSearch: React.FC = () => {
         </thead>
         <tbody>
           {customers.map((aCustomer) => (
-            <CustomerRow customer={aCustomer} key={aCustomer.id} />
+            <CustomerRow customer={aCustomer} key={aCustomer.id} renderCustomerActions={renderCustomerActions} />
           ))}
         </tbody>
       </table>
