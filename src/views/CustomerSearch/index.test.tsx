@@ -26,6 +26,7 @@ describe("CustomerSearch", () => {
   let renderAndWait: ICustomerSearchRenderContainer["renderAndWait"]
   // let simulateBlur: ICustomerSearchRenderContainer["simulateBlur"]
   // let simulateChange: ICustomerSearchRenderContainer["simulateChange"]
+  let simulateChangeAndWait: ICustomerSearchRenderContainer["simulateChangeAndWait"]
   let simulateClickAndWait: ICustomerSearchRenderContainer["simulateClickAndWait"]
   // let simulateSubmit: ICustomerSearchRenderContainer["simulateSubmit"]
   // let simulateSubmitAndWait: ICustomerSearchRenderContainer["simulateSubmitAndWait"]
@@ -40,6 +41,7 @@ describe("CustomerSearch", () => {
       renderAndWait,
       // simulateBlur,
       // simulateChange,
+      simulateChangeAndWait,
       simulateClickAndWait,
       // simulateSubmit,
       // simulateSubmitAndWait,
@@ -146,5 +148,12 @@ describe("CustomerSearch", () => {
     await simulateClickAndWait(previousPageButton)
     await simulateClickAndWait(previousPageButton)
     expect(globalThis.fetch).toHaveBeenLastCalledWith("/customers", expect.anything())
+  })
+
+  it("has a search input field with a placeholder", async () => {
+    await renderAndWait(<CustomerSearch />)
+    const searchField = findElement("input")
+    assert(searchField !== null, "SearchField is not found.")
+    expect(searchField.getAttribute("placeholder")).toEqual("Enter filter text")
   })
 })

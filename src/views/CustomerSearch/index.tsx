@@ -35,6 +35,7 @@ export const CustomerSearch: React.FC = () => {
 
   return (
     <>
+      <input placeholder="Enter filter text" />
       <NavigationButtons onNextButtonClick={onNextButtonClick} onPreviousButtonClick={onPreviousButtonClick} />
       <table>
         <thead>

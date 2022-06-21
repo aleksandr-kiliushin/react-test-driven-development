@@ -21,6 +21,7 @@ export interface IRenderContainer<ContainerContentConfig extends { fieldNames: s
   renderAndWait(children: React.ReactNode): Promise<void>
   simulateBlur(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): void
   simulateChange(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): void
+  simulateChangeAndWait(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): Promise<void>
   simulateClick(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): void
   simulateClickAndWait(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): Promise<void>
   simulateSubmit(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): void
@@ -102,6 +103,7 @@ export const createContainer = (): IAbstractRenderContainer => {
     renderAndWait,
     simulateBlur: createEventSimulator("blur"),
     simulateChange: createEventSimulator("change"),
+    simulateChangeAndWait: createAsyncEventSimulator("change"),
     simulateClick: createEventSimulator("click"),
     simulateClickAndWait: createAsyncEventSimulator("click"),
     simulateSubmit: createEventSimulator("submit"),
