@@ -193,4 +193,12 @@ describe("CustomerSearch", () => {
     const rows = findElements("table tbody td")
     expect(rows[rows.length - 1].textContent).toEqual("actions")
   })
+
+  it("passes customer to the renderCustomerActions prop", async () => {
+    const actionSpy = jest.fn()
+    actionSpy.mockReturnValue("actions")
+    ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(twoCustomersResponse))
+    await renderAndWait(<CustomerSearch renderCustomerActions={actionSpy} />)
+    expect(actionSpy).toHaveBeenCalledWith(twoCustomersResponse[0])
+  })
 })

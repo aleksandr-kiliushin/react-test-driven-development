@@ -14,7 +14,7 @@ const getSearchParams = ({ after, searchTerm }: { after: ICustomer["id"]; search
 }
 
 export interface ICustomerSearchProps {
-  renderCustomerActions(): React.ReactNode
+  renderCustomerActions(aCustomer: ICustomer): React.ReactNode
 }
 
 export const CustomerSearch: React.FC<ICustomerSearchProps> = ({ renderCustomerActions }) => {

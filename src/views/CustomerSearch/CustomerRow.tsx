@@ -4,7 +4,7 @@ import { ICustomer } from "#types/ICustomer"
 
 interface ICustomerRowProps {
   customer: ICustomer
-  renderCustomerActions(): React.ReactNode
+  renderCustomerActions(aCustomer: ICustomer): React.ReactNode
 }
 
 export const CustomerRow: React.FC<ICustomerRowProps> = ({ customer, renderCustomerActions }) => (
@@ -12,6 +12,6 @@ export const CustomerRow: React.FC<ICustomerRowProps> = ({ customer, renderCusto
     <td>{customer.firstName}</td>
     <td>{customer.lastName}</td>
     <td>{customer.phoneNumber}</td>
-    <td>{renderCustomerActions()}</td>
+    <td>{renderCustomerActions(customer)}</td>
   </tr>
 )
