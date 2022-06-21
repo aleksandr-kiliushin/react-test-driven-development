@@ -248,9 +248,51 @@ describe("CustomerForm", () => {
       // @ts-ignore
       simulateChange(phoneNumberField, { target: { value: "+7 123 456 789 hehe" } })
       simulateBlur(phoneNumberField)
-      const errorMessageNode = findElement(".error")
+      const errorMessageNode = findElement("input[name='phoneNumber'] ~ p.error")
       assert(errorMessageNode !== null, "Field error message for phoneNumber is not found.")
       expect(errorMessageNode.textContent).toMatch("Only numbers, spaces and these symbols are allowed: ( ) + -.")
+    })
+
+    it("hides error after successful onChange fixes firstName field error", () => {
+      render(<CustomerForm {...defaultProps} />)
+      const firstNameField = findField({ fieldName: "firstName", formId: "customer" })
+      // @ts-ignore
+      simulateChange(firstNameField, { target: { value: "   " } })
+      simulateBlur(firstNameField)
+      const errorMessageNode = findElement("input[name='firstName'] ~ p.error")
+      assert(errorMessageNode !== null, "Field error message for firstName is not found.")
+      expect(errorMessageNode.textContent).toMatch("Required.")
+      // @ts-ignore
+      simulateChange(firstNameField, { target: { value: "Shon" } })
+      expect(findElement("input[name='firstName'] ~ p.error")).toBeNull()
+    })
+
+    it("hides error after successful onChange fixes lastName field error", () => {
+      render(<CustomerForm {...defaultProps} />)
+      const lastNameField = findField({ fieldName: "lastName", formId: "customer" })
+      // @ts-ignore
+      simulateChange(lastNameField, { target: { value: "" } })
+      simulateBlur(lastNameField)
+      const errorMessageNode = findElement("input[name='lastName'] ~ p.error")
+      assert(errorMessageNode !== null, "Field error message for lastName is not found.")
+      expect(errorMessageNode.textContent).toMatch("Required.")
+      // @ts-ignore
+      simulateChange(lastNameField, { target: { value: "Johnson" } })
+      expect(findElement("input[name='lastName'] ~ p.error")).toBeNull()
+    })
+
+    it("hides error after successful onChange fixes phoneNumber field error", () => {
+      render(<CustomerForm {...defaultProps} />)
+      const phoneNumberField = findField({ fieldName: "phoneNumber", formId: "customer" })
+      // @ts-ignore
+      simulateChange(phoneNumberField, { target: { value: "+7 123 456 789 hehe" } })
+      simulateBlur(phoneNumberField)
+      const errorMessageNode = findElement("input[name='phoneNumber'] ~ p.error")
+      assert(errorMessageNode !== null, "Field error message for phoneNumber is not found.")
+      expect(errorMessageNode.textContent).toMatch("Only numbers, spaces and these symbols are allowed: ( ) + -.")
+      // @ts-ignore
+      simulateChange(phoneNumberField, { target: { value: "+7 123 456 789" } })
+      expect(findElement("input[name='phoneNumber'] ~ p.error")).toBeNull()
     })
   })
 

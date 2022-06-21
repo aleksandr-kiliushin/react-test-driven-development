@@ -84,6 +84,9 @@ export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData
             }
           }}
           onChange={(event) => {
+            if (event.target.value.trim() !== "" && validationErrors.firstName === "Required.") {
+              setValidationErrors({ ...validationErrors, firstName: undefined })
+            }
             setFirstName(event.target.value)
           }}
           type="text"
@@ -102,6 +105,9 @@ export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData
             }
           }}
           onChange={(event) => {
+            if (event.target.value.trim() !== "" && validationErrors.lastName === "Required.") {
+              setValidationErrors({ ...validationErrors, lastName: undefined })
+            }
             setLastName(event.target.value)
           }}
           type="text"
@@ -127,6 +133,15 @@ export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData
             }
           }}
           onChange={(event) => {
+            if (event.target.value.trim() !== "" && validationErrors.phoneNumber === "Required.") {
+              setValidationErrors({ ...validationErrors, phoneNumber: undefined })
+            }
+            if (
+              /^[0-9+()\- ]*$/.test(event.target.value) &&
+              validationErrors.phoneNumber?.startsWith("Only numbers,")
+            ) {
+              setValidationErrors({ ...validationErrors, phoneNumber: undefined })
+            }
             setPhoneNumber(event.target.value)
           }}
           type="text"
