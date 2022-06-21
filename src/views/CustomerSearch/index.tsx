@@ -13,7 +13,9 @@ export const CustomerSearch: React.FC = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       let queryString = ""
-      if (searchTerm !== "") {
+      if (queryStrings.length > 0 && searchTerm !== "") {
+        queryString = queryStrings[queryStrings.length - 1] + "&searchTerm=" + searchTerm
+      } else if (searchTerm !== "") {
         queryString = `?searchTerm=${searchTerm}`
       } else if (queryStrings.length > 0) queryString = queryStrings[queryStrings.length - 1]
       const result = await globalThis.fetch(`/customers${queryString}`, {

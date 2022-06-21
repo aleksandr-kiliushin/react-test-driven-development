@@ -165,4 +165,17 @@ describe("CustomerSearch", () => {
     await simulateChangeAndWait(searchField, { target: { value: "name" } })
     expect(globalThis.fetch).toHaveBeenLastCalledWith("/customers?searchTerm=name", expect.anything())
   })
+
+  it("includes search term when moving to next page", async () => {
+    ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(tenCustomersResponse))
+    await renderAndWait(<CustomerSearch />)
+    const searchField = findElement("input")
+    const nextPageButton = findElement("button#next-page")
+    assert(searchField !== null, "SearchField is not found.")
+    assert(nextPageButton !== null, "next-page button not found")
+    // @ts-ignore
+    await simulateChangeAndWait(searchField, { target: { value: "name" } })
+    await simulateClickAndWait(nextPageButton)
+    expect(globalThis.fetch).toHaveBeenLastCalledWith("/customers?after=9&searchTerm=name", expect.anything())
+  })
 })
