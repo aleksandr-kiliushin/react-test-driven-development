@@ -6,11 +6,12 @@ import { ICustomer } from "#types/ICustomer"
 import { AppointmentFormLoader } from "./AppointmentForm/AppointmentFormLoader"
 import { AppointmentsDayViewLoader } from "./AppointmentsDayView/AppointmentsDayViewLoader"
 import { CustomerForm } from "./CustomerForm"
+import { CustomerSearch } from "./CustomerSearch"
 
 const today = new Date()
 
 export const App: React.FC = () => {
-  const [view, setView] = React.useState<"addAppointment" | "addCustomer" | "dayView">("dayView")
+  const [view, setView] = React.useState<"addAppointment" | "addCustomer" | "dayView" | "searchCustomers">("dayView")
   const [customer, setCustomer] = React.useState<ICustomer | undefined>()
 
   const transitionToAddCustomer = React.useCallback(() => {
@@ -30,6 +31,16 @@ export const App: React.FC = () => {
       return <AppointmentFormLoader customer={customer} onSave={transitionToDayView} />
     case "addCustomer":
       return <CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={transitionToAddAppointment} />
+    case "searchCustomers":
+      return (
+        <CustomerSearch
+          renderCustomerActions={(aCustomer) => (
+            <button onClick={() => transitionToAddAppointment(aCustomer)} role="button">
+              Create appointment
+            </button>
+          )}
+        />
+      )
     default:
       return (
         <React.Fragment>
