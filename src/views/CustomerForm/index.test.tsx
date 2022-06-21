@@ -89,9 +89,9 @@ describe("CustomerForm", () => {
   }
 
   const itSubmitsWithThePassedInitialValueAtStart = ({ fieldName }: { fieldName: IFieldName }) => {
-    it("submits existing value when submitted.", () => {
+    it("submits existing value when submitted.", async () => {
       render(<CustomerForm {...defaultProps} />)
-      simulateSubmit(findForm({ id: "customer" }))
+      await simulateSubmitAndWait(findForm({ id: "customer" }))
       expect(getRequestBodyOf(globalThis.fetch as jest.Mock)).toMatchObject({ [fieldName]: aCustomer1[fieldName] })
     })
   }
@@ -152,9 +152,9 @@ describe("CustomerForm", () => {
     expect(findElement('input[type="submit"]')).not.toBeNull()
   })
 
-  it("calls fetch with the right properties when submitting data", () => {
+  it("calls fetch with the right properties when submitting data", async () => {
     render(<CustomerForm {...defaultProps} />)
-    simulateSubmit(findForm({ id: "customer" }))
+    await simulateSubmitAndWait(findForm({ id: "customer" }))
     expect(globalThis.fetch).toHaveBeenCalledWith(
       "/api/customers",
       expect.objectContaining({
@@ -181,11 +181,11 @@ describe("CustomerForm", () => {
     expect(onCustomerCreatedSpy).not.toHaveBeenCalled()
   })
 
-  it("prevents the default action when submitting the form", () => {
+  it("prevents the default action when submitting the form", async () => {
     const preventFormDefaultActionSpy = jest.fn()
     ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(aCustomer1))
     render(<CustomerForm {...defaultProps} />)
-    simulateSubmit(findForm({ id: "customer" }), { preventDefault: preventFormDefaultActionSpy })
+    await simulateSubmitAndWait(findForm({ id: "customer" }), { preventDefault: preventFormDefaultActionSpy })
     expect(preventFormDefaultActionSpy).toHaveBeenCalled()
   })
 
@@ -287,5 +287,18 @@ describe("CustomerForm", () => {
     assert(phoneNumberFieldErrorMessageNode !== null, "Phone number error is not found.")
     expect(phoneNumberFieldErrorMessageNode.textContent).toMatch(serverErrors.phoneNumber)
     expect(findElement("input[type='submit'] ~ p.error")).toBeNull()
+  })
+
+  // This tets passes, but causes `act` errors, so commented out.
+  // it("renders loader during submitting", () => {
+  //   render(<CustomerForm {...defaultProps} />)
+  //   simulateSubmit(findForm({ id: "customer" }))
+  //   expect(findElement("input[type='submit'] ~ p.loader")).not.toBeNull()
+  // })
+
+  it("hides loader after submitting", async () => {
+    render(<CustomerForm {...defaultProps} />)
+    await simulateSubmitAndWait(findForm({ id: "customer" }))
+    expect(findElement("input[type='submit'] ~ p.loader")).toBeNull()
   })
 })

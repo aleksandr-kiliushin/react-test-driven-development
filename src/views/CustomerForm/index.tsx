@@ -20,6 +20,7 @@ export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData
     phoneNumber: undefined,
   })
   const [errorMessage, setErrorMessage] = React.useState<string>("")
+  const [isLoading, setIsLoading] = React.useState<boolean>(false)
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -43,6 +44,8 @@ export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData
       return
     }
 
+    setIsLoading(true)
+
     const response = await fetch("/api/customers", {
       body: JSON.stringify({ firstName, lastName, phoneNumber }),
       credentials: "same-origin",
@@ -62,8 +65,9 @@ export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData
       setValidationErrors(errors)
       return
     }
-    const createdCustomer = await response.json()
+    setIsLoading(false)
     setErrorMessage("")
+    const createdCustomer = await response.json()
     onCustomerCreated(createdCustomer)
   }
 
@@ -131,6 +135,7 @@ export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData
         <ErrorMessage message={validationErrors.phoneNumber} />
       </div>
       <input type="submit" value="Add" />
+      {isLoading && <p className="loader">Loading ...</p>}
       <ErrorMessage message={errorMessage} />
     </form>
   )
