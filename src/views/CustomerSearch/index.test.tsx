@@ -98,4 +98,9 @@ describe("CustomerSearch", () => {
     await simulateClickAndWait(nextPageButton)
     expect(globalThis.fetch).toHaveBeenLastCalledWith(`/customers?after=${lastLoadedCustomerId}`, expect.anything())
   })
+
+  it("has a previous button", async () => {
+    await renderAndWait(<CustomerSearch />)
+    expect(findElement("button#previous-page")).not.toBeNull()
+  })
 })
