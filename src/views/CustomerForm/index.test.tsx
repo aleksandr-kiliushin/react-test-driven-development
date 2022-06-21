@@ -193,7 +193,7 @@ describe("CustomerForm", () => {
     ;(globalThis.fetch as jest.Mock).mockReturnValueOnce(createFetchErrorResponse({ body: undefined, status: 500 }))
     render(<CustomerForm {...defaultProps} />)
     await simulateSubmitAndWait(findForm({ id: "customer" }))
-    const errorMessageNode = findElement("p.error")
+    const errorMessageNode = findElement("input[type='submit'] ~ p.error")
     assert(errorMessageNode !== null, "Error node is not appear after failed form submission.")
     expect(errorMessageNode.textContent).toMatch("An error occurred during save.")
   })
@@ -203,9 +203,9 @@ describe("CustomerForm", () => {
     ;(globalThis.fetch as jest.Mock).mockReturnValueOnce(createFetchSuccessfulResponse(aCustomer1))
     render(<CustomerForm {...defaultProps} />)
     await simulateSubmitAndWait(findForm({ id: "customer" }))
-    expect(findElement("p.error")).not.toBeNull()
+    expect(findElement("input[type='submit'] ~ p.error")).not.toBeNull()
     await simulateSubmitAndWait(findForm({ id: "customer" }))
-    expect(findElement("p.error")).toBeNull()
+    expect(findElement("input[type='submit'] ~ p.error")).toBeNull()
   })
 
   describe("validation", () => {
@@ -215,7 +215,7 @@ describe("CustomerForm", () => {
       // @ts-ignore
       simulateChange(firstNameField, { target: { value: "    " } })
       simulateBlur(firstNameField)
-      const errorMessageNode = findElement(".error")
+      const errorMessageNode = findElement("input[name='firstName'] ~ p.error")
       assert(errorMessageNode !== null, "Field error message for firstName is not found.")
       expect(errorMessageNode.textContent).toMatch("Required.")
     })
@@ -226,7 +226,7 @@ describe("CustomerForm", () => {
       // @ts-ignore
       simulateChange(lastNameField, { target: { value: "    " } })
       simulateBlur(lastNameField)
-      const errorMessageNode = findElement(".error")
+      const errorMessageNode = findElement("input[name='lastName'] ~ p.error")
       assert(errorMessageNode !== null, "Field error message for firstName is not found.")
       expect(errorMessageNode.textContent).toMatch("Required.")
     })
@@ -237,7 +237,7 @@ describe("CustomerForm", () => {
       // @ts-ignore
       simulateChange(phoneNumberField, { target: { value: "    " } })
       simulateBlur(phoneNumberField)
-      const errorMessageNode = findElement(".error")
+      const errorMessageNode = findElement("input[name='phoneNumber'] ~ p.error")
       assert(errorMessageNode !== null, "Field error message for phoneNumber is not found.")
       expect(errorMessageNode.textContent).toMatch("Required.")
     })
@@ -280,14 +280,12 @@ describe("CustomerForm", () => {
 
   it("renders field validation errors from server", async () => {
     const serverErrors = { phoneNumber: "Phone number already exists in the system." }
-    ;(globalThis.fetch as jest.Mock).mockReturnValue(
-      createFetchErrorResponse({ body: { errors: serverErrors }, status: 422 })
-    )
+    ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchErrorResponse({ body: serverErrors, status: 422 }))
     render(<CustomerForm {...defaultProps} />)
     await simulateSubmitAndWait(findForm({ id: "customer" }))
     const phoneNumberFieldErrorMessageNode = findElement("input[name='phoneNumber'] ~ p.error")
     assert(phoneNumberFieldErrorMessageNode !== null, "Phone number error is not found.")
     expect(phoneNumberFieldErrorMessageNode.textContent).toMatch(serverErrors.phoneNumber)
-    // expect("input[type='submit'] + p.error").toBeNull()
+    expect(findElement("input[type='submit'] ~ p.error")).toBeNull()
   })
 })

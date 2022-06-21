@@ -55,7 +55,7 @@ export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData
       return
     }
     if (response.ok === false && response.status !== 500) {
-      const serverErrors = (await response.json()).errors
+      const serverErrors = await response.json()
       for (const fieldName in serverErrors) {
         errors[fieldName as IFieldName] = serverErrors[fieldName as IFieldName]
       }
