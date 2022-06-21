@@ -15,7 +15,7 @@ const customersResponse: ICustomer[] = [aCustomer1, aCustomer2]
 type ICustomerSearchRenderContainer = IRenderContainer<{ formIds: []; fieldNames: [] }>
 
 describe("CustomerSearch", () => {
-  // let findElement: ICustomerSearchRenderContainer["findElement"]
+  let findElement: ICustomerSearchRenderContainer["findElement"]
   let findElements: ICustomerSearchRenderContainer["findElements"]
   // let findField: ICustomerSearchRenderContainer["findField"]
   // let findFieldLabel: ICustomerSearchRenderContainer["findFieldLabel"]
@@ -28,7 +28,7 @@ describe("CustomerSearch", () => {
 
   beforeEach(() => {
     ;({
-      // findElement,
+      findElement,
       findElements,
       // findField,
       // findFieldLabel,
@@ -78,5 +78,10 @@ describe("CustomerSearch", () => {
     expect(aCustomer2RowCells[0].textContent).toEqual(aCustomer2.firstName)
     expect(aCustomer2RowCells[1].textContent).toEqual(aCustomer2.lastName)
     expect(aCustomer2RowCells[2].textContent).toEqual(aCustomer2.phoneNumber)
+  })
+
+  it("has a next button", async () => {
+    await renderAndWait(<CustomerSearch />)
+    expect(findElement("button#next-page")).not.toBeNull()
   })
 })

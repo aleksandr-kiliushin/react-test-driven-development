@@ -3,6 +3,7 @@ import React from "react"
 import { ICustomer } from "#types/ICustomer"
 
 import { CustomerRow } from "./CustomerRow"
+import { NavigationButtons } from "./NavigationButtons"
 
 export const CustomerSearch: React.FC = () => {
   const [customers, setCustomers] = React.useState<ICustomer[]>([])
@@ -19,20 +20,23 @@ export const CustomerSearch: React.FC = () => {
   }, [])
 
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>First name</th>
-          <th>Last name</th>
-          <th>Phone number</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {customers.map((aCustomer) => (
-          <CustomerRow customer={aCustomer} key={aCustomer.id} />
-        ))}
-      </tbody>
-    </table>
+    <>
+      <NavigationButtons />
+      <table>
+        <thead>
+          <tr>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Phone number</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {customers.map((aCustomer) => (
+            <CustomerRow customer={aCustomer} key={aCustomer.id} />
+          ))}
+        </tbody>
+      </table>
+    </>
   )
 }
