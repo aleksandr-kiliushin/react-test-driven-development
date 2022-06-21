@@ -25,9 +25,13 @@ export const CustomerSearch: React.FC = () => {
     setQueryString(`?after=${after}`)
   }, [customers])
 
+  const onPreviousButtonClick = React.useCallback(() => {
+    setQueryString("")
+  }, [])
+
   return (
     <>
-      <NavigationButtons onNextButtonClick={onNextButtonClick} />
+      <NavigationButtons onNextButtonClick={onNextButtonClick} onPreviousButtonClick={onPreviousButtonClick} />
       <table>
         <thead>
           <tr>

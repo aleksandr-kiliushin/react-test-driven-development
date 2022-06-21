@@ -103,4 +103,16 @@ describe("CustomerSearch", () => {
     await renderAndWait(<CustomerSearch />)
     expect(findElement("button#previous-page")).not.toBeNull()
   })
+
+  it("moves back to first page when previous button is clicked", async () => {
+    ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(tenCustomersResponse))
+    await renderAndWait(<CustomerSearch />)
+    const nextPageButton = findElement("button#next-page")
+    const previousPageButton = findElement("button#previous-page")
+    assert(nextPageButton !== null, "next-page button not found")
+    assert(previousPageButton !== null, "previous-page button not found")
+    await simulateClickAndWait(nextPageButton)
+    await simulateClickAndWait(previousPageButton)
+    expect(globalThis.fetch).toHaveBeenLastCalledWith("/customers", expect.anything())
+  })
 })
