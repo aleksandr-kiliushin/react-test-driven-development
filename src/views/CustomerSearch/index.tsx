@@ -8,11 +8,14 @@ import { NavigationButtons } from "./NavigationButtons"
 export const CustomerSearch: React.FC = () => {
   const [customers, setCustomers] = React.useState<ICustomer[]>([])
   const [queryStrings, setQueryStrings] = React.useState<string[]>([])
+  const [searchTerm, setSearchTerm] = React.useState<string>("")
 
   React.useEffect(() => {
     const fetchData = async () => {
       let queryString = ""
-      if (queryStrings.length > 0) queryString = queryStrings[queryStrings.length - 1]
+      if (searchTerm !== "") {
+        queryString = `?searchTerm=${searchTerm}`
+      } else if (queryStrings.length > 0) queryString = queryStrings[queryStrings.length - 1]
       const result = await globalThis.fetch(`/customers${queryString}`, {
         credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
@@ -21,7 +24,7 @@ export const CustomerSearch: React.FC = () => {
       setCustomers(await result.json())
     }
     fetchData()
-  }, [queryStrings])
+  }, [queryStrings, searchTerm])
 
   const onNextButtonClick = React.useCallback(() => {
     const after = customers[customers.length - 1].id
@@ -35,7 +38,13 @@ export const CustomerSearch: React.FC = () => {
 
   return (
     <>
-      <input placeholder="Enter filter text" />
+      <input
+        onChange={(event) => {
+          setSearchTerm(event.target.value)
+        }}
+        placeholder="Enter filter text"
+        value={searchTerm}
+      />
       <NavigationButtons onNextButtonClick={onNextButtonClick} onPreviousButtonClick={onPreviousButtonClick} />
       <table>
         <thead>

@@ -156,4 +156,13 @@ describe("CustomerSearch", () => {
     assert(searchField !== null, "SearchField is not found.")
     expect(searchField.getAttribute("placeholder")).toEqual("Enter filter text")
   })
+
+  it("performs search when search term is changed", async () => {
+    await renderAndWait(<CustomerSearch />)
+    const searchField = findElement("input")
+    assert(searchField !== null, "SearchField is not found.")
+    // @ts-ignore
+    await simulateChangeAndWait(searchField, { target: { value: "name" } })
+    expect(globalThis.fetch).toHaveBeenLastCalledWith("/customers?searchTerm=name", expect.anything())
+  })
 })
