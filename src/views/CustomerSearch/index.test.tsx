@@ -13,6 +13,7 @@ globalThis.IS_REACT_ACT_ENVIRONMENT = true // TODO: Move to test setup file.
 
 const customersResponse: ICustomer[] = [aCustomer1, aCustomer2]
 const tenCustomersResponse = Array.from("0123456789", (id) => ({ id }))
+const anotherTenCustomersResponse = Array.from("ABCDEFGHIJ", (id) => ({ id }))
 
 type ICustomerSearchRenderContainer = IRenderContainer<{ formIds: []; fieldNames: [] }>
 
@@ -114,5 +115,22 @@ describe("CustomerSearch", () => {
     await simulateClickAndWait(nextPageButton)
     await simulateClickAndWait(previousPageButton)
     expect(globalThis.fetch).toHaveBeenLastCalledWith("/customers", expect.anything())
+  })
+
+  it("moves back one page when clicking previous after multiple clicks of the next button", async () => {
+    ;(globalThis.fetch as jest.Mock)
+      .mockReturnValueOnce(createFetchSuccessfulResponse(tenCustomersResponse))
+      .mockReturnValue(createFetchSuccessfulResponse(anotherTenCustomersResponse))
+    await renderAndWait(<CustomerSearch />)
+    const nextPageButton = findElement("button#next-page")
+    const previousPageButton = findElement("button#previous-page")
+    assert(nextPageButton !== null, "next-page button not found")
+    assert(previousPageButton !== null, "previous-page button not found")
+    await simulateClickAndWait(nextPageButton)
+    await simulateClickAndWait(previousPageButton)
+    await simulateClickAndWait(nextPageButton)
+    await simulateClickAndWait(nextPageButton)
+    await simulateClickAndWait(previousPageButton)
+    expect(globalThis.fetch).toHaveBeenLastCalledWith("/customers?after=9", expect.anything())
   })
 })

@@ -8,6 +8,7 @@ import { NavigationButtons } from "./NavigationButtons"
 export const CustomerSearch: React.FC = () => {
   const [customers, setCustomers] = React.useState<ICustomer[]>([])
   const [queryString, setQueryString] = React.useState<string>("")
+  const [previousQueryString, setPreviousQueryString] = React.useState<string>("")
 
   React.useEffect(() => {
     globalThis
@@ -22,12 +23,14 @@ export const CustomerSearch: React.FC = () => {
 
   const onNextButtonClick = React.useCallback(() => {
     const after = customers[customers.length - 1].id
-    setQueryString(`?after=${after}`)
+    const newQueryString = `?after=${after}`
+    setPreviousQueryString(queryString)
+    setQueryString(newQueryString)
   }, [customers])
 
   const onPreviousButtonClick = React.useCallback(() => {
-    setQueryString("")
-  }, [])
+    setQueryString(previousQueryString)
+  }, [previousQueryString])
 
   return (
     <>
