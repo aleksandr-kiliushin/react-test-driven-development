@@ -1,6 +1,5 @@
 import { noop } from "lodash"
 import React from "react"
-import "whatwg-fetch"
 
 import { aCustomer1 } from "#sampleData/someCustomers"
 import {
@@ -14,8 +13,6 @@ import { createFetchSuccessfulResponse } from "#utils/testing/spyHelpers"
 
 import { AppointmentFormLoader, IAppointmentFormLoaderProps } from "./AppointmentFormLoader"
 import * as AppointmentFormExports from "./index"
-
-globalThis.IS_REACT_ACT_ENVIRONMENT = true // TODO: Move to test setup file.
 
 type IAppointmentFormLoaderRenderContainer = IRenderContainer<{ formIds: []; fieldNames: [] }>
 

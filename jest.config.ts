@@ -7,6 +7,7 @@ const config = {
     "^#utils(.*)$": "<rootDir>/src/utils$1",
   },
   modulePathIgnorePatterns: ["<rootDir>/dist"],
+  setupFilesAfterEnv: ["./jest.setup.ts"],
   testEnvironment: "jsdom",
 }
 

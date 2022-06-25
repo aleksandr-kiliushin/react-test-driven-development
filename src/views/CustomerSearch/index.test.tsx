@@ -1,6 +1,5 @@
 import assert from "node:assert"
 import React from "react"
-import "whatwg-fetch"
 
 import { aCustomer1, aCustomer2 } from "#sampleData/someCustomers"
 import { ICustomer } from "#types/ICustomer"
@@ -8,8 +7,6 @@ import { IRenderContainer, createContainer } from "#utils/testing/createContaine
 import { createFetchSuccessfulResponse } from "#utils/testing/spyHelpers"
 
 import { CustomerSearch, ICustomerSearchProps } from "./index"
-
-globalThis.IS_REACT_ACT_ENVIRONMENT = true // TODO: Move to test setup file.
 
 const twoCustomersResponse: ICustomer[] = [aCustomer1, aCustomer2]
 const tenCustomersResponse = Array.from("0123456789", (id) => ({ id }))

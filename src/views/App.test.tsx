@@ -1,11 +1,8 @@
 import React from "react"
-import "whatwg-fetch"
 
 import { IRenderContainer, createContainer } from "#utils/testing/createContainer"
 
 import { App } from "./App"
-
-globalThis.IS_REACT_ACT_ENVIRONMENT = true // TODO: Move to test setup file.
 
 type ICustomerSearchRenderContainer = IRenderContainer<{ formIds: []; fieldNames: [] }>
 

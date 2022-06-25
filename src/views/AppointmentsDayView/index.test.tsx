@@ -7,8 +7,6 @@ import { IRenderContainer, createContainer } from "#utils/testing/createContaine
 
 import { AppointmentsDayView } from "./index"
 
-globalThis.IS_REACT_ACT_ENVIRONMENT = true // TODO: Move to test setup file.
-
 type IAppointmentsDayViewFormRenderContainer = IRenderContainer<{ formIds: []; fieldNames: [] }>
 
 describe("AppointmentsDayView", () => {

@@ -1,7 +1,6 @@
 import { noop } from "lodash"
 import assert from "node:assert"
 import React from "react"
-import "whatwg-fetch"
 
 import { aCustomer1 } from "#sampleData/someCustomers"
 import {
@@ -14,8 +13,6 @@ import { IRenderContainer, createContainer } from "#utils/testing/createContaine
 import { createFetchSuccessfulResponse, getRequestBodyOf } from "#utils/testing/spyHelpers"
 
 import { AppointmentForm, IAppointmentFormProps, IFieldName } from "./index"
-
-globalThis.IS_REACT_ACT_ENVIRONMENT = true // TODO: Move to test setup file.
 
 const appointmentFormDefaultProps: IAppointmentFormProps = {
   availableServiceNames: ["Cut", "Blow-dry"],

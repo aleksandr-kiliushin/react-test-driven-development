@@ -1,5 +1,4 @@
 import React from "react"
-import "whatwg-fetch"
 
 import { aCustomer1, aCustomer2 } from "#sampleData/someCustomers"
 import { aTimeSlotAtHannaTodayAt_13_30, aTimeSlotAtSuzanTodayAt_12_00 } from "#sampleData/someTimeSlots"
@@ -9,8 +8,6 @@ import { createFetchSuccessfulResponse } from "#utils/testing/spyHelpers"
 
 import { AppointmentsDayViewLoader } from "./AppointmentsDayViewLoader"
 import * as AppointmentsDayViewExports from "./index"
-
-globalThis.IS_REACT_ACT_ENVIRONMENT = true // TODO: Move to test setup file.
 
 type IAppointmentsDayViewLoaderRenderContainer = IRenderContainer<{ formIds: []; fieldNames: [] }>
 
