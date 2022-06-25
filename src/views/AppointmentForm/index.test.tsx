@@ -31,7 +31,7 @@ const appointmentFormDefaultProps: IAppointmentFormProps = {
   ],
   customer: aCustomer1,
   defaultServiceName: "Blow-dry",
-  onSubmit: noop,
+  onAppointmentCreated: noop,
   salonClosesAt: 14,
   salonOpensAt: 12,
   today: new Date(),
@@ -138,21 +138,23 @@ describe("AppointmentForm", () => {
     })
 
     it("saves the default service name when the form is submitted", () => {
-      const submitSpy = jest.fn()
-      render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
+      const onAppointmentCreatedSpy = jest.fn()
+      render(<AppointmentForm {...appointmentFormDefaultProps} onAppointmentCreated={onAppointmentCreatedSpy} />)
       simulateSubmit(findForm({ id: "appointment" }))
-      expect(submitSpy).toHaveBeenCalledWith(
+      expect(onAppointmentCreatedSpy).toHaveBeenCalledWith(
         expect.objectContaining({ serviceName: appointmentFormDefaultProps.defaultServiceName })
       )
     })
 
     it("saves the new entered service name when the form is submitted", () => {
-      const submitSpy = jest.fn()
+      const onAppointmentCreatedSpy = jest.fn()
       const aNewEnteredServiceName = "Cut"
-      render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
+      render(<AppointmentForm {...appointmentFormDefaultProps} onAppointmentCreated={onAppointmentCreatedSpy} />)
       selectService(aNewEnteredServiceName)
       simulateSubmit(findForm({ id: "appointment" }))
-      expect(submitSpy).toHaveBeenCalledWith(expect.objectContaining({ serviceName: aNewEnteredServiceName }))
+      expect(onAppointmentCreatedSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ serviceName: aNewEnteredServiceName })
+      )
     })
   })
 
@@ -180,10 +182,10 @@ describe("AppointmentForm", () => {
     })
 
     it("onSubmit contains 'Not selected' stylist when the form is submitted with no stylist selected", () => {
-      const submitSpy = jest.fn()
-      render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
+      const onAppointmentCreatedSpy = jest.fn()
+      render(<AppointmentForm {...appointmentFormDefaultProps} onAppointmentCreated={onAppointmentCreatedSpy} />)
       simulateSubmit(findForm({ id: "appointment" }))
-      expect(submitSpy).toHaveBeenCalledWith(expect.objectContaining({ stylistName: "Not selected" }))
+      expect(onAppointmentCreatedSpy).toHaveBeenCalledWith(expect.objectContaining({ stylistName: "Not selected" }))
     })
 
     it("from start, has only 'Suzan' stylistName available, because only she is certified for 'Blow-dry'", () => {
@@ -202,13 +204,15 @@ describe("AppointmentForm", () => {
     })
 
     it("submits with a newly selected stylistName", () => {
-      const submitSpy = jest.fn()
+      const onAppointmentCreatedSpy = jest.fn()
       const aNewlySelectedStylistName = "Hanna"
-      render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
+      render(<AppointmentForm {...appointmentFormDefaultProps} onAppointmentCreated={onAppointmentCreatedSpy} />)
       selectService("Cut")
       selectStylist(aNewlySelectedStylistName)
       simulateSubmit(findForm({ id: "appointment" }))
-      expect(submitSpy).toHaveBeenCalledWith(expect.objectContaining({ stylistName: aNewlySelectedStylistName }))
+      expect(onAppointmentCreatedSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ stylistName: aNewlySelectedStylistName })
+      )
     })
   })
 
@@ -267,32 +271,34 @@ describe("AppointmentForm", () => {
     })
 
     it("submits with a undefined value if no value was selected", () => {
-      const submitSpy = jest.fn()
-      render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
+      const onAppointmentCreatedSpy = jest.fn()
+      render(<AppointmentForm {...appointmentFormDefaultProps} onAppointmentCreated={onAppointmentCreatedSpy} />)
       simulateSubmit(findForm({ id: "appointment" }))
-      expect(submitSpy.mock.calls[0][0].startsAtDate).toBeUndefined()
+      expect(onAppointmentCreatedSpy.mock.calls[0][0].startsAtDate).toBeUndefined()
     })
 
     it("submits with a newly selected value if a new value was selected.", () => {
-      const submitSpy = jest.fn()
+      const onAppointmentCreatedSpy = jest.fn()
       const aNewlySelectedTimeSlotStartsAtValue = aTimeSlotAtHannaTodayAt_13_30.startsAt
-      render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
+      render(<AppointmentForm {...appointmentFormDefaultProps} onAppointmentCreated={onAppointmentCreatedSpy} />)
       selectStylist("Hanna")
       simulateChange(findTimeSlotRadioButton({ inputValue: aNewlySelectedTimeSlotStartsAtValue.toString() }))
       simulateSubmit(findForm({ id: "appointment" }))
-      expect(submitSpy.mock.calls[0][0].startsAtDate.toString()).toEqual(aNewlySelectedTimeSlotStartsAtValue.toString())
+      expect(onAppointmentCreatedSpy.mock.calls[0][0].startsAtDate.toString()).toEqual(
+        aNewlySelectedTimeSlotStartsAtValue.toString()
+      )
     })
 
     it("submits with a another newly selected value if a new value was selected.", () => {
-      const submitSpy = jest.fn()
-      render(<AppointmentForm {...appointmentFormDefaultProps} onSubmit={submitSpy} />)
+      const onAppointmentCreatedSpy = jest.fn()
+      render(<AppointmentForm {...appointmentFormDefaultProps} onAppointmentCreated={onAppointmentCreatedSpy} />)
       selectStylist("Hanna")
       simulateChange(findTimeSlotRadioButton({ inputValue: aTimeSlotAtHannaTodayAt_13_30.startsAt.toString() }))
       simulateChange(findTimeSlotRadioButton({ inputValue: aTimeSlotAtHannaIn6DaysAt_13_00.startsAt.toString() }))
       selectStylist("Suzan")
       simulateChange(findTimeSlotRadioButton({ inputValue: aTimeSlotAtSuzanTodayAt_12_00.startsAt.toString() }))
       simulateSubmit(findForm({ id: "appointment" }))
-      expect(submitSpy.mock.calls[0][0].startsAtDate.toString()).toEqual(
+      expect(onAppointmentCreatedSpy.mock.calls[0][0].startsAtDate.toString()).toEqual(
         aTimeSlotAtSuzanTodayAt_12_00.startsAt.toString()
       )
     })

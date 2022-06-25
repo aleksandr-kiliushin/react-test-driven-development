@@ -14,7 +14,7 @@ export interface IAppointmentFormProps {
   availableTimeSlots: ITimeSlot[]
   customer: ICustomer
   defaultServiceName: string
-  onSubmit(formValues: {
+  onAppointmentCreated(formValues: {
     customerId: ICustomer["id"]
     serviceName: string
     startsAtDate: ITimeSlot["startsAt"] | undefined
@@ -31,7 +31,7 @@ export const AppointmentForm: React.FC<IAppointmentFormProps> = ({
   availableTimeSlots,
   customer,
   defaultServiceName,
-  onSubmit,
+  onAppointmentCreated,
   salonClosesAt,
   salonOpensAt,
   today,
@@ -52,12 +52,6 @@ export const AppointmentForm: React.FC<IAppointmentFormProps> = ({
       id="appointment"
       onSubmit={(event) => {
         event.preventDefault()
-        onSubmit({
-          customerId: customer.id,
-          serviceName: selectedServiceName,
-          startsAtDate: selectedStartsAtDate,
-          stylistName: selectedStylistName,
-        })
         fetch("/api/appointments", {
           body: JSON.stringify({
             customerId: customer.id,
@@ -68,6 +62,12 @@ export const AppointmentForm: React.FC<IAppointmentFormProps> = ({
           credentials: "same-origin",
           headers: { "Content-Type": "application/json" },
           method: "POST",
+        })
+        onAppointmentCreated({
+          customerId: customer.id,
+          serviceName: selectedServiceName,
+          startsAtDate: selectedStartsAtDate,
+          stylistName: selectedStylistName,
         })
       }}
     >

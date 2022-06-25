@@ -28,8 +28,7 @@ export const App: React.FC = () => {
   switch (view) {
     case "addAppointment":
       if (customer === undefined) return null
-      // @ts-ignore
-      return <AppointmentFormLoader customer={customer} onSave={transitionToDayView} />
+      return <AppointmentFormLoader customer={customer} onAppointmentCreated={transitionToDayView} />
     case "addCustomer":
       return <CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={transitionToAddAppointment} />
     case "searchCustomers":

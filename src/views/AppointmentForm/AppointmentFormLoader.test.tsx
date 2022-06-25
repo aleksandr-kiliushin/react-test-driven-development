@@ -33,7 +33,7 @@ const availableTimeSlotsServerResponse = availableTimeSlots.map((aTimeSlot) => (
 
 const appointmentFormLoaderDefaultProps: IAppointmentFormLoaderProps = {
   customer: aCustomer1,
-  onSave: noop,
+  onAppointmentCreated: noop,
 }
 
 describe("AppointmentFormLoader", () => {

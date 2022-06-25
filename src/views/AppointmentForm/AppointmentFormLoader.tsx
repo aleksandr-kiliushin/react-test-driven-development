@@ -9,10 +9,10 @@ const today = new Date()
 
 export interface IAppointmentFormLoaderProps {
   customer: ICustomer
-  onSave(): void
+  onAppointmentCreated(): void
 }
 
-export const AppointmentFormLoader: React.FC<IAppointmentFormLoaderProps> = ({ customer, onSave }) => {
+export const AppointmentFormLoader: React.FC<IAppointmentFormLoaderProps> = ({ customer, onAppointmentCreated }) => {
   const [availableTimeSlots, setAvailableTimeSlots] = React.useState<ITimeSlot[]>([])
 
   React.useEffect(() => {
@@ -43,7 +43,7 @@ export const AppointmentFormLoader: React.FC<IAppointmentFormLoaderProps> = ({ c
       ]}
       availableTimeSlots={availableTimeSlots}
       defaultServiceName="Cut"
-      onSubmit={onSave}
+      onAppointmentCreated={onAppointmentCreated}
       salonClosesAt={19}
       salonOpensAt={9}
       today={today}
