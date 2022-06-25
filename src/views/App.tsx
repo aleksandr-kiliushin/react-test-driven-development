@@ -1,5 +1,6 @@
+import { noop } from "lodash"
 import React from "react"
-import { Link } from "react-router-dom"
+import { Link, Route, Routes, useNavigate } from "react-router-dom"
 
 import { aCustomer1 } from "#sampleData/someCustomers"
 import { ICustomer } from "#types/ICustomer"
@@ -12,52 +13,51 @@ import { CustomerSearch } from "./CustomerSearch"
 const today = new Date()
 
 export const App: React.FC = () => {
-  const [view, setView] = React.useState<"addAppointment" | "addCustomer" | "dayView" | "searchCustomers">("dayView")
+  const navigate = useNavigate()
   const [customer, setCustomer] = React.useState<ICustomer | undefined>()
 
-  const transitionToAddCustomer = React.useCallback(() => {
-    setView("addCustomer")
-  }, [])
-  const transitionToAddAppointment = React.useCallback((customer: ICustomer) => {
-    setCustomer(customer)
-    setView("addAppointment")
-  }, [])
-  const transitionToDayView = React.useCallback(() => {
-    setView("dayView")
-  }, [])
-  const transitionToCustomersSearch = React.useCallback(() => {
-    setView("searchCustomers")
-  }, [])
-
-  switch (view) {
-    case "addAppointment":
-      if (customer === undefined) return null
-      return <AppointmentFormLoader customer={customer} onAppointmentCreated={transitionToDayView} />
-    case "addCustomer":
-      return <CustomerForm initialCustomerData={aCustomer1} onCustomerCreated={transitionToAddAppointment} />
-    case "searchCustomers":
-      return (
-        <CustomerSearch
-          renderCustomerActions={(aCustomer) => (
-            <button onClick={() => transitionToAddAppointment(aCustomer)} role="button">
-              Create appointment
-            </button>
-          )}
-        />
-      )
-    default:
-      return (
-        <React.Fragment>
-          <div className="button-bar">
-            <Link onClick={transitionToAddCustomer} to="/add-a-customer">
-              Add customer and appointment
-            </Link>
-            <Link onClick={transitionToCustomersSearch} to="/customers-search">
-              Customers search
-            </Link>
-          </div>
-          <AppointmentsDayViewLoader today={today} />
-        </React.Fragment>
-      )
-  }
+  return (
+    <Routes>
+      <Route
+        element={
+          <>
+            <div className="button-bar">
+              <Link to="/add-a-customer">Add customer and appointment</Link>
+              <Link to="/customers-search">Customers search</Link>
+            </div>
+            <AppointmentsDayViewLoader today={today} />
+          </>
+        }
+        path="/"
+      />
+      <Route
+        element={
+          <CustomerSearch
+            renderCustomerActions={(aCustomer) => (
+              <button onClick={() => setCustomer(aCustomer)} role="button">
+                Create appointment
+              </button>
+            )}
+          />
+        }
+        path="/customers-search"
+      />
+      <Route
+        element={
+          <CustomerForm
+            onCustomerCreated={(createdCustomer) => {
+              setCustomer(createdCustomer)
+              navigate("/add-an-appointment")
+            }}
+            initialCustomerData={aCustomer1}
+          />
+        }
+        path="add-a-customer"
+      />
+      <Route
+        element={customer !== undefined && <AppointmentFormLoader customer={customer} onAppointmentCreated={noop} />}
+        path="add-an-appointment"
+      />
+    </Routes>
+  )
 }

@@ -7,7 +7,7 @@ type IFieldName = keyof Omit<ICustomer, "id">
 
 export interface ICustomerFormProps {
   initialCustomerData: Omit<ICustomer, "id">
-  onCustomerCreated(responseData: unknown): void
+  onCustomerCreated(responseData: ICustomer): void
 }
 
 export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData, onCustomerCreated }) => {
@@ -67,7 +67,7 @@ export const CustomerForm: React.FC<ICustomerFormProps> = ({ initialCustomerData
     }
     setIsLoading(false)
     setErrorMessage("")
-    const createdCustomer = await response.json()
+    const createdCustomer: ICustomer = await response.json()
     onCustomerCreated(createdCustomer)
   }
 
