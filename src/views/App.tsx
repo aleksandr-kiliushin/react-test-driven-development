@@ -1,4 +1,5 @@
 import React from "react"
+import { Link } from "react-router-dom"
 
 import { aCustomer1 } from "#sampleData/someCustomers"
 import { ICustomer } from "#types/ICustomer"
@@ -48,12 +49,12 @@ export const App: React.FC = () => {
       return (
         <React.Fragment>
           <div className="button-bar">
-            <button id="addCustomer" onClick={transitionToAddCustomer} type="button">
+            <Link onClick={transitionToAddCustomer} to="/add-a-customer">
               Add customer and appointment
-            </button>
-            <button id="searchCustomers" onClick={transitionToCustomersSearch} type="button">
+            </Link>
+            <Link onClick={transitionToCustomersSearch} to="/customers-search">
               Customers search
-            </button>
+            </Link>
           </div>
           <AppointmentsDayViewLoader today={today} />
         </React.Fragment>
