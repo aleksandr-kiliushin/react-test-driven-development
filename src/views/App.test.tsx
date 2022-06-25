@@ -1,5 +1,4 @@
 import React from "react"
-import { MemoryRouter } from "react-router-dom"
 
 import { IRenderContainer, createContainer } from "#utils/testing/createContainer"
 
@@ -41,20 +40,12 @@ describe("App", () => {
   })
 
   it("renders the add a customer page link", () => {
-    render(
-      <MemoryRouter>
-        <App />
-      </MemoryRouter>
-    )
+    render(<App />)
     expect(findElement("a[href='/add-a-customer']")).not.toBeNull()
   })
 
   it("renders the search customers page link", () => {
-    render(
-      <MemoryRouter>
-        <App />
-      </MemoryRouter>
-    )
+    render(<App />)
     expect(findElement("a[href='/customers-search']")).not.toBeNull()
   })
 })

@@ -1,6 +1,8 @@
 import assert from "node:assert"
+import React from "react"
 import ReactDom from "react-dom/client"
 import ReactDomTestUtils, { act } from "react-dom/test-utils"
+import { MemoryRouter } from "react-router-dom"
 
 export interface IRenderContainer<ContainerContentConfig extends { fieldNames: string[]; formIds: string[] }> {
   container: HTMLDivElement
@@ -36,13 +38,13 @@ export const createContainer = (): IAbstractRenderContainer => {
 
   const render: IAbstractRenderContainer["render"] = (aComponent) => {
     act(() => {
-      root.render(aComponent)
+      root.render(<MemoryRouter>{aComponent}</MemoryRouter>)
     })
   }
 
   const renderAndWait: IAbstractRenderContainer["renderAndWait"] = async (aComponent) => {
     await act(async () => {
-      root.render(aComponent)
+      root.render(<MemoryRouter>{aComponent}</MemoryRouter>)
     })
   }
 
