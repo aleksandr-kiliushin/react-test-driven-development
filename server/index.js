@@ -11,6 +11,9 @@ const port = 3600
 app.get("/api/appointments/*", (req, res) => {
   res.json(appointmentsResponseData)
 })
+app.post("/api/appointments", (req, res) => {
+  res.json(req.body)
+})
 app.get("/api/availableTimeSlots", (req, res) => {
   res.json(timeSlots)
 })

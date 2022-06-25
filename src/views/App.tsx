@@ -24,6 +24,9 @@ export const App: React.FC = () => {
   const transitionToDayView = React.useCallback(() => {
     setView("dayView")
   }, [])
+  const transitionToCustomersSearch = React.useCallback(() => {
+    setView("searchCustomers")
+  }, [])
 
   switch (view) {
     case "addAppointment":
@@ -45,8 +48,11 @@ export const App: React.FC = () => {
       return (
         <React.Fragment>
           <div className="button-bar">
-            <button type="button" id="addCustomer" onClick={transitionToAddCustomer}>
+            <button id="addCustomer" onClick={transitionToAddCustomer} type="button">
               Add customer and appointment
+            </button>
+            <button id="searchCustomers" onClick={transitionToCustomersSearch} type="button">
+              Customers search
             </button>
           </div>
           <AppointmentsDayViewLoader today={today} />
