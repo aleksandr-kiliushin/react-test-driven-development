@@ -21,7 +21,7 @@ type ICustomerFormRenderContainer = IRenderContainer<{ formIds: ["customer"]; fi
 describe("CustomerForm", () => {
   let findElement: ICustomerFormRenderContainer["findElement"]
   let findField: ICustomerFormRenderContainer["findField"]
-  let findFieldLabel: ICustomerFormRenderContainer["findFieldLabel"]
+  let findLabel: ICustomerFormRenderContainer["findLabel"]
   let findForm: ICustomerFormRenderContainer["findForm"]
   let render: ICustomerFormRenderContainer["render"]
   let simulateBlur: ICustomerFormRenderContainer["simulateBlur"]
@@ -33,7 +33,7 @@ describe("CustomerForm", () => {
     ;({
       findElement,
       findField,
-      findFieldLabel,
+      findLabel,
       findForm,
       render,
       simulateBlur,
@@ -72,16 +72,14 @@ describe("CustomerForm", () => {
   }) => {
     it("renders a label.", () => {
       render(<CustomerForm {...defaultProps} />)
-      expect(findFieldLabel({ fieldName, formId: "customer" }).textContent).toEqual(labelText)
+      expect(findLabel({ fieldName }).textContent).toEqual(labelText)
     })
   }
 
   const itAssignsAFieldAnIdThatMatchesTheCorrespondingLabelId = ({ fieldName }: { fieldName: IFieldName }) => {
     it("assigns an id that matches the label id.", () => {
       render(<CustomerForm {...defaultProps} />)
-      expect(findFieldLabel({ fieldName, formId: "customer" }).htmlFor).toEqual(
-        findField({ fieldName, formId: "customer" }).id
-      )
+      expect(findLabel({ fieldName }).htmlFor).toEqual(findField({ fieldName, formId: "customer" }).id)
     })
   }
 

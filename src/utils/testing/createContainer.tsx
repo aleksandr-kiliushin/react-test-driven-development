@@ -17,8 +17,7 @@ export interface IRenderContainer<ContainerContentConfig extends { fieldNames: s
     formId: ContainerContentConfig["formIds"][keyof ContainerContentConfig["formIds"]]
     fieldName: ContainerContentConfig["fieldNames"][keyof ContainerContentConfig["fieldNames"]]
   }) => HTMLInputElement | HTMLSelectElement
-  findFieldLabel: (params: {
-    formId: ContainerContentConfig["formIds"][keyof ContainerContentConfig["formIds"]]
+  findLabel: (params: {
     fieldName: ContainerContentConfig["fieldNames"][keyof ContainerContentConfig["fieldNames"]]
   }) => HTMLLabelElement
   findForm: (params: {
@@ -88,7 +87,7 @@ export const createContainer = (): IAbstractRenderContainer => {
     return field
   }
 
-  const findFieldLabel: IAbstractRenderContainer["findFieldLabel"] = ({ fieldName, formId }) => {
+  const findLabel: IAbstractRenderContainer["findLabel"] = ({ fieldName }) => {
     const label = container.querySelector(`label[for="${fieldName}"]`)
     assert(label instanceof HTMLLabelElement, `Cannot find a label with a [for] attribute of [${fieldName}].`)
     return label
@@ -121,7 +120,7 @@ export const createContainer = (): IAbstractRenderContainer => {
     findElement,
     findElements,
     findField,
-    findFieldLabel,
+    findLabel,
     findForm,
     history,
     queryElement,

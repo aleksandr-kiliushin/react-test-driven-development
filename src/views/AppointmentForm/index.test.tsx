@@ -40,14 +40,14 @@ describe("AppointmentForm", () => {
   let findElement: IAppointmentFormRenderContainer["findElement"]
   let findElements: IAppointmentFormRenderContainer["findElements"]
   let findField: IAppointmentFormRenderContainer["findField"]
-  let findFieldLabel: IAppointmentFormRenderContainer["findFieldLabel"]
+  let findLabel: IAppointmentFormRenderContainer["findLabel"]
   let findForm: IAppointmentFormRenderContainer["findForm"]
   let render: IAppointmentFormRenderContainer["render"]
   let simulateChange: IAppointmentFormRenderContainer["simulateChange"]
   let simulateSubmit: IAppointmentFormRenderContainer["simulateSubmit"]
 
   beforeEach(() => {
-    ;({ findElement, findElements, findField, findFieldLabel, findForm, render, simulateChange, simulateSubmit } =
+    ;({ findElement, findElements, findField, findLabel, findForm, render, simulateChange, simulateSubmit } =
       createContainer())
     // @ts-ignore
     jest.spyOn(globalThis, "fetch").mockReturnValue(createFetchSuccessfulResponse())
@@ -124,13 +124,13 @@ describe("AppointmentForm", () => {
 
     it("renders a field label with an appropriate htmlFor attribute", () => {
       render(<AppointmentForm {...appointmentFormDefaultProps} />)
-      expect(findFieldLabel({ fieldName: "serviceName", formId: "appointment" })).not.toBeNull()
+      expect(findLabel({ fieldName: "serviceName" })).not.toBeNull()
     })
 
     it("assign label htmlFor matching to the select field ID", () => {
       render(<AppointmentForm {...appointmentFormDefaultProps} />)
       const field = findField({ fieldName: "serviceName", formId: "appointment" })
-      const label = findFieldLabel({ fieldName: "serviceName", formId: "appointment" })
+      const label = findLabel({ fieldName: "serviceName" })
       expect(label.htmlFor).toEqual(field.id)
     })
 
@@ -163,13 +163,13 @@ describe("AppointmentForm", () => {
 
     it("renders a field label with an appropriate htmlFor attribute", () => {
       render(<AppointmentForm {...appointmentFormDefaultProps} />)
-      expect(findFieldLabel({ fieldName: "stylistName", formId: "appointment" })).not.toBeNull()
+      expect(findLabel({ fieldName: "stylistName" })).not.toBeNull()
     })
 
     it("assign label htmlFor matching to the select field ID", () => {
       render(<AppointmentForm {...appointmentFormDefaultProps} />)
       const field = findField({ fieldName: "serviceName", formId: "appointment" })
-      const label = findFieldLabel({ fieldName: "serviceName", formId: "appointment" })
+      const label = findLabel({ fieldName: "serviceName" })
       expect(label.htmlFor).toEqual(field.id)
     })
 
