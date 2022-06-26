@@ -8,7 +8,7 @@ import { ICustomer } from "#types/ICustomer"
 import { AppointmentFormLoader } from "./AppointmentForm/AppointmentFormLoader"
 import { AppointmentsDayViewLoader } from "./AppointmentsDayView/AppointmentsDayViewLoader"
 import { CustomerForm } from "./CustomerForm"
-import { CustomerSearch } from "./CustomerSearch"
+import { CustomersSearch } from "./CustomersSearch"
 
 const today = new Date()
 
@@ -36,7 +36,7 @@ export const App: React.FC = () => {
       />
       <Route
         element={
-          <CustomerSearch
+          <CustomersSearch
             renderCustomerActions={(aCustomer) => (
               <button onClick={() => setCustomer(aCustomer)} role="button">
                 Create appointment

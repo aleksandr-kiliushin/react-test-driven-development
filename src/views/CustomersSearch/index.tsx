@@ -13,12 +13,11 @@ const getSearchParams = ({ after, searchTerm }: { after: ICustomer["id"]; search
   return ""
 }
 
-export interface ICustomerSearchProps {
+export interface ICustomersSearchProps {
   renderCustomerActions(aCustomer: ICustomer): React.ReactNode
 }
 
-// TODO: Rename with Customer(s!)Search.
-export const CustomerSearch: React.FC<ICustomerSearchProps> = ({ renderCustomerActions }) => {
+export const CustomersSearch: React.FC<ICustomersSearchProps> = ({ renderCustomerActions }) => {
   const [customers, setCustomers] = React.useState<ICustomer[]>([])
   const [lastRowIds, setLastRowIds] = React.useState<number[]>([])
   const [searchTerm, setSearchTerm] = React.useState<string>("")
