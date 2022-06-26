@@ -1,12 +1,7 @@
 import React from "react"
 import { Link, useSearchParams } from "react-router-dom"
 
-interface INavigationButtonsProps {
-  onNextButtonClick(): void
-  onPreviousButtonClick(): void
-}
-
-export const NavigationButtons: React.FC<INavigationButtonsProps> = ({ onNextButtonClick, onPreviousButtonClick }) => {
+export const NavigationButtons: React.FC = ({}) => {
   const [searchParams] = useSearchParams()
 
   const pageNumberSearchParam = searchParams.get("page")
@@ -21,18 +16,12 @@ export const NavigationButtons: React.FC<INavigationButtonsProps> = ({ onNextBut
         <Link
           className="bg-red-200 hover:bg-red-400"
           id="previous-page"
-          onClick={onPreviousButtonClick}
           to={`/customers-search?page=${pageNumber - 1}`}
         >
           Previous
         </Link>
       )}
-      <Link
-        className="bg-cyan-200 hover:bg-cyan-400"
-        id="next-page"
-        onClick={onNextButtonClick}
-        to={`/customers-search?page=${pageNumber + 1}`}
-      >
+      <Link className="bg-cyan-200 hover:bg-cyan-400" id="next-page" to={`/customers-search?page=${pageNumber + 1}`}>
         Next
       </Link>
     </div>

@@ -7,14 +7,6 @@ import { CustomerRow } from "./CustomerRow"
 import { NavigationButtons } from "./NavigationButtons"
 import { isPageNumberSearchParamValid } from "./isPageNumberSearchParamValid"
 
-// const getSearchParams = ({ after, searchTerm }: { after: ICustomer["id"]; searchTerm: string }) => {
-//   let pairs = []
-//   if (after) pairs.push(`after=${after}`)
-//   if (searchTerm) pairs.push(`searchTerm=${searchTerm}`)
-//   if (pairs.length > 0) return `?${pairs.join("&")}`
-//   return ""
-// }
-
 export interface ICustomersSearchProps {
   renderCustomerActions(aCustomer: ICustomer): React.ReactNode
 }
@@ -26,7 +18,6 @@ export const CustomersSearch: React.FC<ICustomersSearchProps> = ({ renderCustome
   const searchTermSearchParam = searchParams.get("searchTerm")
 
   const [customers, setCustomers] = React.useState<ICustomer[]>([])
-  const [lastRowIds, setLastRowIds] = React.useState<number[]>([])
 
   React.useEffect(() => {
     if (isPageNumberSearchParamValid(pageNumberSearchParam)) return
@@ -53,15 +44,6 @@ export const CustomersSearch: React.FC<ICustomersSearchProps> = ({ renderCustome
       .then(setCustomers)
   }, [pageNumberSearchParam, searchTermSearchParam])
 
-  const onNextButtonClick = React.useCallback(() => {
-    const currentLastRowId = customers[customers.length - 1].id
-    setLastRowIds([...lastRowIds, currentLastRowId])
-  }, [customers, lastRowIds])
-
-  const onPreviousButtonClick = React.useCallback(() => {
-    setLastRowIds(lastRowIds.slice(0, -1))
-  }, [lastRowIds])
-
   return (
     <>
       <input
@@ -71,7 +53,7 @@ export const CustomersSearch: React.FC<ICustomersSearchProps> = ({ renderCustome
         placeholder="Enter filter text"
         value={searchTermSearchParam ?? ""}
       />
-      <NavigationButtons onNextButtonClick={onNextButtonClick} onPreviousButtonClick={onPreviousButtonClick} />
+      <NavigationButtons />
       <table>
         <thead>
           <tr>
