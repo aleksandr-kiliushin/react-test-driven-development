@@ -15,14 +15,16 @@ export const NavigationButtons: React.FC<INavigationButtonsProps> = ({ onNextBut
 
   return (
     <div className="button-bar">
-      <Link
-        className={`bg-red-200 hover:bg-red-400 ${pageNumberSearchParam === "1" && "invisible"}`}
-        id="previous-page"
-        onClick={onPreviousButtonClick}
-        to="/customers-search"
-      >
-        Previous
-      </Link>
+      {pageNumberSearchParam !== "1" && (
+        <Link
+          className="bg-red-200 hover:bg-red-400"
+          id="previous-page"
+          onClick={onPreviousButtonClick}
+          to="/customers-search"
+        >
+          Previous
+        </Link>
+      )}
       <Link className="bg-cyan-200 hover:bg-cyan-400" id="next-page" onClick={onNextButtonClick} to="/customers-search">
         Next
       </Link>

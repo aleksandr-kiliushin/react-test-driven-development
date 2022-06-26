@@ -6,7 +6,7 @@ import { MemoryRouter } from "react-router-dom"
 
 export interface IRenderContainer<ContainerContentConfig extends { fieldNames: string[]; formIds: string[] }> {
   container: HTMLDivElement
-  findElement(selector: string): Element | null
+  findElement(selector: string): Element | null // TODO: Remove null from options.
   findElements(selector: string): Element[]
   findField: (params: {
     formId: ContainerContentConfig["formIds"][keyof ContainerContentConfig["formIds"]]
@@ -19,6 +19,7 @@ export interface IRenderContainer<ContainerContentConfig extends { fieldNames: s
   findForm: (params: {
     id: ContainerContentConfig["formIds"][keyof ContainerContentConfig["formIds"]]
   }) => HTMLFormElement
+  queryElement(selector: string): Element | null
   render: ReactDom.Root["render"]
   renderAndWait(children: React.ReactNode): Promise<void>
   renderWithMemoryRouter: ReactDom.Root["render"] // TODO: Replace with `render` + config { withMemoryRouter: true }.
@@ -63,6 +64,10 @@ export const createContainer = (): IAbstractRenderContainer => {
   }
 
   const findElement: IAbstractRenderContainer["findElement"] = (selector: string) => {
+    return container.querySelector(selector)
+  }
+
+  const queryElement: IAbstractRenderContainer["findElement"] = (selector: string) => {
     return container.querySelector(selector)
   }
 
@@ -115,6 +120,7 @@ export const createContainer = (): IAbstractRenderContainer => {
     findField,
     findFieldLabel,
     findForm,
+    queryElement,
     render,
     renderAndWait,
     renderWithMemoryRouter,
