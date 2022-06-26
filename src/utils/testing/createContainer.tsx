@@ -69,7 +69,7 @@ export const createContainer = (): IAbstractRenderContainer => {
     return container.querySelector(selector)
   }
 
-  const queryElement: IAbstractRenderContainer["findElement"] = (selector: string) => {
+  const queryElement: IAbstractRenderContainer["queryElement"] = (selector: string) => {
     return container.querySelector(selector)
   }
 
