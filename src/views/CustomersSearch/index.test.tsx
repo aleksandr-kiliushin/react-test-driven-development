@@ -42,9 +42,6 @@ describe("CustomersSearch", () => {
 
   it("renders a table with four headings", async () => {
     await renderAndWait(<CustomersSearch {...customersSearchDefaultProps} />)
-    await act(async () => {
-      history.push("/customers-search")
-    })
     const headings = findElements("table th")
     expect(headings.map((aHeader) => aHeader.textContent)).toEqual([
       "First name",
