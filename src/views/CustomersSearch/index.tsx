@@ -35,18 +35,14 @@ export const CustomersSearch: React.FC<ICustomersSearchProps> = ({ renderCustome
 
   React.useEffect(() => {
     if (!isPageNumberSearchParamValid(pageNumberSearchParam)) return
-    const fetchData = async () => {
-      const result = await globalThis.fetch(
-        `/api/customers?page=${pageNumberSearchParam}${searchTerm === "" ? "" : `&searchTerm=${searchTerm}`}`,
-        {
-          credentials: "same-origin",
-          headers: { "Content-Type": "application/json" },
-          method: "GET",
-        }
-      )
-      setCustomers(await result.json())
-    }
-    fetchData()
+    globalThis
+      .fetch(`/api/customers?page=${pageNumberSearchParam}${searchTerm === "" ? "" : `&searchTerm=${searchTerm}`}`, {
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        method: "GET",
+      })
+      .then((response) => response.json())
+      .then(setCustomers)
   }, [pageNumberSearchParam, searchTerm])
 
   const onNextButtonClick = React.useCallback(() => {
