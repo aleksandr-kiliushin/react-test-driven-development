@@ -261,6 +261,26 @@ describe("CustomersSearch", () => {
     expect(nextPageLink.href).toMatch("/customers-search?page=6")
   })
 
+  it("navigation links have proper hrefs when searchTerm is specified", async () => {
+    const history = createBrowserHistory() // TODO: Get it from render result of `createContainer`.
+    await renderAndWait(
+      <HistoryRouter history={history}>
+        <CustomersSearch {...customersSearchDefaultProps} />
+      </HistoryRouter>
+    )
+    await act(async () => {
+      history.push("/customers-search?page=5&searchTerm=Gerald")
+    })
+    const previousPageLink = findElement("a#previous-page")
+    const nextPageLink = findElement("a#next-page")
+    assert(previousPageLink !== null, "previous-page link not found")
+    assert(nextPageLink !== null, "next-page link not found")
+    assert(previousPageLink instanceof HTMLAnchorElement, "previous-page link is not an anchor element")
+    assert(nextPageLink instanceof HTMLAnchorElement, "next-page link is not an anchor element")
+    expect(previousPageLink.href).toMatch("/customers-search?page=4&searchTerm=Gerald")
+    expect(nextPageLink.href).toMatch("/customers-search?page=6&searchTerm=Gerald")
+  })
+
   it("has a search input field with a placeholder", async () => {
     const history = createBrowserHistory() // TODO: Get it from render result of `createContainer`.
     await renderAndWait(
