@@ -11,7 +11,7 @@ interface IRenderOptions {
 
 export interface IRenderContainer<ContainerContentConfig extends { fieldNames: string[]; formIds: string[] }> {
   container: HTMLDivElement
-  findElement(selector: string): Element | null // TODO: Remove null from options.
+  findElement(selector: string): Element | null // TODO: Remove null from options, add error message as the second param.
   findElements(selector: string): Element[]
   findField: (params: {
     formId: ContainerContentConfig["formIds"][keyof ContainerContentConfig["formIds"]]
