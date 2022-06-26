@@ -36,7 +36,7 @@ describe("CustomersSearch", () => {
   // let simulateChange: ICustomersSearchRenderContainer["simulateChange"]
   let simulateChangeAndWait: ICustomersSearchRenderContainer["simulateChangeAndWait"]
   // let simulateClick: ICustomersSearchRenderContainer["simulateClick"]
-  let simulateClickAndWait: ICustomersSearchRenderContainer["simulateClickAndWait"]
+  // let simulateClickAndWait: ICustomersSearchRenderContainer["simulateClickAndWait"]
   // let simulateSubmit: ICustomersSearchRenderContainer["simulateSubmit"]
   // let simulateSubmitAndWait: ICustomersSearchRenderContainer["simulateSubmitAndWait"]
 
@@ -54,7 +54,7 @@ describe("CustomersSearch", () => {
       // simulateChange,
       simulateChangeAndWait,
       // simulateClick,
-      simulateClickAndWait,
+      // simulateClickAndWait,
       // simulateSubmit,
       // simulateSubmitAndWait,
     } = createContainer())
@@ -74,7 +74,7 @@ describe("CustomersSearch", () => {
         <CustomersSearch {...customersSearchDefaultProps} />
       </HistoryRouter>
     )
-    act(() => {
+    await act(async () => {
       history.push("/customers-search")
     })
     const headings = findElements("table th")
@@ -86,21 +86,30 @@ describe("CustomersSearch", () => {
     ])
   })
 
-  it("fetches all customer data when component mounts", async () => {
+  it("fetches first customer page when component mounts with no page specified", async () => {
     const history = createBrowserHistory() // TODO: Get it from render result of `createContainer`.
     await renderAndWait(
       <HistoryRouter history={history}>
         <CustomersSearch {...customersSearchDefaultProps} />
       </HistoryRouter>
     )
-    act(() => {
+    await act(async () => {
       history.push("/customers-search")
     })
-    expect(globalThis.fetch).toHaveBeenCalledWith("/api/customers", {
-      credentials: "same-origin",
-      headers: { "Content-Type": "application/json" },
-      method: "GET",
+    expect(globalThis.fetch).toHaveBeenCalledWith("/api/customers?page=1", expect.anything())
+  })
+
+  it("fetches first customer page when component mounts with page=5", async () => {
+    const history = createBrowserHistory() // TODO: Get it from render result of `createContainer`.
+    await renderAndWait(
+      <HistoryRouter history={history}>
+        <CustomersSearch {...customersSearchDefaultProps} />
+      </HistoryRouter>
+    )
+    await act(async () => {
+      history.push("/customers-search?page=5")
     })
+    expect(globalThis.fetch).toHaveBeenLastCalledWith(`/api/customers?page=${5}`, expect.anything())
   })
 
   it("renders all customer data in a table row", async () => {
@@ -110,7 +119,7 @@ describe("CustomersSearch", () => {
         <CustomersSearch {...customersSearchDefaultProps} />
       </HistoryRouter>
     )
-    act(() => {
+    await act(async () => {
       history.push("/customers-search")
     })
     const aCustomer1RowCells = findElements("table tbody tr:nth-child(1) td")
@@ -130,7 +139,7 @@ describe("CustomersSearch", () => {
         <CustomersSearch {...customersSearchDefaultProps} />
       </HistoryRouter>
     )
-    act(() => {
+    await act(async () => {
       history.push("/customers-search")
     })
     expect(findElement("a#next-page")).not.toBeNull()
@@ -143,7 +152,7 @@ describe("CustomersSearch", () => {
         <CustomersSearch {...customersSearchDefaultProps} />
       </HistoryRouter>
     )
-    act(() => {
+    await act(async () => {
       history.push("/customers-search?page=1")
     })
     expect(queryElement("a#previous-page")).toBeNull()
@@ -156,7 +165,7 @@ describe("CustomersSearch", () => {
         <CustomersSearch {...customersSearchDefaultProps} />
       </HistoryRouter>
     )
-    act(() => {
+    await act(async () => {
       history.push("/customers-search?page=123")
     })
     expect(findElement("a#previous-page")).not.toBeNull()
@@ -169,7 +178,7 @@ describe("CustomersSearch", () => {
         <CustomersSearch {...customersSearchDefaultProps} />
       </HistoryRouter>
     )
-    act(() => {
+    await act(async () => {
       history.push("/customers-search")
     })
     expect(history.location.pathname).toEqual("/customers-search")
@@ -183,7 +192,7 @@ describe("CustomersSearch", () => {
         <CustomersSearch {...customersSearchDefaultProps} />
       </HistoryRouter>
     )
-    act(() => {
+    await act(async () => {
       history.push("/customers-search?page=0")
     })
     expect(history.location.pathname).toEqual("/customers-search")
@@ -197,7 +206,7 @@ describe("CustomersSearch", () => {
         <CustomersSearch {...customersSearchDefaultProps} />
       </HistoryRouter>
     )
-    act(() => {
+    await act(async () => {
       history.push("/customers-search?page=-2")
     })
     expect(history.location.pathname).toEqual("/customers-search")
@@ -211,7 +220,7 @@ describe("CustomersSearch", () => {
         <CustomersSearch {...customersSearchDefaultProps} />
       </HistoryRouter>
     )
-    act(() => {
+    await act(async () => {
       history.push("/customers-search?page=Hello")
     })
     expect(history.location.pathname).toEqual("/customers-search")
@@ -225,7 +234,7 @@ describe("CustomersSearch", () => {
         <CustomersSearch {...customersSearchDefaultProps} />
       </HistoryRouter>
     )
-    act(() => {
+    await act(async () => {
       history.push("/customers-search?page=6")
     })
     expect(history.location.pathname).toEqual("/customers-search")
@@ -239,7 +248,7 @@ describe("CustomersSearch", () => {
         <CustomersSearch {...customersSearchDefaultProps} />
       </HistoryRouter>
     )
-    act(() => {
+    await act(async () => {
       history.push("/customers-search?page=5")
     })
     const previousPageLink = findElement("a#previous-page")
@@ -252,24 +261,6 @@ describe("CustomersSearch", () => {
     expect(nextPageLink.href).toMatch("/customers-search?page=6")
   })
 
-  it("requests next page of data when next page link is clicked", async () => {
-    const lastLoadedCustomerId = 9
-    ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(tenCustomersResponse))
-    const history = createBrowserHistory() // TODO: Get it from render result of `createContainer`.
-    await renderAndWait(
-      <HistoryRouter history={history}>
-        <CustomersSearch {...customersSearchDefaultProps} />
-      </HistoryRouter>
-    )
-    act(() => {
-      history.push("/customers-search")
-    })
-    const nextPageLink = findElement("a#next-page")
-    assert(nextPageLink !== null, "Next page link not found.")
-    await simulateClickAndWait(nextPageLink)
-    expect(globalThis.fetch).toHaveBeenLastCalledWith(`/api/customers?after=${lastLoadedCustomerId}`, expect.anything())
-  })
-
   it("has a search input field with a placeholder", async () => {
     const history = createBrowserHistory() // TODO: Get it from render result of `createContainer`.
     await renderAndWait(
@@ -277,7 +268,7 @@ describe("CustomersSearch", () => {
         <CustomersSearch {...customersSearchDefaultProps} />
       </HistoryRouter>
     )
-    act(() => {
+    await act(async () => {
       history.push("/customers-search")
     })
     const searchField = findElement("input")
@@ -292,14 +283,14 @@ describe("CustomersSearch", () => {
         <CustomersSearch {...customersSearchDefaultProps} />
       </HistoryRouter>
     )
-    act(() => {
+    await act(async () => {
       history.push("/customers-search")
     })
     const searchField = findElement("input")
     assert(searchField !== null, "SearchField is not found.")
     // @ts-ignore
-    await simulateChangeAndWait(searchField, { target: { value: "name" } })
-    expect(globalThis.fetch).toHaveBeenLastCalledWith("/api/customers?searchTerm=name", expect.anything())
+    await simulateChangeAndWait(searchField, { target: { value: "Gerald" } })
+    expect(globalThis.fetch).toHaveBeenLastCalledWith("/api/customers?page=1&searchTerm=Gerald", expect.anything())
   })
 
   it("includes search term when moving to next page", async () => {
@@ -310,17 +301,14 @@ describe("CustomersSearch", () => {
         <CustomersSearch {...customersSearchDefaultProps} />
       </HistoryRouter>
     )
-    act(() => {
-      history.push("/customers-search")
+    await act(async () => {
+      history.push("/customers-search?page=5")
     })
     const searchField = findElement("input")
-    const nextPageLink = findElement("a#next-page")
     assert(searchField !== null, "SearchField is not found.")
-    assert(nextPageLink !== null, "next-page link not found")
     // @ts-ignore
-    await simulateChangeAndWait(searchField, { target: { value: "name" } })
-    await simulateClickAndWait(nextPageLink)
-    expect(globalThis.fetch).toHaveBeenLastCalledWith("/api/customers?after=9&searchTerm=name", expect.anything())
+    await simulateChangeAndWait(searchField, { target: { value: "Gerald" } })
+    expect(globalThis.fetch).toHaveBeenLastCalledWith("/api/customers?page=5&searchTerm=Gerald", expect.anything())
   })
 
   it("displays provided action buttons for each customer", async () => {
@@ -333,7 +321,7 @@ describe("CustomersSearch", () => {
         <CustomersSearch renderCustomerActions={actionSpy} />
       </HistoryRouter>
     )
-    act(() => {
+    await act(async () => {
       history.push("/customers-search")
     })
     const rows = findElements("table tbody td")
@@ -350,7 +338,7 @@ describe("CustomersSearch", () => {
         <CustomersSearch renderCustomerActions={actionSpy} />
       </HistoryRouter>
     )
-    act(() => {
+    await act(async () => {
       history.push("/customers-search")
     })
     expect(actionSpy).toHaveBeenCalledWith(twoCustomersResponse[0])
