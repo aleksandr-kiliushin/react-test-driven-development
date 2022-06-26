@@ -22,8 +22,12 @@ export const App: React.FC = () => {
         element={
           <>
             <div className="button-bar">
-              <Link to="/add-a-customer">Add customer and appointment</Link>
-              <Link to="/customers-search">Customers search</Link>
+              <Link className="bg-cyan-200 hover:bg-cyan-500" to="/add-a-customer">
+                Add customer and appointment
+              </Link>
+              <Link className="bg-violet-200 hover:bg-violet-500" to="/customers-search">
+                Customers search
+              </Link>
             </div>
             <AppointmentsDayViewLoader today={today} />
           </>
