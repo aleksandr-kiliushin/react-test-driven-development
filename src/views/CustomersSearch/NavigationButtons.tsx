@@ -5,6 +5,7 @@ export const NavigationButtons: React.FC = ({}) => {
   const [searchParams] = useSearchParams()
 
   const pageNumberSearchParam = searchParams.get("page")
+  const searchTermSearchParam = searchParams.get("searchTerm")
 
   if (pageNumberSearchParam === null) return null
 
@@ -16,12 +17,20 @@ export const NavigationButtons: React.FC = ({}) => {
         <Link
           className="bg-red-200 hover:bg-red-400"
           id="previous-page"
-          to={`/customers-search?page=${pageNumber - 1}`}
+          to={`/customers-search?page=${pageNumber - 1}${
+            searchTermSearchParam ? `&searchTerm=${searchTermSearchParam}` : ""
+          }`}
         >
           Previous
         </Link>
       )}
-      <Link className="bg-cyan-200 hover:bg-cyan-400" id="next-page" to={`/customers-search?page=${pageNumber + 1}`}>
+      <Link
+        className="bg-cyan-200 hover:bg-cyan-400"
+        id="next-page"
+        to={`/customers-search?page=${pageNumber + 1}${
+          searchTermSearchParam ? `&searchTerm=${searchTermSearchParam}` : ""
+        }`}
+      >
         Next
       </Link>
     </div>
