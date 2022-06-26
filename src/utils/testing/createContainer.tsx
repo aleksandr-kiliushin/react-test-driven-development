@@ -48,9 +48,7 @@ export const createContainer = (): IAbstractRenderContainer => {
       root.render(<HistoryRouter history={history}>{aComponent}</HistoryRouter>)
     })
     act(() => {
-      if (renderOptions === undefined) return
-      if (renderOptions.initialUrl === undefined) return
-      history.push(renderOptions.initialUrl)
+      history.push(renderOptions?.initialUrl ?? "/")
     })
   }
 
@@ -59,9 +57,7 @@ export const createContainer = (): IAbstractRenderContainer => {
       root.render(<HistoryRouter history={history}>{aComponent}</HistoryRouter>)
     })
     await act(async () => {
-      if (renderOptions === undefined) return
-      if (renderOptions.initialUrl === undefined) return
-      history.push(renderOptions.initialUrl)
+      history.push(renderOptions?.initialUrl ?? "/")
     })
   }
 
