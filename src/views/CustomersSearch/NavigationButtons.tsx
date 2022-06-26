@@ -3,12 +3,8 @@ import { Link, useLocation, useSearchParams } from "react-router-dom"
 
 export const NavigationButtons: React.FC = ({}) => {
   const [searchParams] = useSearchParams()
-
   const location = useLocation()
-
   const pageNumberSearchParam = searchParams.get("page")
-
-  if (pageNumberSearchParam === null) return null
 
   return (
     <div className="button-bar">
