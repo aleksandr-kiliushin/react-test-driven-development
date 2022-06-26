@@ -7,19 +7,9 @@ interface INavigationButtonsProps {
 }
 
 export const NavigationButtons: React.FC<INavigationButtonsProps> = ({ onNextButtonClick, onPreviousButtonClick }) => {
-  let [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
 
   const pageNumberSearchParam = searchParams.get("page")
-
-  React.useEffect(() => {
-    if (
-      pageNumberSearchParam !== null &&
-      !isNaN(parseInt(pageNumberSearchParam)) &&
-      parseInt(pageNumberSearchParam) >= 1
-    )
-      return
-    setSearchParams({ page: "1" })
-  }, [pageNumberSearchParam])
 
   if (pageNumberSearchParam === null) return null
 

@@ -1,4 +1,5 @@
 import React from "react"
+import { useSearchParams } from "react-router-dom"
 
 import { ICustomer } from "#types/ICustomer"
 
@@ -18,9 +19,23 @@ export interface ICustomersSearchProps {
 }
 
 export const CustomersSearch: React.FC<ICustomersSearchProps> = ({ renderCustomerActions }) => {
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const pageNumberSearchParam = searchParams.get("page")
+
   const [customers, setCustomers] = React.useState<ICustomer[]>([])
   const [lastRowIds, setLastRowIds] = React.useState<number[]>([])
   const [searchTerm, setSearchTerm] = React.useState<string>("")
+
+  React.useEffect(() => {
+    if (
+      pageNumberSearchParam !== null &&
+      !isNaN(parseInt(pageNumberSearchParam)) &&
+      parseInt(pageNumberSearchParam) >= 1
+    )
+      return
+    setSearchParams({ page: "1" })
+  }, [pageNumberSearchParam])
 
   React.useEffect(() => {
     const fetchData = async () => {

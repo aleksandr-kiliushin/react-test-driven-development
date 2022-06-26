@@ -77,9 +77,9 @@ describe("CustomersSearch", () => {
   it("fetches all customer data when component mounts", async () => {
     await renderWithMemoryRouterAndWait(<CustomersSearch {...customersSearchDefaultProps} />)
     expect(globalThis.fetch).toHaveBeenCalledWith("/api/customers", {
-      method: "GET",
       credentials: "same-origin",
       headers: { "Content-Type": "application/json" },
+      method: "GET",
     })
   })
 
