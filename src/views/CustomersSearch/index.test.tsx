@@ -223,7 +223,15 @@ describe("CustomersSearch", () => {
   it("requests next page of data when next page link is clicked", async () => {
     const lastLoadedCustomerId = 9
     ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(tenCustomersResponse))
-    await renderWithMemoryRouterAndWait(<CustomersSearch {...customersSearchDefaultProps} />)
+    const history = createBrowserHistory() // TODO: Get it from render result of `createContainer`.
+    await renderAndWait(
+      <HistoryRouter history={history}>
+        <CustomersSearch {...customersSearchDefaultProps} />
+      </HistoryRouter>
+    )
+    act(() => {
+      history.push("/customers-search")
+    })
     const nextPageLink = findElement("a#next-page")
     assert(nextPageLink !== null, "Next page link not found.")
     await simulateClickAndWait(nextPageLink)
@@ -238,7 +246,15 @@ describe("CustomersSearch", () => {
   })
 
   it("performs search when search term is changed", async () => {
-    await renderWithMemoryRouterAndWait(<CustomersSearch {...customersSearchDefaultProps} />)
+    const history = createBrowserHistory() // TODO: Get it from render result of `createContainer`.
+    await renderAndWait(
+      <HistoryRouter history={history}>
+        <CustomersSearch {...customersSearchDefaultProps} />
+      </HistoryRouter>
+    )
+    act(() => {
+      history.push("/customers-search")
+    })
     const searchField = findElement("input")
     assert(searchField !== null, "SearchField is not found.")
     // @ts-ignore
@@ -248,7 +264,15 @@ describe("CustomersSearch", () => {
 
   it("includes search term when moving to next page", async () => {
     ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(tenCustomersResponse))
-    await renderWithMemoryRouterAndWait(<CustomersSearch {...customersSearchDefaultProps} />)
+    const history = createBrowserHistory() // TODO: Get it from render result of `createContainer`.
+    await renderAndWait(
+      <HistoryRouter history={history}>
+        <CustomersSearch {...customersSearchDefaultProps} />
+      </HistoryRouter>
+    )
+    act(() => {
+      history.push("/customers-search")
+    })
     const searchField = findElement("input")
     const nextPageLink = findElement("a#next-page")
     assert(searchField !== null, "SearchField is not found.")
@@ -263,7 +287,15 @@ describe("CustomersSearch", () => {
     const actionSpy = jest.fn()
     actionSpy.mockReturnValue("actions")
     ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(twoCustomersResponse))
-    await renderWithMemoryRouterAndWait(<CustomersSearch renderCustomerActions={actionSpy} />)
+    const history = createBrowserHistory() // TODO: Get it from render result of `createContainer`.
+    await renderAndWait(
+      <HistoryRouter history={history}>
+        <CustomersSearch renderCustomerActions={actionSpy} />
+      </HistoryRouter>
+    )
+    act(() => {
+      history.push("/customers-search")
+    })
     const rows = findElements("table tbody td")
     expect(rows[rows.length - 1].textContent).toEqual("actions")
   })
@@ -272,7 +304,15 @@ describe("CustomersSearch", () => {
     const actionSpy = jest.fn()
     actionSpy.mockReturnValue("actions")
     ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(twoCustomersResponse))
-    await renderWithMemoryRouterAndWait(<CustomersSearch renderCustomerActions={actionSpy} />)
+    const history = createBrowserHistory() // TODO: Get it from render result of `createContainer`.
+    await renderAndWait(
+      <HistoryRouter history={history}>
+        <CustomersSearch renderCustomerActions={actionSpy} />
+      </HistoryRouter>
+    )
+    act(() => {
+      history.push("/customers-search")
+    })
     expect(actionSpy).toHaveBeenCalledWith(twoCustomersResponse[0])
   })
 })
