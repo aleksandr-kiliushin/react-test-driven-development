@@ -26,7 +26,7 @@ describe("CustomerSearch", () => {
   // let findField: ICustomerSearchRenderContainer["findField"]
   // let findFieldLabel: ICustomerSearchRenderContainer["findFieldLabel"]
   // let findForm: ICustomerSearchRenderContainer["findForm"]
-  let renderAndWait: ICustomerSearchRenderContainer["renderAndWait"]
+  let renderWithMemoryRouterAndWait: ICustomerSearchRenderContainer["renderWithMemoryRouterAndWait"]
   // let simulateBlur: ICustomerSearchRenderContainer["simulateBlur"]
   // let simulateChange: ICustomerSearchRenderContainer["simulateChange"]
   let simulateChangeAndWait: ICustomerSearchRenderContainer["simulateChangeAndWait"]
@@ -41,7 +41,7 @@ describe("CustomerSearch", () => {
       // findField,
       // findFieldLabel,
       // findForm,
-      renderAndWait,
+      renderWithMemoryRouterAndWait,
       // simulateBlur,
       // simulateChange,
       simulateChangeAndWait,
@@ -59,7 +59,7 @@ describe("CustomerSearch", () => {
   })
 
   it("renders a table with four headings", async () => {
-    await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
+    await renderWithMemoryRouterAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
     const headings = findElements("table th")
     expect(headings.map((aHeader) => aHeader.textContent)).toEqual([
       "First name",
@@ -70,7 +70,7 @@ describe("CustomerSearch", () => {
   })
 
   it("fetches all customer data when component mounts", async () => {
-    await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
+    await renderWithMemoryRouterAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
     expect(globalThis.fetch).toHaveBeenCalledWith("/api/customers", {
       method: "GET",
       credentials: "same-origin",
@@ -79,7 +79,7 @@ describe("CustomerSearch", () => {
   })
 
   it("renders all customer data in a table row", async () => {
-    await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
+    await renderWithMemoryRouterAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
     const aCustomer1RowCells = findElements("table tbody tr:nth-child(1) td")
     expect(aCustomer1RowCells[0].textContent).toEqual(aCustomer1.firstName)
     expect(aCustomer1RowCells[1].textContent).toEqual(aCustomer1.lastName)
@@ -91,14 +91,14 @@ describe("CustomerSearch", () => {
   })
 
   it("has a next page link", async () => {
-    await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
+    await renderWithMemoryRouterAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
     expect(findElement("a#next-page")).not.toBeNull()
   })
 
   it("requests next page of data when next page link is clicked", async () => {
     const lastLoadedCustomerId = 9
     ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(tenCustomersResponse))
-    await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
+    await renderWithMemoryRouterAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
     const nextPageLink = findElement("a#next-page")
     assert(nextPageLink !== null, "Next page link not found.")
     await simulateClickAndWait(nextPageLink)
@@ -106,13 +106,13 @@ describe("CustomerSearch", () => {
   })
 
   it("has a previous page link", async () => {
-    await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
+    await renderWithMemoryRouterAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
     expect(findElement("a#previous-page")).not.toBeNull()
   })
 
   it("moves back to first page when previous page link is clicked", async () => {
     ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(tenCustomersResponse))
-    await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
+    await renderWithMemoryRouterAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
     const nextPageLink = findElement("a#next-page")
     const previousPageLink = findElement("a#previous-page")
     assert(nextPageLink !== null, "next-page link not found")
@@ -126,7 +126,7 @@ describe("CustomerSearch", () => {
     ;(globalThis.fetch as jest.Mock)
       .mockReturnValueOnce(createFetchSuccessfulResponse(tenCustomersResponse))
       .mockReturnValue(createFetchSuccessfulResponse(anotherTenCustomersResponse))
-    await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
+    await renderWithMemoryRouterAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
     const nextPageLink = findElement("a#next-page")
     const previousPageLink = findElement("a#previous-page")
     assert(nextPageLink !== null, "next-page link not found")
@@ -141,7 +141,7 @@ describe("CustomerSearch", () => {
     ;(globalThis.fetch as jest.Mock)
       .mockReturnValueOnce(createFetchSuccessfulResponse(tenCustomersResponse))
       .mockReturnValue(createFetchSuccessfulResponse(anotherTenCustomersResponse))
-    await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
+    await renderWithMemoryRouterAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
     const nextPageLink = findElement("a#next-page")
     const previousPageLink = findElement("a#previous-page")
     assert(nextPageLink !== null, "next-page link not found")
@@ -154,14 +154,14 @@ describe("CustomerSearch", () => {
   })
 
   it("has a search input field with a placeholder", async () => {
-    await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
+    await renderWithMemoryRouterAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
     const searchField = findElement("input")
     assert(searchField !== null, "SearchField is not found.")
     expect(searchField.getAttribute("placeholder")).toEqual("Enter filter text")
   })
 
   it("performs search when search term is changed", async () => {
-    await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
+    await renderWithMemoryRouterAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
     const searchField = findElement("input")
     assert(searchField !== null, "SearchField is not found.")
     // @ts-ignore
@@ -171,7 +171,7 @@ describe("CustomerSearch", () => {
 
   it("includes search term when moving to next page", async () => {
     ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(tenCustomersResponse))
-    await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
+    await renderWithMemoryRouterAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
     const searchField = findElement("input")
     const nextPageLink = findElement("a#next-page")
     assert(searchField !== null, "SearchField is not found.")
@@ -186,7 +186,7 @@ describe("CustomerSearch", () => {
     const actionSpy = jest.fn()
     actionSpy.mockReturnValue("actions")
     ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(twoCustomersResponse))
-    await renderAndWait(<CustomerSearch renderCustomerActions={actionSpy} />)
+    await renderWithMemoryRouterAndWait(<CustomerSearch renderCustomerActions={actionSpy} />)
     const rows = findElements("table tbody td")
     expect(rows[rows.length - 1].textContent).toEqual("actions")
   })
@@ -195,7 +195,7 @@ describe("CustomerSearch", () => {
     const actionSpy = jest.fn()
     actionSpy.mockReturnValue("actions")
     ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(twoCustomersResponse))
-    await renderAndWait(<CustomerSearch renderCustomerActions={actionSpy} />)
+    await renderWithMemoryRouterAndWait(<CustomerSearch renderCustomerActions={actionSpy} />)
     expect(actionSpy).toHaveBeenCalledWith(twoCustomersResponse[0])
   })
 })

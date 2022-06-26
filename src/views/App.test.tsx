@@ -12,7 +12,7 @@ describe("App", () => {
   // let findField: ICustomerSearchRenderContainer["findField"]
   // let findFieldLabel: ICustomerSearchRenderContainer["findFieldLabel"]
   // let findForm: ICustomerSearchRenderContainer["findForm"]
-  let render: ICustomerSearchRenderContainer["render"]
+  let renderWithMemoryRouter: ICustomerSearchRenderContainer["renderWithMemoryRouter"]
   // let renderAndWait: ICustomerSearchRenderContainer["renderAndWait"]
   // let simulateBlur: ICustomerSearchRenderContainer["simulateBlur"]
   // let simulateChange: ICustomerSearchRenderContainer["simulateChange"]
@@ -28,7 +28,7 @@ describe("App", () => {
       // findField,
       // findFieldLabel,
       // findForm,
-      render,
+      renderWithMemoryRouter,
       // renderAndWait,
       // simulateBlur,
       // simulateChange,
@@ -40,12 +40,12 @@ describe("App", () => {
   })
 
   it("renders the add a customer page link", () => {
-    render(<App />)
+    renderWithMemoryRouter(<App />)
     expect(findElement("a[href='/add-a-customer']")).not.toBeNull()
   })
 
   it("renders the search customers page link", () => {
-    render(<App />)
+    renderWithMemoryRouter(<App />)
     expect(findElement("a[href='/customers-search']")).not.toBeNull()
   })
 })
