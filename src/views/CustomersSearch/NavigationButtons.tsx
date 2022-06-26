@@ -12,9 +12,7 @@ export const NavigationButtons: React.FC = ({}) => {
         <Link
           className="bg-red-200 hover:bg-red-400"
           id="previous-page"
-          to={`${location.pathname}${location.search}`.replace(/(?<=page=)\d+/, (aMatch) =>
-            String(parseInt(aMatch) - 1)
-          )}
+          to={(location.pathname + location.search).replace(/(?<=page=)\d+/, (aMatch) => String(parseInt(aMatch) - 1))}
         >
           Previous
         </Link>
@@ -22,7 +20,7 @@ export const NavigationButtons: React.FC = ({}) => {
       <Link
         className="bg-cyan-200 hover:bg-cyan-400"
         id="next-page"
-        to={`${location.pathname}${location.search}`.replace(/(?<=page=)\d+/, (aMatch) => String(parseInt(aMatch) + 1))}
+        to={(location.pathname + location.search).replace(/(?<=page=)\d+/, (aMatch) => String(parseInt(aMatch) + 1))}
       >
         Next
       </Link>
