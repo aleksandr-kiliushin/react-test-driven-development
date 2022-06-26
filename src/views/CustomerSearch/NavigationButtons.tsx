@@ -1,4 +1,5 @@
 import React from "react"
+import { Link } from "react-router-dom"
 
 interface INavigationButtonsProps {
   onNextButtonClick(): void
@@ -7,11 +8,23 @@ interface INavigationButtonsProps {
 
 export const NavigationButtons: React.FC<INavigationButtonsProps> = ({ onNextButtonClick, onPreviousButtonClick }) => (
   <div className="button-bar">
-    <button className="bg-red-200 hover:bg-red-400" id="previous-page" onClick={onPreviousButtonClick} role="button">
+    <Link
+      className="bg-red-200 hover:bg-red-400"
+      id="previous-page"
+      onClick={onPreviousButtonClick}
+      role="button"
+      to="/customers-search"
+    >
       Previous
-    </button>
-    <button className="bg-cyan-200 hover:bg-cyan-400" id="next-page" onClick={onNextButtonClick} role="button">
+    </Link>
+    <Link
+      className="bg-cyan-200 hover:bg-cyan-400"
+      id="next-page"
+      onClick={onNextButtonClick}
+      role="button"
+      to="/customers-search"
+    >
       Next
-    </button>
+    </Link>
   </div>
 )

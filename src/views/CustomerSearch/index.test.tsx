@@ -90,50 +90,50 @@ describe("CustomerSearch", () => {
     expect(aCustomer2RowCells[2].textContent).toEqual(aCustomer2.phoneNumber)
   })
 
-  it("has a next button", async () => {
+  it("has a next page link", async () => {
     await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
-    expect(findElement("button#next-page")).not.toBeNull()
+    expect(findElement("a#next-page")).not.toBeNull()
   })
 
-  it("requests next page of data when next button is clicked", async () => {
+  it("requests next page of data when next page link is clicked", async () => {
     const lastLoadedCustomerId = 9
     ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(tenCustomersResponse))
     await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
-    const nextPageButton = findElement("button#next-page")
-    assert(nextPageButton !== null, "Next page button not found.")
-    await simulateClickAndWait(nextPageButton)
+    const nextPageLink = findElement("a#next-page")
+    assert(nextPageLink !== null, "Next page link not found.")
+    await simulateClickAndWait(nextPageLink)
     expect(globalThis.fetch).toHaveBeenLastCalledWith(`/api/customers?after=${lastLoadedCustomerId}`, expect.anything())
   })
 
-  it("has a previous button", async () => {
+  it("has a previous page link", async () => {
     await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
-    expect(findElement("button#previous-page")).not.toBeNull()
+    expect(findElement("a#previous-page")).not.toBeNull()
   })
 
-  it("moves back to first page when previous button is clicked", async () => {
+  it("moves back to first page when previous page link is clicked", async () => {
     ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(tenCustomersResponse))
     await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
-    const nextPageButton = findElement("button#next-page")
-    const previousPageButton = findElement("button#previous-page")
-    assert(nextPageButton !== null, "next-page button not found")
-    assert(previousPageButton !== null, "previous-page button not found")
-    await simulateClickAndWait(nextPageButton)
-    await simulateClickAndWait(previousPageButton)
+    const nextPageLink = findElement("a#next-page")
+    const previousPageLink = findElement("a#previous-page")
+    assert(nextPageLink !== null, "next-page link not found")
+    assert(previousPageLink !== null, "previous-page link not found")
+    await simulateClickAndWait(nextPageLink)
+    await simulateClickAndWait(previousPageLink)
     expect(globalThis.fetch).toHaveBeenLastCalledWith("/api/customers", expect.anything())
   })
 
-  it("moves back one page when clicking previous after multiple clicks of the next button", async () => {
+  it("moves back one page when clicking previous after multiple clicks of the next link", async () => {
     ;(globalThis.fetch as jest.Mock)
       .mockReturnValueOnce(createFetchSuccessfulResponse(tenCustomersResponse))
       .mockReturnValue(createFetchSuccessfulResponse(anotherTenCustomersResponse))
     await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
-    const nextPageButton = findElement("button#next-page")
-    const previousPageButton = findElement("button#previous-page")
-    assert(nextPageButton !== null, "next-page button not found")
-    assert(previousPageButton !== null, "previous-page button not found")
-    await simulateClickAndWait(nextPageButton)
-    await simulateClickAndWait(nextPageButton)
-    await simulateClickAndWait(previousPageButton)
+    const nextPageLink = findElement("a#next-page")
+    const previousPageLink = findElement("a#previous-page")
+    assert(nextPageLink !== null, "next-page link not found")
+    assert(previousPageLink !== null, "previous-page link not found")
+    await simulateClickAndWait(nextPageLink)
+    await simulateClickAndWait(nextPageLink)
+    await simulateClickAndWait(previousPageLink)
     expect(globalThis.fetch).toHaveBeenLastCalledWith("/api/customers?after=9", expect.anything())
   })
 
@@ -142,14 +142,14 @@ describe("CustomerSearch", () => {
       .mockReturnValueOnce(createFetchSuccessfulResponse(tenCustomersResponse))
       .mockReturnValue(createFetchSuccessfulResponse(anotherTenCustomersResponse))
     await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
-    const nextPageButton = findElement("button#next-page")
-    const previousPageButton = findElement("button#previous-page")
-    assert(nextPageButton !== null, "next-page button not found")
-    assert(previousPageButton !== null, "previous-page button not found")
-    await simulateClickAndWait(nextPageButton)
-    await simulateClickAndWait(nextPageButton)
-    await simulateClickAndWait(previousPageButton)
-    await simulateClickAndWait(previousPageButton)
+    const nextPageLink = findElement("a#next-page")
+    const previousPageLink = findElement("a#previous-page")
+    assert(nextPageLink !== null, "next-page link not found")
+    assert(previousPageLink !== null, "previous-page link not found")
+    await simulateClickAndWait(nextPageLink)
+    await simulateClickAndWait(nextPageLink)
+    await simulateClickAndWait(previousPageLink)
+    await simulateClickAndWait(previousPageLink)
     expect(globalThis.fetch).toHaveBeenLastCalledWith("/api/customers", expect.anything())
   })
 
@@ -173,12 +173,12 @@ describe("CustomerSearch", () => {
     ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(tenCustomersResponse))
     await renderAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
     const searchField = findElement("input")
-    const nextPageButton = findElement("button#next-page")
+    const nextPageLink = findElement("a#next-page")
     assert(searchField !== null, "SearchField is not found.")
-    assert(nextPageButton !== null, "next-page button not found")
+    assert(nextPageLink !== null, "next-page link not found")
     // @ts-ignore
     await simulateChangeAndWait(searchField, { target: { value: "name" } })
-    await simulateClickAndWait(nextPageButton)
+    await simulateClickAndWait(nextPageLink)
     expect(globalThis.fetch).toHaveBeenLastCalledWith("/api/customers?after=9&searchTerm=name", expect.anything())
   })
 
