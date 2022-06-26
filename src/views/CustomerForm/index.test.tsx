@@ -23,6 +23,7 @@ describe("CustomerForm", () => {
   let findField: ICustomerFormRenderContainer["findField"]
   let findLabel: ICustomerFormRenderContainer["findLabel"]
   let findForm: ICustomerFormRenderContainer["findForm"]
+  let queryElement: ICustomerFormRenderContainer["queryElement"]
   let render: ICustomerFormRenderContainer["render"]
   let simulateBlur: ICustomerFormRenderContainer["simulateBlur"]
   let simulateChange: ICustomerFormRenderContainer["simulateChange"]
@@ -35,6 +36,7 @@ describe("CustomerForm", () => {
       findField,
       findLabel,
       findForm,
+      queryElement,
       render,
       simulateBlur,
       simulateChange,
@@ -200,7 +202,7 @@ describe("CustomerForm", () => {
     await simulateSubmitAndWait(findForm({ id: "customer" }))
     expect(findElement("input[type='submit'] ~ p.error")).not.toBeNull()
     await simulateSubmitAndWait(findForm({ id: "customer" }))
-    expect(findElement("input[type='submit'] ~ p.error")).toBeNull()
+    expect(queryElement("input[type='submit'] ~ p.error")).toBeNull()
   })
 
   describe("validation", () => {
@@ -259,7 +261,7 @@ describe("CustomerForm", () => {
       expect(errorMessageNode.textContent).toMatch("Required.")
       // @ts-ignore
       simulateChange(firstNameField, { target: { value: "Shon" } })
-      expect(findElement("input[name='firstName'] ~ p.error")).toBeNull()
+      expect(queryElement("input[name='firstName'] ~ p.error")).toBeNull()
     })
 
     it("hides error after successful onChange fixes lastName field error", () => {
@@ -273,7 +275,7 @@ describe("CustomerForm", () => {
       expect(errorMessageNode.textContent).toMatch("Required.")
       // @ts-ignore
       simulateChange(lastNameField, { target: { value: "Johnson" } })
-      expect(findElement("input[name='lastName'] ~ p.error")).toBeNull()
+      expect(queryElement("input[name='lastName'] ~ p.error")).toBeNull()
     })
 
     it("hides error after successful onChange fixes phoneNumber field error", () => {
@@ -287,7 +289,7 @@ describe("CustomerForm", () => {
       expect(errorMessageNode.textContent).toMatch("Only numbers, spaces and these symbols are allowed: ( ) + -.")
       // @ts-ignore
       simulateChange(phoneNumberField, { target: { value: "+7 123 456 789" } })
-      expect(findElement("input[name='phoneNumber'] ~ p.error")).toBeNull()
+      expect(queryElement("input[name='phoneNumber'] ~ p.error")).toBeNull()
     })
   })
 
@@ -305,8 +307,7 @@ describe("CustomerForm", () => {
     assert(firstNameFieldErrorMessageNode !== null, "firstName field error not found")
     expect(firstNameFieldErrorMessageNode.textContent).toMatch("Required.")
 
-    const lastNameFieldErrorMessageNode = findElement("input[name='lastName'] ~ p.error")
-    expect(lastNameFieldErrorMessageNode).toBeNull()
+    expect(queryElement("input[name='lastName'] ~ p.error")).toBeNull()
 
     const phoneNumberFieldErrorMessageNode = findElement("input[name='phoneNumber'] ~ p.error")
     assert(phoneNumberFieldErrorMessageNode !== null, "phoneNumber field error not found")
@@ -323,7 +324,7 @@ describe("CustomerForm", () => {
     const phoneNumberFieldErrorMessageNode = findElement("input[name='phoneNumber'] ~ p.error")
     assert(phoneNumberFieldErrorMessageNode !== null, "Phone number error is not found.")
     expect(phoneNumberFieldErrorMessageNode.textContent).toMatch(serverErrors.phoneNumber)
-    expect(findElement("input[type='submit'] ~ p.error")).toBeNull()
+    expect(queryElement("input[type='submit'] ~ p.error")).toBeNull()
   })
 
   // This tets passes, but causes `act` errors, so commented out.
@@ -336,6 +337,6 @@ describe("CustomerForm", () => {
   it("hides loader after submitting", async () => {
     render(<CustomerForm {...defaultProps} />)
     await simulateSubmitAndWait(findForm({ id: "customer" }))
-    expect(findElement("input[type='submit'] ~ p.loader")).toBeNull()
+    expect(queryElement("input[type='submit'] ~ p.loader")).toBeNull()
   })
 })

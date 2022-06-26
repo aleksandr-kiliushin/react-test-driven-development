@@ -11,7 +11,7 @@ interface IRenderOptions {
 
 export interface IRenderContainer<ContainerContentConfig extends { fieldNames: string[]; formIds: string[] }> {
   container: HTMLDivElement
-  findElement(selector: string): Element | null // TODO: Remove null from options, add error message as the second param.
+  findElement(selector: string): Element
   findElements(selector: string): Element[]
   findField: (params: {
     formId: ContainerContentConfig["formIds"][keyof ContainerContentConfig["formIds"]]
@@ -25,8 +25,8 @@ export interface IRenderContainer<ContainerContentConfig extends { fieldNames: s
   }) => HTMLFormElement
   history: BrowserHistory
   queryElement(selector: string): Element | null
-  render(children: React.ReactNode, renderOptions?: IRenderOptions): void
-  renderAndWait(children: React.ReactNode, renderOptions?: IRenderOptions): Promise<void>
+  render(children: React.ReactNode, options?: IRenderOptions): void
+  renderAndWait(children: React.ReactNode, options?: IRenderOptions): Promise<void>
   simulateBlur(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): void
   simulateChange(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): void
   simulateChangeAndWait(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): Promise<void>
@@ -43,26 +43,28 @@ export const createContainer = (): IAbstractRenderContainer => {
   const root = ReactDom.createRoot(container)
   const history: IAbstractRenderContainer["history"] = createBrowserHistory()
 
-  const render: IAbstractRenderContainer["render"] = (aComponent, renderOptions) => {
+  const render: IAbstractRenderContainer["render"] = (aComponent, options) => {
     act(() => {
       root.render(<HistoryRouter history={history}>{aComponent}</HistoryRouter>)
     })
     act(() => {
-      history.push(renderOptions?.initialUrl ?? "/")
+      history.push(options?.initialUrl ?? "/")
     })
   }
 
-  const renderAndWait: IAbstractRenderContainer["renderAndWait"] = async (aComponent, renderOptions) => {
+  const renderAndWait: IAbstractRenderContainer["renderAndWait"] = async (aComponent, options) => {
     await act(async () => {
       root.render(<HistoryRouter history={history}>{aComponent}</HistoryRouter>)
     })
     await act(async () => {
-      history.push(renderOptions?.initialUrl ?? "/")
+      history.push(options?.initialUrl ?? "/")
     })
   }
 
   const findElement: IAbstractRenderContainer["findElement"] = (selector: string) => {
-    return container.querySelector(selector)
+    const theElement = container.querySelector(selector)
+    assert(theElement !== null, `Can't find an element with selector of ${selector}.`)
+    return theElement
   }
 
   const queryElement: IAbstractRenderContainer["queryElement"] = (selector: string) => {
