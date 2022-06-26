@@ -1,8 +1,11 @@
+import { createBrowserHistory } from "history"
 import assert from "node:assert"
 import React from "react"
+import { act } from "react-dom/test-utils"
 
 import { aCustomer1, aCustomer2 } from "#sampleData/someCustomers"
 import { ICustomer } from "#types/ICustomer"
+import { HistoryRouter } from "#utils/testing/HistoryRouter"
 import { IRenderContainer, createContainer } from "#utils/testing/createContainer"
 import { createFetchSuccessfulResponse } from "#utils/testing/spyHelpers"
 
@@ -26,6 +29,7 @@ describe("CustomerSearch", () => {
   // let findField: ICustomerSearchRenderContainer["findField"]
   // let findFieldLabel: ICustomerSearchRenderContainer["findFieldLabel"]
   // let findForm: ICustomerSearchRenderContainer["findForm"]
+  let renderAndWait: ICustomerSearchRenderContainer["renderAndWait"]
   let renderWithMemoryRouterAndWait: ICustomerSearchRenderContainer["renderWithMemoryRouterAndWait"]
   // let simulateBlur: ICustomerSearchRenderContainer["simulateBlur"]
   // let simulateChange: ICustomerSearchRenderContainer["simulateChange"]
@@ -41,6 +45,7 @@ describe("CustomerSearch", () => {
       // findField,
       // findFieldLabel,
       // findForm,
+      renderAndWait,
       renderWithMemoryRouterAndWait,
       // simulateBlur,
       // simulateChange,
@@ -93,6 +98,76 @@ describe("CustomerSearch", () => {
   it("has a next page link", async () => {
     await renderWithMemoryRouterAndWait(<CustomerSearch {...customerSearchDefaultProps} />)
     expect(findElement("a#next-page")).not.toBeNull()
+  })
+
+  it("sets page search param value to '1' if it is not defined", async () => {
+    const history = createBrowserHistory() // TODO: Get it from render result of `createContainer`.
+    await renderAndWait(
+      <HistoryRouter history={history}>
+        <CustomerSearch {...customerSearchDefaultProps} />
+      </HistoryRouter>
+    )
+    act(() => {
+      history.push("/customers-search")
+    })
+    expect(history.location.pathname).toEqual("/customers-search")
+    expect(history.location.search).toEqual("?page=1")
+  })
+
+  it("sets page search param value to '1' if it is zero", async () => {
+    const history = createBrowserHistory() // TODO: Get it from render result of `createContainer`.
+    await renderAndWait(
+      <HistoryRouter history={history}>
+        <CustomerSearch {...customerSearchDefaultProps} />
+      </HistoryRouter>
+    )
+    act(() => {
+      history.push("/customers-search?page=0")
+    })
+    expect(history.location.pathname).toEqual("/customers-search")
+    expect(history.location.search).toEqual("?page=1")
+  })
+
+  it("sets page search param value to '1' if it is negative", async () => {
+    const history = createBrowserHistory() // TODO: Get it from render result of `createContainer`.
+    await renderAndWait(
+      <HistoryRouter history={history}>
+        <CustomerSearch {...customerSearchDefaultProps} />
+      </HistoryRouter>
+    )
+    act(() => {
+      history.push("/customers-search?page=-2")
+    })
+    expect(history.location.pathname).toEqual("/customers-search")
+    expect(history.location.search).toEqual("?page=1")
+  })
+
+  it("sets page search param value to '1' if it is not a number", async () => {
+    const history = createBrowserHistory() // TODO: Get it from render result of `createContainer`.
+    await renderAndWait(
+      <HistoryRouter history={history}>
+        <CustomerSearch {...customerSearchDefaultProps} />
+      </HistoryRouter>
+    )
+    act(() => {
+      history.push("/customers-search?page=Hello")
+    })
+    expect(history.location.pathname).toEqual("/customers-search")
+    expect(history.location.search).toEqual("?page=1")
+  })
+
+  it("does not change a page search param if it is already correct", async () => {
+    const history = createBrowserHistory() // TODO: Get it from render result of `createContainer`.
+    await renderAndWait(
+      <HistoryRouter history={history}>
+        <CustomerSearch {...customerSearchDefaultProps} />
+      </HistoryRouter>
+    )
+    act(() => {
+      history.push("/customers-search?page=6")
+    })
+    expect(history.location.pathname).toEqual("/customers-search")
+    expect(history.location.search).toEqual("?page=6")
   })
 
   it("requests next page of data when next page link is clicked", async () => {

@@ -17,6 +17,7 @@ export interface ICustomerSearchProps {
   renderCustomerActions(aCustomer: ICustomer): React.ReactNode
 }
 
+// TODO: Rename with Customer(s!)Search.
 export const CustomerSearch: React.FC<ICustomerSearchProps> = ({ renderCustomerActions }) => {
   const [customers, setCustomers] = React.useState<ICustomer[]>([])
   const [lastRowIds, setLastRowIds] = React.useState<number[]>([])
