@@ -35,6 +35,7 @@ describe("CustomersSearch", () => {
   // let simulateBlur: ICustomersSearchRenderContainer["simulateBlur"]
   // let simulateChange: ICustomersSearchRenderContainer["simulateChange"]
   let simulateChangeAndWait: ICustomersSearchRenderContainer["simulateChangeAndWait"]
+  // let simulateClick: ICustomersSearchRenderContainer["simulateClick"]
   let simulateClickAndWait: ICustomersSearchRenderContainer["simulateClickAndWait"]
   // let simulateSubmit: ICustomersSearchRenderContainer["simulateSubmit"]
   // let simulateSubmitAndWait: ICustomersSearchRenderContainer["simulateSubmitAndWait"]
@@ -52,6 +53,7 @@ describe("CustomersSearch", () => {
       // simulateBlur,
       // simulateChange,
       simulateChangeAndWait,
+      // simulateClick,
       simulateClickAndWait,
       // simulateSubmit,
       // simulateSubmitAndWait,
@@ -196,6 +198,26 @@ describe("CustomersSearch", () => {
     })
     expect(history.location.pathname).toEqual("/customers-search")
     expect(history.location.search).toEqual("?page=6")
+  })
+
+  it.only("navigation links have proper hrefs", async () => {
+    const history = createBrowserHistory() // TODO: Get it from render result of `createContainer`.
+    await renderAndWait(
+      <HistoryRouter history={history}>
+        <CustomersSearch {...customersSearchDefaultProps} />
+      </HistoryRouter>
+    )
+    act(() => {
+      history.push("/customers-search?page=5")
+    })
+    const previousPageLink = findElement("a#previous-page")
+    const nextPageLink = findElement("a#next-page")
+    assert(previousPageLink !== null, "previous-page link not found")
+    assert(nextPageLink !== null, "next-page link not found")
+    assert(previousPageLink instanceof HTMLAnchorElement, "previous-page link is not an anchor element")
+    assert(nextPageLink instanceof HTMLAnchorElement, "next-page link is not an anchor element")
+    expect(previousPageLink.href).toMatch("/customers-search?page=4")
+    expect(nextPageLink.href).toMatch("/customers-search?page=6")
   })
 
   it("requests next page of data when next page link is clicked", async () => {
