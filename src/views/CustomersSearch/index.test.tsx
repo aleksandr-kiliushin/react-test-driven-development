@@ -31,7 +31,7 @@ describe("CustomersSearch", () => {
   // let findForm: ICustomersSearchRenderContainer["findForm"]
   let queryElement: ICustomersSearchRenderContainer["queryElement"]
   let renderAndWait: ICustomersSearchRenderContainer["renderAndWait"]
-  let renderWithMemoryRouterAndWait: ICustomersSearchRenderContainer["renderWithMemoryRouterAndWait"]
+  // let renderWithMemoryRouterAndWait: ICustomersSearchRenderContainer["renderWithMemoryRouterAndWait"]
   // let simulateBlur: ICustomersSearchRenderContainer["simulateBlur"]
   // let simulateChange: ICustomersSearchRenderContainer["simulateChange"]
   let simulateChangeAndWait: ICustomersSearchRenderContainer["simulateChangeAndWait"]
@@ -49,7 +49,7 @@ describe("CustomersSearch", () => {
       // findForm,
       queryElement,
       renderAndWait,
-      renderWithMemoryRouterAndWait,
+      // renderWithMemoryRouterAndWait,
       // simulateBlur,
       // simulateChange,
       simulateChangeAndWait,
@@ -68,7 +68,15 @@ describe("CustomersSearch", () => {
   })
 
   it("renders a table with four headings", async () => {
-    await renderWithMemoryRouterAndWait(<CustomersSearch {...customersSearchDefaultProps} />)
+    const history = createBrowserHistory() // TODO: Get it from render result of `createContainer`.
+    await renderAndWait(
+      <HistoryRouter history={history}>
+        <CustomersSearch {...customersSearchDefaultProps} />
+      </HistoryRouter>
+    )
+    act(() => {
+      history.push("/customers-search")
+    })
     const headings = findElements("table th")
     expect(headings.map((aHeader) => aHeader.textContent)).toEqual([
       "First name",
@@ -79,7 +87,15 @@ describe("CustomersSearch", () => {
   })
 
   it("fetches all customer data when component mounts", async () => {
-    await renderWithMemoryRouterAndWait(<CustomersSearch {...customersSearchDefaultProps} />)
+    const history = createBrowserHistory() // TODO: Get it from render result of `createContainer`.
+    await renderAndWait(
+      <HistoryRouter history={history}>
+        <CustomersSearch {...customersSearchDefaultProps} />
+      </HistoryRouter>
+    )
+    act(() => {
+      history.push("/customers-search")
+    })
     expect(globalThis.fetch).toHaveBeenCalledWith("/api/customers", {
       credentials: "same-origin",
       headers: { "Content-Type": "application/json" },
@@ -88,7 +104,15 @@ describe("CustomersSearch", () => {
   })
 
   it("renders all customer data in a table row", async () => {
-    await renderWithMemoryRouterAndWait(<CustomersSearch {...customersSearchDefaultProps} />)
+    const history = createBrowserHistory() // TODO: Get it from render result of `createContainer`.
+    await renderAndWait(
+      <HistoryRouter history={history}>
+        <CustomersSearch {...customersSearchDefaultProps} />
+      </HistoryRouter>
+    )
+    act(() => {
+      history.push("/customers-search")
+    })
     const aCustomer1RowCells = findElements("table tbody tr:nth-child(1) td")
     expect(aCustomer1RowCells[0].textContent).toEqual(aCustomer1.firstName)
     expect(aCustomer1RowCells[1].textContent).toEqual(aCustomer1.lastName)
@@ -100,7 +124,15 @@ describe("CustomersSearch", () => {
   })
 
   it("has a next page link", async () => {
-    await renderWithMemoryRouterAndWait(<CustomersSearch {...customersSearchDefaultProps} />)
+    const history = createBrowserHistory() // TODO: Get it from render result of `createContainer`.
+    await renderAndWait(
+      <HistoryRouter history={history}>
+        <CustomersSearch {...customersSearchDefaultProps} />
+      </HistoryRouter>
+    )
+    act(() => {
+      history.push("/customers-search")
+    })
     expect(findElement("a#next-page")).not.toBeNull()
   })
 
@@ -239,7 +271,15 @@ describe("CustomersSearch", () => {
   })
 
   it("has a search input field with a placeholder", async () => {
-    await renderWithMemoryRouterAndWait(<CustomersSearch {...customersSearchDefaultProps} />)
+    const history = createBrowserHistory() // TODO: Get it from render result of `createContainer`.
+    await renderAndWait(
+      <HistoryRouter history={history}>
+        <CustomersSearch {...customersSearchDefaultProps} />
+      </HistoryRouter>
+    )
+    act(() => {
+      history.push("/customers-search")
+    })
     const searchField = findElement("input")
     assert(searchField !== null, "SearchField is not found.")
     expect(searchField.getAttribute("placeholder")).toEqual("Enter filter text")
