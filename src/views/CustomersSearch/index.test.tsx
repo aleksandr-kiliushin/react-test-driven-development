@@ -293,7 +293,7 @@ describe("CustomersSearch", () => {
     expect(globalThis.fetch).toHaveBeenLastCalledWith("/api/customers?page=1&searchTerm=Gerald", expect.anything())
   })
 
-  it("includes search term when moving to next page", async () => {
+  it("resets page to page=1 after searchTerm was changed", async () => {
     ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(tenCustomersResponse))
     const history = createBrowserHistory() // TODO: Get it from render result of `createContainer`.
     await renderAndWait(
@@ -308,7 +308,23 @@ describe("CustomersSearch", () => {
     assert(searchField !== null, "SearchField is not found.")
     // @ts-ignore
     await simulateChangeAndWait(searchField, { target: { value: "Gerald" } })
-    expect(globalThis.fetch).toHaveBeenLastCalledWith("/api/customers?page=5&searchTerm=Gerald", expect.anything())
+    expect(globalThis.fetch).toHaveBeenLastCalledWith("/api/customers?page=1&searchTerm=Gerald", expect.anything())
+  })
+
+  it("removes searchTerm searchParam if it equals an empty string", async () => {
+    ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(tenCustomersResponse))
+    const history = createBrowserHistory() // TODO: Get it from render result of `createContainer`.
+    await renderAndWait(
+      <HistoryRouter history={history}>
+        <CustomersSearch {...customersSearchDefaultProps} />
+      </HistoryRouter>
+    )
+    await act(async () => {
+      history.push("/customers-search?page=5&searchTerm=")
+    })
+    expect(history.location.pathname).toEqual("/customers-search")
+    expect(history.location.search).toEqual("?page=5")
+    expect(globalThis.fetch).toHaveBeenLastCalledWith("/api/customers?page=5", expect.anything())
   })
 
   it("displays provided action buttons for each customer", async () => {

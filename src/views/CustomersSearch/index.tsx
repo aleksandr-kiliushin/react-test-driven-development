@@ -28,6 +28,11 @@ export const CustomersSearch: React.FC<ICustomersSearchProps> = ({ renderCustome
   }, [pageNumberSearchParam])
 
   React.useEffect(() => {
+    if (searchTermSearchParam !== "") return
+    setSearchParams({ page: pageNumberSearchParam || "1" })
+  }, [searchTermSearchParam])
+
+  React.useEffect(() => {
     if (!isPageNumberSearchParamValid(pageNumberSearchParam)) return
     globalThis
       .fetch(
@@ -48,7 +53,7 @@ export const CustomersSearch: React.FC<ICustomersSearchProps> = ({ renderCustome
     <>
       <input
         onChange={(event) => {
-          setSearchParams({ page: pageNumberSearchParam || "1", searchTerm: event.target.value })
+          setSearchParams({ page: "1", searchTerm: event.target.value })
         }}
         placeholder="Enter filter text"
         value={searchTermSearchParam ?? ""}
