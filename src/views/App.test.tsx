@@ -8,44 +8,19 @@ type ICustomersSearchRenderContainer = IRenderContainer<{ formIds: []; fieldName
 
 describe("App", () => {
   let findElement: ICustomersSearchRenderContainer["findElement"]
-  // let findElements: ICustomersSearchRenderContainer["findElements"]
-  // let findField: ICustomersSearchRenderContainer["findField"]
-  // let findFieldLabel: ICustomersSearchRenderContainer["findFieldLabel"]
-  // let findForm: ICustomersSearchRenderContainer["findForm"]
-  let renderWithMemoryRouter: ICustomersSearchRenderContainer["renderWithMemoryRouter"]
-  // let renderAndWait: ICustomersSearchRenderContainer["renderAndWait"]
-  // let simulateBlur: ICustomersSearchRenderContainer["simulateBlur"]
-  // let simulateChange: ICustomersSearchRenderContainer["simulateChange"]
-  // let simulateChangeAndWait: ICustomersSearchRenderContainer["simulateChangeAndWait"]
-  // let simulateClickAndWait: ICustomersSearchRenderContainer["simulateClickAndWait"]
-  // let simulateSubmit: ICustomersSearchRenderContainer["simulateSubmit"]
-  // let simulateSubmitAndWait: ICustomersSearchRenderContainer["simulateSubmitAndWait"]
+  let render: ICustomersSearchRenderContainer["render"]
 
   beforeEach(() => {
-    ;({
-      findElement,
-      // findElements,
-      // findField,
-      // findFieldLabel,
-      // findForm,
-      renderWithMemoryRouter,
-      // renderAndWait,
-      // simulateBlur,
-      // simulateChange,
-      // simulateChangeAndWait,
-      // simulateClickAndWait,
-      // simulateSubmit,
-      // simulateSubmitAndWait,
-    } = createContainer())
+    ;({ findElement, render } = createContainer())
   })
 
   it("renders the add a customer page link", () => {
-    renderWithMemoryRouter(<App />)
+    render(<App />)
     expect(findElement("a[href='/add-a-customer']")).not.toBeNull()
   })
 
   it("renders the search customers page link", () => {
-    renderWithMemoryRouter(<App />)
+    render(<App />)
     expect(findElement("a[href='/customers-search']")).not.toBeNull()
   })
 })

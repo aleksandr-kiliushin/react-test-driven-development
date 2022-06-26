@@ -3,7 +3,7 @@ import assert from "node:assert"
 import React from "react"
 import ReactDom from "react-dom/client"
 import ReactDomTestUtils, { act } from "react-dom/test-utils"
-import { unstable_HistoryRouter as HistoryRouter, MemoryRouter } from "react-router-dom"
+import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom"
 
 export interface IRenderContainer<ContainerContentConfig extends { fieldNames: string[]; formIds: string[] }> {
   container: HTMLDivElement
@@ -24,8 +24,6 @@ export interface IRenderContainer<ContainerContentConfig extends { fieldNames: s
   queryElement(selector: string): Element | null
   render: ReactDom.Root["render"]
   renderAndWait(children: React.ReactNode): Promise<void>
-  renderWithMemoryRouter: ReactDom.Root["render"] // TODO: Replace with `render` + config { withMemoryRouter: true }.
-  renderWithMemoryRouterAndWait(children: React.ReactNode): Promise<void> // TODO: Replace with `renderAndWait` + config { withMemoryRouter: true }.
   simulateBlur(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): void
   simulateChange(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): void
   simulateChangeAndWait(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): Promise<void>
@@ -48,21 +46,9 @@ export const createContainer = (): IAbstractRenderContainer => {
     })
   }
 
-  const renderWithMemoryRouter: IAbstractRenderContainer["render"] = (aComponent) => {
-    act(() => {
-      root.render(<MemoryRouter>{aComponent}</MemoryRouter>)
-    })
-  }
-
   const renderAndWait: IAbstractRenderContainer["renderAndWait"] = async (aComponent) => {
     await act(async () => {
       root.render(<HistoryRouter history={history}>{aComponent}</HistoryRouter>)
-    })
-  }
-
-  const renderWithMemoryRouterAndWait: IAbstractRenderContainer["renderAndWait"] = async (aComponent) => {
-    await act(async () => {
-      root.render(<MemoryRouter>{aComponent}</MemoryRouter>)
     })
   }
 
@@ -127,8 +113,6 @@ export const createContainer = (): IAbstractRenderContainer => {
     queryElement,
     render,
     renderAndWait,
-    renderWithMemoryRouter,
-    renderWithMemoryRouterAndWait,
     simulateBlur: createEventSimulator("blur"),
     simulateChange: createEventSimulator("change"),
     simulateChangeAndWait: createAsyncEventSimulator("change"),
