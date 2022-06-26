@@ -5,6 +5,10 @@ import ReactDom from "react-dom/client"
 import ReactDomTestUtils, { act } from "react-dom/test-utils"
 import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom"
 
+interface IRenderOptions {
+  initialUrl?: string
+}
+
 export interface IRenderContainer<ContainerContentConfig extends { fieldNames: string[]; formIds: string[] }> {
   container: HTMLDivElement
   findElement(selector: string): Element | null // TODO: Remove null from options.
@@ -22,8 +26,8 @@ export interface IRenderContainer<ContainerContentConfig extends { fieldNames: s
   }) => HTMLFormElement
   history: BrowserHistory
   queryElement(selector: string): Element | null
-  render: ReactDom.Root["render"]
-  renderAndWait(children: React.ReactNode): Promise<void>
+  render(children: React.ReactNode, renderOptions?: IRenderOptions): void
+  renderAndWait(children: React.ReactNode, renderOptions?: IRenderOptions): Promise<void>
   simulateBlur(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): void
   simulateChange(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): void
   simulateChangeAndWait(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): Promise<void>
@@ -40,15 +44,25 @@ export const createContainer = (): IAbstractRenderContainer => {
   const root = ReactDom.createRoot(container)
   const history: IAbstractRenderContainer["history"] = createBrowserHistory()
 
-  const render: IAbstractRenderContainer["render"] = (aComponent) => {
+  const render: IAbstractRenderContainer["render"] = (aComponent, renderOptions) => {
     act(() => {
       root.render(<HistoryRouter history={history}>{aComponent}</HistoryRouter>)
     })
+    act(() => {
+      if (renderOptions === undefined) return
+      if (renderOptions.initialUrl === undefined) return
+      history.push(renderOptions.initialUrl)
+    })
   }
 
-  const renderAndWait: IAbstractRenderContainer["renderAndWait"] = async (aComponent) => {
+  const renderAndWait: IAbstractRenderContainer["renderAndWait"] = async (aComponent, renderOptions) => {
     await act(async () => {
       root.render(<HistoryRouter history={history}>{aComponent}</HistoryRouter>)
+    })
+    await act(async () => {
+      if (renderOptions === undefined) return
+      if (renderOptions.initialUrl === undefined) return
+      history.push(renderOptions.initialUrl)
     })
   }
 
