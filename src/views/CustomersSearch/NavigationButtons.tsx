@@ -18,12 +18,11 @@ const getAnotherPageUrl = ({ currentUrl, direction }: { currentUrl: string; dire
 export const NavigationButtons: React.FC = ({}) => {
   const [searchParams] = useSearchParams()
   const location = useLocation()
-  const pageNumberSearchParam = searchParams.get("page")
   const currentUrl = location.pathname + location.search
 
   return (
     <div className="button-bar">
-      {pageNumberSearchParam !== "1" && (
+      {searchParams.get("page") !== "1" && (
         <Link
           className="bg-red-200 hover:bg-red-400"
           id="previous-page"
