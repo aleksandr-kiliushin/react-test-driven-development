@@ -1,4 +1,3 @@
-import assert from "node:assert"
 import React from "react"
 
 import { anAppointment1, anAppointment2 } from "#sampleData/someAppointments"
@@ -24,13 +23,11 @@ describe("AppointmentsDayView", () => {
 
   it("renders a ol with the right className.", () => {
     render(<AppointmentsDayView appointments={[]} />)
-    expect(findElement("ol.appointmentsDayView")).not.toEqual(null)
+    expect(findElement("ol.appointmentsDayView")).not.toBeNull()
   })
 
   it("renders multiple appointments in an `ol` element.", () => {
     render(<AppointmentsDayView appointments={appointments} />)
-    const appointmentsList = findElement("ol.appointmentsDayView")
-    assert(appointmentsList !== null, "AppointmentsList is not found.")
     expect(findElements("li")).toHaveLength(2)
   })
 

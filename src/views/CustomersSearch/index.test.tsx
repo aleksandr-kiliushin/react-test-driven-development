@@ -145,8 +145,6 @@ describe("CustomersSearch", () => {
     })
     const previousPageLink = findElement("a#previous-page")
     const nextPageLink = findElement("a#next-page")
-    assert(previousPageLink !== null, "previous-page link not found")
-    assert(nextPageLink !== null, "next-page link not found")
     assert(previousPageLink instanceof HTMLAnchorElement, "previous-page link is not an anchor element")
     assert(nextPageLink instanceof HTMLAnchorElement, "next-page link is not an anchor element")
     expect(previousPageLink.href).toMatch("/customers-search?page=4")
@@ -159,8 +157,6 @@ describe("CustomersSearch", () => {
     })
     const previousPageLink = findElement("a#previous-page")
     const nextPageLink = findElement("a#next-page")
-    assert(previousPageLink !== null, "previous-page link not found")
-    assert(nextPageLink !== null, "next-page link not found")
     assert(previousPageLink instanceof HTMLAnchorElement, "previous-page link is not an anchor element")
     assert(nextPageLink instanceof HTMLAnchorElement, "next-page link is not an anchor element")
     expect(previousPageLink.href).toMatch("/customers-search?page=4&searchTerm=Gerald")
@@ -169,8 +165,7 @@ describe("CustomersSearch", () => {
 
   it("has a search input field with a placeholder", async () => {
     await renderAndWait(<CustomersSearch {...customersSearchDefaultProps} />)
-    const searchField = findElement("input")
-    assert(searchField !== null, "SearchField is not found.")
+    const searchField = findElement("input", { failureMessage: "Search field is not found." })
     expect(searchField.getAttribute("placeholder")).toEqual("Enter filter text")
   })
 
@@ -178,8 +173,7 @@ describe("CustomersSearch", () => {
     await renderAndWait(<CustomersSearch {...customersSearchDefaultProps} />, {
       initialUrl: "/customers-search",
     })
-    const searchField = findElement("input")
-    assert(searchField !== null, "SearchField is not found.")
+    const searchField = findElement("input", { failureMessage: "Search field is not found." })
     // @ts-ignore
     await simulateChangeAndWait(searchField, { target: { value: "Gerald" } })
     expect(globalThis.fetch).toHaveBeenLastCalledWith("/api/customers?page=1&searchTerm=Gerald", expect.anything())
@@ -190,8 +184,7 @@ describe("CustomersSearch", () => {
     await renderAndWait(<CustomersSearch {...customersSearchDefaultProps} />, {
       initialUrl: "/customers-search?page=5",
     })
-    const searchField = findElement("input")
-    assert(searchField !== null, "SearchField is not found.")
+    const searchField = findElement("input", { failureMessage: "Search field is not found." })
     // @ts-ignore
     await simulateChangeAndWait(searchField, { target: { value: "Gerald" } })
     expect(globalThis.fetch).toHaveBeenLastCalledWith("/api/customers?page=1&searchTerm=Gerald", expect.anything())

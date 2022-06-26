@@ -11,7 +11,7 @@ interface IRenderOptions {
 
 export interface IRenderContainer<ContainerContentConfig extends { fieldNames: string[]; formIds: string[] }> {
   container: HTMLDivElement
-  findElement(selector: string): Element
+  findElement(selector: string, options?: { failureMessage?: string }): Element
   findElements(selector: string): Element[]
   findField: (params: {
     formId: ContainerContentConfig["formIds"][keyof ContainerContentConfig["formIds"]]
@@ -61,9 +61,10 @@ export const createContainer = (): IAbstractRenderContainer => {
     })
   }
 
-  const findElement: IAbstractRenderContainer["findElement"] = (selector: string) => {
+  const findElement: IAbstractRenderContainer["findElement"] = (selector: string, options) => {
+    const failureMessage = options?.failureMessage ?? `Can't find an element with the following selector: ${selector}.`
     const theElement = container.querySelector(selector)
-    assert(theElement !== null, `Can't find an element with selector of ${selector}.`)
+    assert(theElement !== null, failureMessage)
     return theElement
   }
 
