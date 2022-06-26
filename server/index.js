@@ -18,18 +18,19 @@ app.get("/api/availableTimeSlots", (req, res) => {
   res.json(timeSlots)
 })
 app.get("/api/customers", (req, res) => {
-  const idToLoadStartingFrom = parseInt(req.query.after) || 0
-  const { searchTerm } = req.query
+  const { page, searchTerm } = req.query
+  const indexToStartFrom = (page - 1) * 10
   if (searchTerm === undefined) {
-    res.json(customersResponseData.slice(idToLoadStartingFrom, idToLoadStartingFrom + 10))
+    res.json(customersResponseData.slice(indexToStartFrom, indexToStartFrom + 10))
+    return
   }
-  const result = customersResponseData.filter((aCustomer) => {
+  const filteredCustomers = customersResponseData.filter((aCustomer) => {
     if (aCustomer.firstName.indexOf(searchTerm) !== -1) return true
     if (aCustomer.lastName.indexOf(searchTerm) !== -1) return true
     if (aCustomer.phoneNumber.indexOf(searchTerm) !== -1) return true
     return false
   })
-  res.json(result.slice(idToLoadStartingFrom, idToLoadStartingFrom + 10))
+  res.json(filteredCustomers.slice(indexToStartFrom, indexToStartFrom + 10))
 })
 app.post("/api/customers", (req, res) => {
   res.json({
