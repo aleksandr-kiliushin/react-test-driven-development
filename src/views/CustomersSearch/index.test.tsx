@@ -13,7 +13,7 @@ import { CustomersSearch, ICustomersSearchProps } from "./index"
 
 const twoCustomersResponse: ICustomer[] = [aCustomer1, aCustomer2]
 const tenCustomersResponse = Array.from("0123456789", (id) => ({ id }))
-const anotherTenCustomersResponse = Array.from("ABCDEFGHIJ", (id) => ({ id }))
+// const anotherTenCustomersResponse = Array.from("ABCDEFGHIJ", (id) => ({ id }))
 
 const customersSearchDefaultProps: ICustomersSearchProps = {
   renderCustomerActions() {
@@ -200,7 +200,7 @@ describe("CustomersSearch", () => {
     expect(history.location.search).toEqual("?page=6")
   })
 
-  it.only("navigation links have proper hrefs", async () => {
+  it("navigation links have proper hrefs", async () => {
     const history = createBrowserHistory() // TODO: Get it from render result of `createContainer`.
     await renderAndWait(
       <HistoryRouter history={history}>
@@ -228,49 +228,6 @@ describe("CustomersSearch", () => {
     assert(nextPageLink !== null, "Next page link not found.")
     await simulateClickAndWait(nextPageLink)
     expect(globalThis.fetch).toHaveBeenLastCalledWith(`/api/customers?after=${lastLoadedCustomerId}`, expect.anything())
-  })
-
-  it.skip("moves back to first page when previous page link is clicked", async () => {
-    ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(tenCustomersResponse))
-    await renderWithMemoryRouterAndWait(<CustomersSearch {...customersSearchDefaultProps} />)
-    const nextPageLink = findElement("a#next-page")
-    const previousPageLink = findElement("a#previous-page")
-    assert(nextPageLink !== null, "next-page link not found")
-    assert(previousPageLink !== null, "previous-page link not found")
-    await simulateClickAndWait(nextPageLink)
-    await simulateClickAndWait(previousPageLink)
-    expect(globalThis.fetch).toHaveBeenLastCalledWith("/api/customers", expect.anything())
-  })
-
-  it.skip("moves back one page when clicking previous after multiple clicks of the next link", async () => {
-    ;(globalThis.fetch as jest.Mock)
-      .mockReturnValueOnce(createFetchSuccessfulResponse(tenCustomersResponse))
-      .mockReturnValue(createFetchSuccessfulResponse(anotherTenCustomersResponse))
-    await renderWithMemoryRouterAndWait(<CustomersSearch {...customersSearchDefaultProps} />)
-    const nextPageLink = findElement("a#next-page")
-    const previousPageLink = findElement("a#previous-page")
-    assert(nextPageLink !== null, "next-page link not found")
-    assert(previousPageLink !== null, "previous-page link not found")
-    await simulateClickAndWait(nextPageLink)
-    await simulateClickAndWait(nextPageLink)
-    await simulateClickAndWait(previousPageLink)
-    expect(globalThis.fetch).toHaveBeenLastCalledWith("/api/customers?after=9", expect.anything())
-  })
-
-  it.skip("moves back multiple pages", async () => {
-    ;(globalThis.fetch as jest.Mock)
-      .mockReturnValueOnce(createFetchSuccessfulResponse(tenCustomersResponse))
-      .mockReturnValue(createFetchSuccessfulResponse(anotherTenCustomersResponse))
-    await renderWithMemoryRouterAndWait(<CustomersSearch {...customersSearchDefaultProps} />)
-    const nextPageLink = findElement("a#next-page")
-    const previousPageLink = findElement("a#previous-page")
-    assert(nextPageLink !== null, "next-page link not found")
-    assert(previousPageLink !== null, "previous-page link not found")
-    await simulateClickAndWait(nextPageLink)
-    await simulateClickAndWait(nextPageLink)
-    await simulateClickAndWait(previousPageLink)
-    await simulateClickAndWait(previousPageLink)
-    expect(globalThis.fetch).toHaveBeenLastCalledWith("/api/customers", expect.anything())
   })
 
   it("has a search input field with a placeholder", async () => {
