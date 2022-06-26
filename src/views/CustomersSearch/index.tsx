@@ -23,27 +23,35 @@ export const CustomersSearch: React.FC<ICustomersSearchProps> = ({ renderCustome
   const [searchParams, setSearchParams] = useSearchParams()
 
   const pageNumberSearchParam = searchParams.get("page")
+  const searchTermSearchParam = searchParams.get("searchTerm")
 
   const [customers, setCustomers] = React.useState<ICustomer[]>([])
   const [lastRowIds, setLastRowIds] = React.useState<number[]>([])
-  const [searchTerm, setSearchTerm] = React.useState<string>("")
 
   React.useEffect(() => {
     if (isPageNumberSearchParamValid(pageNumberSearchParam)) return
-    setSearchParams({ page: "1" })
+    setSearchParams({
+      page: "1",
+      ...(searchTermSearchParam ? { searchTerm: searchTermSearchParam } : {}),
+    })
   }, [pageNumberSearchParam])
 
   React.useEffect(() => {
     if (!isPageNumberSearchParamValid(pageNumberSearchParam)) return
     globalThis
-      .fetch(`/api/customers?page=${pageNumberSearchParam}${searchTerm === "" ? "" : `&searchTerm=${searchTerm}`}`, {
-        credentials: "same-origin",
-        headers: { "Content-Type": "application/json" },
-        method: "GET",
-      })
+      .fetch(
+        `/api/customers?page=${pageNumberSearchParam}${
+          searchTermSearchParam ? `&searchTerm=${searchTermSearchParam}` : ""
+        }`,
+        {
+          credentials: "same-origin",
+          headers: { "Content-Type": "application/json" },
+          method: "GET",
+        }
+      )
       .then((response) => response.json())
       .then(setCustomers)
-  }, [pageNumberSearchParam, searchTerm])
+  }, [pageNumberSearchParam, searchTermSearchParam])
 
   const onNextButtonClick = React.useCallback(() => {
     const currentLastRowId = customers[customers.length - 1].id
@@ -58,10 +66,10 @@ export const CustomersSearch: React.FC<ICustomersSearchProps> = ({ renderCustome
     <>
       <input
         onChange={(event) => {
-          setSearchTerm(event.target.value)
+          setSearchParams({ page: pageNumberSearchParam || "1", searchTerm: event.target.value })
         }}
         placeholder="Enter filter text"
-        value={searchTerm}
+        value={searchTermSearchParam ?? ""}
       />
       <NavigationButtons onNextButtonClick={onNextButtonClick} onPreviousButtonClick={onPreviousButtonClick} />
       <table>
