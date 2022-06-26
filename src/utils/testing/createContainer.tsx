@@ -1,8 +1,9 @@
+import { BrowserHistory, createBrowserHistory } from "history"
 import assert from "node:assert"
 import React from "react"
 import ReactDom from "react-dom/client"
 import ReactDomTestUtils, { act } from "react-dom/test-utils"
-import { MemoryRouter } from "react-router-dom"
+import { unstable_HistoryRouter as HistoryRouter, MemoryRouter } from "react-router-dom"
 
 export interface IRenderContainer<ContainerContentConfig extends { fieldNames: string[]; formIds: string[] }> {
   container: HTMLDivElement
@@ -19,6 +20,7 @@ export interface IRenderContainer<ContainerContentConfig extends { fieldNames: s
   findForm: (params: {
     id: ContainerContentConfig["formIds"][keyof ContainerContentConfig["formIds"]]
   }) => HTMLFormElement
+  history: BrowserHistory
   queryElement(selector: string): Element | null
   render: ReactDom.Root["render"]
   renderAndWait(children: React.ReactNode): Promise<void>
@@ -36,12 +38,13 @@ export interface IRenderContainer<ContainerContentConfig extends { fieldNames: s
 type IAbstractRenderContainer = IRenderContainer<any>
 
 export const createContainer = (): IAbstractRenderContainer => {
-  const container = document.createElement("div")
+  const container: IAbstractRenderContainer["container"] = document.createElement("div")
   const root = ReactDom.createRoot(container)
+  const history: IAbstractRenderContainer["history"] = createBrowserHistory()
 
   const render: IAbstractRenderContainer["render"] = (aComponent) => {
     act(() => {
-      root.render(aComponent)
+      root.render(<HistoryRouter history={history}>{aComponent}</HistoryRouter>)
     })
   }
 
@@ -53,7 +56,7 @@ export const createContainer = (): IAbstractRenderContainer => {
 
   const renderAndWait: IAbstractRenderContainer["renderAndWait"] = async (aComponent) => {
     await act(async () => {
-      root.render(aComponent)
+      root.render(<HistoryRouter history={history}>{aComponent}</HistoryRouter>)
     })
   }
 
@@ -120,6 +123,7 @@ export const createContainer = (): IAbstractRenderContainer => {
     findField,
     findFieldLabel,
     findForm,
+    history,
     queryElement,
     render,
     renderAndWait,
