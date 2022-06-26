@@ -2,10 +2,10 @@ import { createBrowserHistory } from "history"
 import assert from "node:assert"
 import React from "react"
 import { act } from "react-dom/test-utils"
+import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom"
 
 import { aCustomer1, aCustomer2 } from "#sampleData/someCustomers"
 import { ICustomer } from "#types/ICustomer"
-import { HistoryRouter } from "#utils/testing/HistoryRouter"
 import { IRenderContainer, createContainer } from "#utils/testing/createContainer"
 import { createFetchSuccessfulResponse } from "#utils/testing/spyHelpers"
 
