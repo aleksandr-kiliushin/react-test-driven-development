@@ -5,6 +5,7 @@ import { ICustomer } from "#types/ICustomer"
 
 import { CustomerRow } from "./CustomerRow"
 import { NavigationButtons } from "./NavigationButtons"
+import { isPageNumberSearchParamValid } from "./isPageNumberSearchParamValid"
 
 const getSearchParams = ({ after, searchTerm }: { after: ICustomer["id"]; searchTerm: string }) => {
   let pairs = []
@@ -28,12 +29,7 @@ export const CustomersSearch: React.FC<ICustomersSearchProps> = ({ renderCustome
   const [searchTerm, setSearchTerm] = React.useState<string>("")
 
   React.useEffect(() => {
-    if (
-      pageNumberSearchParam !== null &&
-      !isNaN(parseInt(pageNumberSearchParam)) &&
-      parseInt(pageNumberSearchParam) >= 1
-    )
-      return
+    if (isPageNumberSearchParamValid(pageNumberSearchParam)) return
     setSearchParams({ page: "1" })
   }, [pageNumberSearchParam])
 
