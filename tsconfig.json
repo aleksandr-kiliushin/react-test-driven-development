@@ -21,6 +21,7 @@
       "#components/*": ["src/components/*"],
       "#declarations/*": ["declarations/*"],
       "#sampleData/*": ["src/sampleData/*"],
+      "#store/*": ["src/store/*"],
       "#types/*": ["src/types/*"],
       "#utils/*": ["src/utils/*"]
     },
