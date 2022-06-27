@@ -1,7 +1,9 @@
 import React from "react"
 
+import { fetchAndSetAvailableTimeSlots } from "#store/appointment-creation"
 import { ICustomer } from "#types/ICustomer"
-import { ITimeSlot } from "#types/ITimeSlot"
+import { useAppDispatch } from "#utils/useAppDispatch"
+import { useAppSelector } from "#utils/useAppSelector"
 
 import { AppointmentForm } from "./index"
 
@@ -13,23 +15,12 @@ export interface IAppointmentFormLoaderProps {
 }
 
 export const AppointmentFormLoader: React.FC<IAppointmentFormLoaderProps> = ({ customer, onAppointmentCreated }) => {
-  const [availableTimeSlots, setAvailableTimeSlots] = React.useState<ITimeSlot[]>([])
+  const dispatch = useAppDispatch()
+  const availableTimeSlots = useAppSelector((state) => state.appointmentCreation.availableTimeSlots)
 
   React.useEffect(() => {
-    globalThis
-      .fetch("/api/availableTimeSlots", {
-        credentials: "same-origin",
-        headers: { "Content-Type": "application/json" },
-        method: "GET",
-      })
-      .then((response) => response.json())
-      .then((availableTimeSlots) => {
-        return availableTimeSlots.map((aTimeSlot: { startsAt: string; stylist: ITimeSlot["stylist"] }) => ({
-          startsAt: new Date(aTimeSlot.startsAt.toString()),
-          stylist: aTimeSlot.stylist,
-        }))
-      })
-      .then(setAvailableTimeSlots)
+    // @ts-ignore
+    dispatch(fetchAndSetAvailableTimeSlots())
   }, [])
 
   return (
