@@ -1,3 +1,4 @@
+import { configureStore } from "@reduxjs/toolkit"
 import { BrowserHistory, createBrowserHistory } from "history"
 import assert from "node:assert"
 import React from "react"
@@ -5,8 +6,6 @@ import ReactDom from "react-dom/client"
 import ReactDomTestUtils, { act } from "react-dom/test-utils"
 import { Provider } from "react-redux"
 import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom"
-import { applyMiddleware, legacy_createStore } from "redux"
-import thunk from "redux-thunk"
 
 import { rootReducer } from "#store/rootReducer"
 
@@ -49,7 +48,7 @@ export const createContainer = (): IAbstractRenderContainer => {
   const container: IAbstractRenderContainer["container"] = document.createElement("div")
   const root = ReactDom.createRoot(container)
   const history: IAbstractRenderContainer["history"] = createBrowserHistory()
-  const store = legacy_createStore(rootReducer, applyMiddleware(thunk))
+  const store = configureStore({ reducer: rootReducer })
 
   const render: IAbstractRenderContainer["render"] = (aComponent, options) => {
     act(() => {
