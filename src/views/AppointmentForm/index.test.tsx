@@ -49,8 +49,7 @@ describe("AppointmentForm", () => {
   beforeEach(() => {
     ;({ findElement, findElements, findField, findLabel, findForm, render, simulateChange, simulateSubmit } =
       createContainer())
-    // @ts-ignore
-    jest.spyOn(globalThis, "fetch").mockReturnValue(createFetchSuccessfulResponse())
+    jest.spyOn(globalThis, "fetch").mockReturnValue(createFetchSuccessfulResponse() as Promise<Response>)
   })
 
   afterEach(() => {

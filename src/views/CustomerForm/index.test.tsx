@@ -42,8 +42,7 @@ describe("CustomerForm", () => {
       simulateSubmit,
       simulateSubmitAndWait,
     } = createContainer())
-    // @ts-ignore
-    jest.spyOn(globalThis, "fetch").mockReturnValue(createFetchSuccessfulResponse())
+    jest.spyOn(globalThis, "fetch").mockReturnValue(createFetchSuccessfulResponse() as Promise<Response>)
   })
 
   afterEach(() => {

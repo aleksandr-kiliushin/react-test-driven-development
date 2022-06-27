@@ -30,8 +30,7 @@ describe("CustomersSearch", () => {
 
   beforeEach(() => {
     ;({ findElement, findElements, history, queryElement, renderAndWait, simulateChangeAndWait } = createContainer())
-    // @ts-ignore
-    jest.spyOn(globalThis, "fetch").mockReturnValue(createFetchSuccessfulResponse())
+    jest.spyOn(globalThis, "fetch").mockReturnValue(createFetchSuccessfulResponse() as Promise<Response>)
     ;(globalThis.fetch as jest.Mock).mockReturnValue(createFetchSuccessfulResponse(twoCustomersResponse))
   })
 

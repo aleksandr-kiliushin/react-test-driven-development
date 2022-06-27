@@ -43,8 +43,9 @@ describe("AppointmentsDayViewLoader", () => {
 
   beforeEach(() => {
     ;({ renderAndWait } = createContainer())
-    // @ts-ignore
-    jest.spyOn(globalThis, "fetch").mockReturnValue(createFetchSuccessfulResponse(appointmentsServerResponse))
+    jest
+      .spyOn(globalThis, "fetch")
+      .mockReturnValue(createFetchSuccessfulResponse(appointmentsServerResponse) as Promise<Response>)
     jest.spyOn(AppointmentsDayViewExports, "AppointmentsDayView").mockReturnValue(null)
   })
   afterEach(() => {

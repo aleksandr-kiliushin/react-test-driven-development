@@ -38,8 +38,9 @@ describe("AppointmentFormLoader", () => {
 
   beforeEach(() => {
     ;({ renderAndWait } = createContainer())
-    // @ts-ignore
-    jest.spyOn(globalThis, "fetch").mockReturnValue(createFetchSuccessfulResponse(availableTimeSlotsServerResponse))
+    jest
+      .spyOn(globalThis, "fetch")
+      .mockReturnValue(createFetchSuccessfulResponse(availableTimeSlotsServerResponse) as Promise<Response>)
     jest.spyOn(AppointmentFormExports, "AppointmentForm").mockReturnValue(null)
   })
 
