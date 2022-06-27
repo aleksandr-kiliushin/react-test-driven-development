@@ -1,6 +1,8 @@
 import React from "react"
 
-import { IAppointment } from "#types/IAppointment"
+import { fetchAndSetTodaysAppointments } from "#store/todays-appointments"
+import { useAppDispatch } from "#utils/useAppDispatch"
+import { useAppSelector } from "#utils/useAppSelector"
 
 import { AppointmentsDayView } from "./index"
 
@@ -9,30 +11,12 @@ interface IAppointmentsDayViewLoaderProps {
 }
 
 export const AppointmentsDayViewLoader: React.FC<IAppointmentsDayViewLoaderProps> = ({ today }) => {
-  const [appointments, setAppointments] = React.useState<IAppointment[]>([])
+  const dispatch = useAppDispatch()
+  const appointments = useAppSelector((state) => state.todaysAppointments.appointments)
 
   React.useEffect(() => {
-    const from = today.setHours(0, 0, 0, 0)
-    const to = today.setHours(23, 59, 59, 999)
-
-    globalThis
-      .fetch(`/api/appointments/${from}-${to}`, {
-        method: "GET",
-        credentials: "same-origin",
-        headers: { "Content-Type": "application/json" },
-      })
-      .then((response) => response.json())
-      .then((appointments) => {
-        // @ts-ignore
-        return appointments.map((anAppointment) => ({
-          ...anAppointment,
-          timeSlot: {
-            ...anAppointment.timeSlot,
-            startsAt: new Date(anAppointment.timeSlot.startsAt),
-          },
-        }))
-      })
-      .then(setAppointments)
+    // @ts-ignore
+    dispatch(fetchAndSetTodaysAppointments({ today }))
   }, [today])
 
   return <AppointmentsDayView appointments={appointments} />
