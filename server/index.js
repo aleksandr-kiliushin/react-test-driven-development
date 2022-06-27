@@ -1,6 +1,6 @@
 const express = require("express")
 const { appointmentsResponseData } = require("./appointmentsResponseData")
-const { timeSlots } = require("./timeSlots")
+const { getRandomTimeSlots } = require("./getRandomTimeSlots")
 const { customersResponseData } = require("./customersResponseData")
 
 const app = express()
@@ -15,7 +15,7 @@ app.post("/api/appointments", (req, res) => {
   res.json(req.body)
 })
 app.get("/api/availableTimeSlots", (req, res) => {
-  res.json(timeSlots)
+  res.json(getRandomTimeSlots())
 })
 app.get("/api/customers", (req, res) => {
   const { page, searchTerm } = req.query
