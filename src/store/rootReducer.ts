@@ -1,11 +1,11 @@
 import { combineReducers } from "redux"
 
 import { appointmentCreationReducer } from "./appointment-creation"
-import { customersSearchReducer } from "./customers-search"
+import { customersSearchSlice } from "./customers-search"
 import { todaysAppointmentsSlice } from "./todays-appointments"
 
 export const rootReducer = combineReducers({
   appointmentCreation: appointmentCreationReducer,
-  customersSearch: customersSearchReducer,
+  customersSearch: customersSearchSlice.reducer,
   todaysAppointments: todaysAppointmentsSlice.reducer,
 })

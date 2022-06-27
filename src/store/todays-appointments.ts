@@ -3,6 +3,16 @@ import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { IAppointment } from "#types/IAppointment"
 import { ITimeSlot } from "#types/ITimeSlot"
 
+interface IResponseAppointment {
+  customer: IAppointment["customer"]
+  notes: IAppointment["notes"]
+  serviceName: IAppointment["serviceName"]
+  timeSlot: {
+    startsAt: string
+    stylist: ITimeSlot["stylist"]
+  }
+}
+
 export interface IState {
   appointments: IAppointment[]
 }
@@ -48,15 +58,5 @@ export const fetchAndSetTodaysAppointments = createAsyncThunk(
       })
   }
 )
-
-interface IResponseAppointment {
-  customer: IAppointment["customer"]
-  notes: IAppointment["notes"]
-  serviceName: IAppointment["serviceName"]
-  timeSlot: {
-    startsAt: string
-    stylist: ITimeSlot["stylist"]
-  }
-}
 
 export const { setTodaysAppointments } = todaysAppointmentsSlice.actions

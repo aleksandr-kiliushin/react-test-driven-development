@@ -1,6 +1,6 @@
-import { ICustomer } from "#types/ICustomer"
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
-import { AppThunk } from "./index"
+import { ICustomer } from "#types/ICustomer"
 
 export interface IState {
   customers: ICustomer[]
@@ -10,33 +10,28 @@ const initialState: IState = {
   customers: [],
 }
 
-export const customersSearchReducer = (
-  state: IState = initialState,
-  action: {
-    payload: { customers: ICustomer[] }
-    type: "customers-search/setCustomers"
-  }
-): IState => {
-  switch (action.type) {
-    case "customers-search/setCustomers": {
-      return {
-        ...state,
-        customers: action.payload.customers,
-      }
-    }
-    default:
-      return state
-  }
-}
+export const customersSearchSlice = createSlice({
+  initialState,
+  name: "customers-search",
+  reducers: {
+    setCustomers(state, action: PayloadAction<ICustomer[]>) {
+      state.customers = action.payload
+    },
+  },
+})
 
-export const fetchAndSetCustomers = ({
-  pageNumberSearchParam,
-  searchTermSearchParam,
-}: {
-  pageNumberSearchParam: string
-  searchTermSearchParam: string | null
-}): AppThunk => {
-  return (dispatch) => {
+export const fetchAndSetCustomers = createAsyncThunk(
+  "todays-appointments/fetchAndSetCustomers",
+  (
+    {
+      pageNumberSearchParam,
+      searchTermSearchParam,
+    }: {
+      pageNumberSearchParam: string
+      searchTermSearchParam: string | null
+    },
+    thunkApi
+  ) => {
     globalThis
       .fetch(
         `/api/customers?page=${pageNumberSearchParam}${
@@ -49,11 +44,8 @@ export const fetchAndSetCustomers = ({
         }
       )
       .then((response) => response.json())
-      .then((customers) =>
-        dispatch({
-          payload: { customers },
-          type: "customers-search/setCustomers",
-        })
-      )
+      .then((customers) => thunkApi.dispatch(customersSearchSlice.actions.setCustomers(customers)))
   }
-}
+)
+
+export const { setCustomers } = customersSearchSlice.actions
