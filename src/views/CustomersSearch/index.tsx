@@ -24,21 +24,23 @@ export const CustomersSearch: React.FC<ICustomersSearchProps> = ({ renderCustome
 
   React.useEffect(() => {
     if (isPageNumberSearchParamValid(pageNumberSearchParam)) return
-    setSearchParams({
-      page: "1",
-      ...(searchTermSearchParam ? { searchTerm: searchTermSearchParam } : {}),
-    })
+    setSearchParams(
+      {
+        page: "1",
+        ...(searchTermSearchParam ? { searchTerm: searchTermSearchParam } : {}),
+      },
+      { replace: true }
+    )
   }, [pageNumberSearchParam])
 
   React.useEffect(() => {
     if (searchTermSearchParam !== "") return
-    setSearchParams({ page: pageNumberSearchParam || "1" })
+    setSearchParams({ page: pageNumberSearchParam || "1" }, { replace: true })
   }, [searchTermSearchParam])
 
   React.useEffect(() => {
     if (!isPageNumberSearchParamValid(pageNumberSearchParam)) return
     if (typeof pageNumberSearchParam !== "string") return
-    // @ts-ignore
     dispatch(fetchAndSetCustomers({ pageNumberSearchParam, searchTermSearchParam }))
   }, [pageNumberSearchParam, searchTermSearchParam])
 
@@ -46,7 +48,7 @@ export const CustomersSearch: React.FC<ICustomersSearchProps> = ({ renderCustome
     <>
       <input
         onChange={(event) => {
-          setSearchParams({ page: "1", searchTerm: event.target.value })
+          setSearchParams({ page: "1", searchTerm: event.target.value }, { replace: true })
         }}
         placeholder="Enter filter text"
         value={searchTermSearchParam ?? ""}
