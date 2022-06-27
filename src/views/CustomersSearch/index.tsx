@@ -1,6 +1,8 @@
 import React from "react"
+import { useDispatch, useSelector } from "react-redux"
 import { useSearchParams } from "react-router-dom"
 
+import { fetchAndSetCustomers } from "#store/customers-search"
 import { ICustomer } from "#types/ICustomer"
 
 import { CustomerRow } from "./CustomerRow"
@@ -12,12 +14,11 @@ export interface ICustomersSearchProps {
 }
 
 export const CustomersSearch: React.FC<ICustomersSearchProps> = ({ renderCustomerActions }) => {
+  const dispatch = useDispatch()
   const [searchParams, setSearchParams] = useSearchParams()
 
   const pageNumberSearchParam = searchParams.get("page")
   const searchTermSearchParam = searchParams.get("searchTerm")
-
-  const [customers, setCustomers] = React.useState<ICustomer[]>([])
 
   React.useEffect(() => {
     if (isPageNumberSearchParamValid(pageNumberSearchParam)) return
@@ -32,21 +33,10 @@ export const CustomersSearch: React.FC<ICustomersSearchProps> = ({ renderCustome
     setSearchParams({ page: pageNumberSearchParam || "1" })
   }, [searchTermSearchParam])
 
+  const customersFromStore = useSelector((state) => state.customersSearch.customers)
   React.useEffect(() => {
     if (!isPageNumberSearchParamValid(pageNumberSearchParam)) return
-    globalThis
-      .fetch(
-        `/api/customers?page=${pageNumberSearchParam}${
-          searchTermSearchParam ? `&searchTerm=${searchTermSearchParam}` : ""
-        }`,
-        {
-          credentials: "same-origin",
-          headers: { "Content-Type": "application/json" },
-          method: "GET",
-        }
-      )
-      .then((response) => response.json())
-      .then(setCustomers)
+    dispatch(fetchAndSetCustomers({ pageNumberSearchParam, searchTermSearchParam }))
   }, [pageNumberSearchParam, searchTermSearchParam])
 
   return (
@@ -69,7 +59,7 @@ export const CustomersSearch: React.FC<ICustomersSearchProps> = ({ renderCustome
           </tr>
         </thead>
         <tbody>
-          {customers.map((aCustomer) => (
+          {customersFromStore.map((aCustomer) => (
             <CustomerRow customer={aCustomer} key={aCustomer.id} renderCustomerActions={renderCustomerActions} />
           ))}
         </tbody>

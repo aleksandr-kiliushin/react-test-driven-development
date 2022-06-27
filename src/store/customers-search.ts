@@ -26,3 +26,32 @@ export const customersSearchReducer = (
       return state
   }
 }
+
+export const fetchAndSetCustomers = ({
+  pageNumberSearchParam,
+  searchTermSearchParam,
+}: {
+  pageNumberSearchParam: string
+  searchTermSearchParam: string | null
+}) => {
+  return (dispatch) => {
+    globalThis
+      .fetch(
+        `/api/customers?page=${pageNumberSearchParam}${
+          searchTermSearchParam ? `&searchTerm=${searchTermSearchParam}` : ""
+        }`,
+        {
+          credentials: "same-origin",
+          headers: { "Content-Type": "application/json" },
+          method: "GET",
+        }
+      )
+      .then((response) => response.json())
+      .then((customers) =>
+        dispatch({
+          payload: { customers },
+          type: "customers-search/setCustomers",
+        })
+      )
+  }
+}
