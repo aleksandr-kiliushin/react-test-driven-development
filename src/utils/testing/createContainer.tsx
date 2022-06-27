@@ -14,6 +14,8 @@ interface IRenderOptions {
   initialUrl?: string
 }
 
+type IChangeEventData = ReactDomTestUtils.SyntheticEventData | { target: Partial<HTMLInputElement> }
+
 export interface IRenderContainer<ContainerContentConfig extends { fieldNames: string[]; formIds: string[] }> {
   container: HTMLDivElement
   findElement(selector: string, options?: { failureMessage?: string }): Element
@@ -33,8 +35,8 @@ export interface IRenderContainer<ContainerContentConfig extends { fieldNames: s
   render(children: React.ReactNode, options?: IRenderOptions): void
   renderAndWait(children: React.ReactNode, options?: IRenderOptions): Promise<void>
   simulateBlur(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): void
-  simulateChange(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): void
-  simulateChangeAndWait(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): Promise<void>
+  simulateChange(element: Element, eventData?: IChangeEventData): void
+  simulateChangeAndWait(element: Element, eventData?: IChangeEventData): Promise<void>
   simulateClick(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): void
   simulateClickAndWait(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): Promise<void>
   simulateSubmit(element: Element, eventData?: ReactDomTestUtils.SyntheticEventData): void

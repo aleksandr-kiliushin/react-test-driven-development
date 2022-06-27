@@ -100,7 +100,6 @@ describe("CustomerForm", () => {
   }) => {
     it("saves new value when submitted.", async () => {
       render(<CustomerForm {...defaultProps} />)
-      // @ts-ignore
       simulateChange(findField({ fieldName, formId: "customer" }), { target: { value: newValue } })
       await simulateSubmitAndWait(findForm({ id: "customer" }))
       expect(getRequestBodyOf(globalThis.fetch as jest.Mock)).toMatchObject({ [fieldName]: newValue })
@@ -205,7 +204,6 @@ describe("CustomerForm", () => {
     it("displays error after blur when first name field is blank", () => {
       render(<CustomerForm {...defaultProps} />)
       const firstNameField = findField({ fieldName: "firstName", formId: "customer" })
-      // @ts-ignore
       simulateChange(firstNameField, { target: { value: "    " } })
       simulateBlur(firstNameField)
       expect(findElement("input[name='firstName'] ~ p.error").textContent).toMatch("Required.")
@@ -214,7 +212,6 @@ describe("CustomerForm", () => {
     it("displays error after blur when last name field is blank", () => {
       render(<CustomerForm {...defaultProps} />)
       const lastNameField = findField({ fieldName: "lastName", formId: "customer" })
-      // @ts-ignore
       simulateChange(lastNameField, { target: { value: "    " } })
       simulateBlur(lastNameField)
       expect(findElement("input[name='lastName'] ~ p.error").textContent).toMatch("Required.")
@@ -223,7 +220,6 @@ describe("CustomerForm", () => {
     it("displays error after blur when phone number field is blank", () => {
       render(<CustomerForm {...defaultProps} />)
       const phoneNumberField = findField({ fieldName: "phoneNumber", formId: "customer" })
-      // @ts-ignore
       simulateChange(phoneNumberField, { target: { value: "    " } })
       simulateBlur(phoneNumberField)
       expect(findElement("input[name='phoneNumber'] ~ p.error").textContent).toMatch("Required.")
@@ -232,7 +228,6 @@ describe("CustomerForm", () => {
     it("displays error after blur when phone number field is filled with not acceptable characters", () => {
       render(<CustomerForm {...defaultProps} />)
       const phoneNumberField = findField({ fieldName: "phoneNumber", formId: "customer" })
-      // @ts-ignore
       simulateChange(phoneNumberField, { target: { value: "+7 123 456 789 hehe" } })
       simulateBlur(phoneNumberField)
       expect(findElement("input[name='phoneNumber'] ~ p.error").textContent).toMatch(
@@ -243,11 +238,9 @@ describe("CustomerForm", () => {
     it("hides error after successful onChange fixes firstName field error", () => {
       render(<CustomerForm {...defaultProps} />)
       const firstNameField = findField({ fieldName: "firstName", formId: "customer" })
-      // @ts-ignore
       simulateChange(firstNameField, { target: { value: "   " } })
       simulateBlur(firstNameField)
       expect(findElement("input[name='firstName'] ~ p.error").textContent).toMatch("Required.")
-      // @ts-ignore
       simulateChange(firstNameField, { target: { value: "Shon" } })
       expect(queryElement("input[name='firstName'] ~ p.error")).toBeNull()
     })
@@ -255,11 +248,9 @@ describe("CustomerForm", () => {
     it("hides error after successful onChange fixes lastName field error", () => {
       render(<CustomerForm {...defaultProps} />)
       const lastNameField = findField({ fieldName: "lastName", formId: "customer" })
-      // @ts-ignore
       simulateChange(lastNameField, { target: { value: "" } })
       simulateBlur(lastNameField)
       expect(findElement("input[name='lastName'] ~ p.error").textContent).toMatch("Required.")
-      // @ts-ignore
       simulateChange(lastNameField, { target: { value: "Johnson" } })
       expect(queryElement("input[name='lastName'] ~ p.error")).toBeNull()
     })
@@ -267,13 +258,11 @@ describe("CustomerForm", () => {
     it("hides error after successful onChange fixes phoneNumber field error", () => {
       render(<CustomerForm {...defaultProps} />)
       const phoneNumberField = findField({ fieldName: "phoneNumber", formId: "customer" })
-      // @ts-ignore
       simulateChange(phoneNumberField, { target: { value: "+7 123 456 789 hehe" } })
       simulateBlur(phoneNumberField)
       expect(findElement("input[name='phoneNumber'] ~ p.error").textContent).toMatch(
         "Only numbers, spaces and these symbols are allowed: ( ) + -."
       )
-      // @ts-ignore
       simulateChange(phoneNumberField, { target: { value: "+7 123 456 789" } })
       expect(queryElement("input[name='phoneNumber'] ~ p.error")).toBeNull()
     })

@@ -173,7 +173,6 @@ describe("CustomersSearch", () => {
       initialUrl: "/customers-search",
     })
     const searchField = findElement("input", { failureMessage: "Search field is not found." })
-    // @ts-ignore
     await simulateChangeAndWait(searchField, { target: { value: "Gerald" } })
     expect(globalThis.fetch).toHaveBeenLastCalledWith("/api/customers?page=1&searchTerm=Gerald", expect.anything())
   })
@@ -184,7 +183,6 @@ describe("CustomersSearch", () => {
       initialUrl: "/customers-search?page=5",
     })
     const searchField = findElement("input", { failureMessage: "Search field is not found." })
-    // @ts-ignore
     await simulateChangeAndWait(searchField, { target: { value: "Gerald" } })
     expect(globalThis.fetch).toHaveBeenLastCalledWith("/api/customers?page=1&searchTerm=Gerald", expect.anything())
   })

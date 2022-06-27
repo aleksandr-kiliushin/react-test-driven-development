@@ -84,12 +84,10 @@ describe("AppointmentForm", () => {
   }
 
   const selectStylist = (aStylistName: "Hanna" | "Suzan"): void => {
-    // @ts-ignore
     simulateChange(findField({ fieldName: "stylistName", formId: "appointment" }), { target: { value: aStylistName } })
   }
 
   const selectService = (aServiceName: "Cut" | "Blow-dry"): void => {
-    // @ts-ignore
     simulateChange(findField({ fieldName: "serviceName", formId: "appointment" }), { target: { value: aServiceName } })
   }
 
