@@ -19,7 +19,6 @@ export const AppointmentFormLoader: React.FC<IAppointmentFormLoaderProps> = ({ c
   const availableTimeSlots = useAppSelector((state) => state.appointmentCreation.availableTimeSlots)
 
   React.useEffect(() => {
-    // @ts-ignore
     dispatch(fetchAndSetAvailableTimeSlots())
   }, [])
 

@@ -1,6 +1,6 @@
-import { ITimeSlot } from "#types/ITimeSlot"
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
-import { AppThunk } from "./index"
+import { ITimeSlot } from "#types/ITimeSlot"
 
 export interface IState {
   availableTimeSlots: ITimeSlot[]
@@ -10,27 +10,19 @@ const initialState: IState = {
   availableTimeSlots: [],
 }
 
-export const appointmentCreationReducer = (
-  state: IState = initialState,
-  action: {
-    payload: { availableTimeSlots: ITimeSlot[] }
-    type: "appointment-creation/setAvailableTimeSlots"
-  }
-): IState => {
-  switch (action.type) {
-    case "appointment-creation/setAvailableTimeSlots": {
-      return {
-        ...state,
-        availableTimeSlots: action.payload.availableTimeSlots,
-      }
-    }
-    default:
-      return state
-  }
-}
+export const appointmentCreationSlice = createSlice({
+  initialState,
+  name: "appointment-creation",
+  reducers: {
+    setAvailableTimeSlots(state, action: PayloadAction<ITimeSlot[]>) {
+      state.availableTimeSlots = action.payload
+    },
+  },
+})
 
-export const fetchAndSetAvailableTimeSlots = (): AppThunk => {
-  return (dispatch) => {
+export const fetchAndSetAvailableTimeSlots = createAsyncThunk(
+  "todays-appointments/fetchAndSetAvailableTimeSlots",
+  (_, thunkApi) => {
     globalThis
       .fetch("/api/availableTimeSlots", {
         credentials: "same-origin",
@@ -45,10 +37,9 @@ export const fetchAndSetAvailableTimeSlots = (): AppThunk => {
         }))
       })
       .then((availableTimeSlots) => {
-        dispatch({
-          payload: { availableTimeSlots },
-          type: "appointment-creation/setAvailableTimeSlots",
-        })
+        thunkApi.dispatch(appointmentCreationSlice.actions.setAvailableTimeSlots(availableTimeSlots))
       })
   }
-}
+)
+
+export const { setAvailableTimeSlots } = appointmentCreationSlice.actions
