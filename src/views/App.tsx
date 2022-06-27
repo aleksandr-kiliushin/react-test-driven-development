@@ -59,7 +59,9 @@ export const App: React.FC = () => {
         path="add-a-customer"
       />
       <Route
-        element={customer !== undefined && <AppointmentFormLoader customer={customer} onAppointmentCreated={noop} />}
+        element={
+          customer !== undefined && <AppointmentFormLoader customer={customer} onAppointmentCreated={console.log} />
+        }
         path="add-an-appointment"
       />
     </Routes>
