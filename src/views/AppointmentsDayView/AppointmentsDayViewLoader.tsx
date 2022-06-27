@@ -23,6 +23,7 @@ export const AppointmentsDayViewLoader: React.FC<IAppointmentsDayViewLoaderProps
       })
       .then((response) => response.json())
       .then((appointments) => {
+        // @ts-ignore
         return appointments.map((anAppointment) => ({
           ...anAppointment,
           timeSlot: {

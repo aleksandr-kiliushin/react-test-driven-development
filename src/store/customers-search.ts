@@ -1,5 +1,7 @@
 import { ICustomer } from "#types/ICustomer"
 
+import { AppThunk } from "./index"
+
 export interface IState {
   customers: ICustomer[]
 }
@@ -11,10 +13,10 @@ const initialState: IState = {
 export const customersSearchReducer = (
   state: IState = initialState,
   action: {
-    payload: any
+    payload: { customers: ICustomer[] }
     type: "customers-search/setCustomers"
   }
-) => {
+): IState => {
   switch (action.type) {
     case "customers-search/setCustomers": {
       return {
@@ -33,7 +35,7 @@ export const fetchAndSetCustomers = ({
 }: {
   pageNumberSearchParam: string
   searchTermSearchParam: string | null
-}) => {
+}): AppThunk => {
   return (dispatch) => {
     globalThis
       .fetch(

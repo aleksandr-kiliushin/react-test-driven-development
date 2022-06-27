@@ -1,9 +1,10 @@
 import React from "react"
-import { useDispatch, useSelector } from "react-redux"
 import { useSearchParams } from "react-router-dom"
 
 import { fetchAndSetCustomers } from "#store/customers-search"
 import { ICustomer } from "#types/ICustomer"
+import { useAppDispatch } from "#utils/useAppDispatch"
+import { useAppSelector } from "#utils/useAppSelector"
 
 import { CustomerRow } from "./CustomerRow"
 import { NavigationButtons } from "./NavigationButtons"
@@ -14,7 +15,8 @@ export interface ICustomersSearchProps {
 }
 
 export const CustomersSearch: React.FC<ICustomersSearchProps> = ({ renderCustomerActions }) => {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
+  const customers = useAppSelector((state) => state.customersSearch.customers)
   const [searchParams, setSearchParams] = useSearchParams()
 
   const pageNumberSearchParam = searchParams.get("page")
@@ -33,9 +35,10 @@ export const CustomersSearch: React.FC<ICustomersSearchProps> = ({ renderCustome
     setSearchParams({ page: pageNumberSearchParam || "1" })
   }, [searchTermSearchParam])
 
-  const customersFromStore = useSelector((state) => state.customersSearch.customers)
   React.useEffect(() => {
     if (!isPageNumberSearchParamValid(pageNumberSearchParam)) return
+    if (typeof pageNumberSearchParam !== "string") return
+    // @ts-ignore
     dispatch(fetchAndSetCustomers({ pageNumberSearchParam, searchTermSearchParam }))
   }, [pageNumberSearchParam, searchTermSearchParam])
 
@@ -59,7 +62,7 @@ export const CustomersSearch: React.FC<ICustomersSearchProps> = ({ renderCustome
           </tr>
         </thead>
         <tbody>
-          {customersFromStore.map((aCustomer) => (
+          {customers.map((aCustomer) => (
             <CustomerRow customer={aCustomer} key={aCustomer.id} renderCustomerActions={renderCustomerActions} />
           ))}
         </tbody>
