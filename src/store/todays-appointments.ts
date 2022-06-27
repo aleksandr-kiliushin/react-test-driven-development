@@ -1,7 +1,7 @@
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+
 import { IAppointment } from "#types/IAppointment"
 import { ITimeSlot } from "#types/ITimeSlot"
-
-import { AppThunk } from "./index"
 
 export interface IState {
   appointments: IAppointment[]
@@ -11,37 +11,19 @@ const initialState: IState = {
   appointments: [],
 }
 
-export const todaysAppointmentsReducer = (
-  state: IState = initialState,
-  action: {
-    payload: { appointments: IAppointment[] }
-    type: "todays-appointments/setTodaysAppointments"
-  }
-): IState => {
-  switch (action.type) {
-    case "todays-appointments/setTodaysAppointments": {
-      return {
-        ...state,
-        appointments: action.payload.appointments,
-      }
-    }
-    default:
-      return state
-  }
-}
+export const todaysAppointmentsSlice = createSlice({
+  initialState,
+  name: "todays-appointments",
+  reducers: {
+    setTodaysAppointments(state, action: PayloadAction<IAppointment[]>) {
+      state.appointments = action.payload
+    },
+  },
+})
 
-interface IResponseAppointment {
-  customer: IAppointment["customer"]
-  notes: IAppointment["notes"]
-  serviceName: IAppointment["serviceName"]
-  timeSlot: {
-    startsAt: string
-    stylist: ITimeSlot["stylist"]
-  }
-}
-
-export const fetchAndSetTodaysAppointments = ({ today }: { today: Date }): AppThunk => {
-  return (dispatch) => {
+export const fetchAndSetTodaysAppointments = createAsyncThunk(
+  "todays-appointments/fetchAndSetTodaysAppointments",
+  ({ today }: { today: Date }, thunkApi) => {
     const from = today.setHours(0, 0, 0, 0)
     const to = today.setHours(23, 59, 59, 999)
 
@@ -62,10 +44,19 @@ export const fetchAndSetTodaysAppointments = ({ today }: { today: Date }): AppTh
         }))
       })
       .then((appointments) => {
-        dispatch({
-          payload: { appointments },
-          type: "todays-appointments/setTodaysAppointments",
-        })
+        thunkApi.dispatch(todaysAppointmentsSlice.actions.setTodaysAppointments(appointments))
       })
   }
+)
+
+interface IResponseAppointment {
+  customer: IAppointment["customer"]
+  notes: IAppointment["notes"]
+  serviceName: IAppointment["serviceName"]
+  timeSlot: {
+    startsAt: string
+    stylist: ITimeSlot["stylist"]
+  }
 }
+
+export const { setTodaysAppointments } = todaysAppointmentsSlice.actions

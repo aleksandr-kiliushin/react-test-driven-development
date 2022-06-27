@@ -15,7 +15,6 @@ export const AppointmentsDayViewLoader: React.FC<IAppointmentsDayViewLoaderProps
   const appointments = useAppSelector((state) => state.todaysAppointments.appointments)
 
   React.useEffect(() => {
-    // @ts-ignore
     dispatch(fetchAndSetTodaysAppointments({ today }))
   }, [today])
 
