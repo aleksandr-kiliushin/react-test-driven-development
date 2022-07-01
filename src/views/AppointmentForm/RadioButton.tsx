@@ -17,26 +17,22 @@ export const RadioButton: React.FC<IRadioButtonProps> = ({
   setSelectedStartsAtDate,
   startsAtDateInTermsOfADay,
 }) => {
-  const anAppointmenDate = new Date(dayOfTheFoollowingWeekDate)
-  anAppointmenDate.setHours(new Date(startsAtDateInTermsOfADay).getHours())
-  anAppointmenDate.setMinutes(new Date(startsAtDateInTermsOfADay).getMinutes())
+  let anAppointmentDateTime: Date | string = new Date(dayOfTheFoollowingWeekDate)
+  anAppointmentDateTime.setHours(new Date(startsAtDateInTermsOfADay).getHours())
+  anAppointmentDateTime.setMinutes(new Date(startsAtDateInTermsOfADay).getMinutes())
+  anAppointmentDateTime = anAppointmentDateTime.toISOString()
 
-  const isChecked =
-    selectedStartsAtDate !== undefined && selectedStartsAtDate.toString() === anAppointmenDate.toString()
-
-  if (
-    availableTimeSlotsForSelectedStylistName.every((aSlot) => aSlot.startsAt.toString() !== anAppointmenDate.toString())
-  ) {
+  if (availableTimeSlotsForSelectedStylistName.every((aSlot) => aSlot.startsAt !== anAppointmentDateTime)) {
     return null
   }
 
   return (
     <input
-      checked={isChecked}
+      checked={selectedStartsAtDate === anAppointmentDateTime}
       name="startsAt"
-      onChange={(event) => setSelectedStartsAtDate(new Date(event.target.value))}
+      onChange={(event) => setSelectedStartsAtDate(event.target.value)}
       type="radio"
-      value={anAppointmenDate.toString()}
+      value={anAppointmentDateTime}
     />
   )
 }

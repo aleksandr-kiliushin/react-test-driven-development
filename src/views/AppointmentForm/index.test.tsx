@@ -276,34 +276,30 @@ describe("AppointmentForm", () => {
       const aNewlySelectedTimeSlotStartsAtValue = aTimeSlotAtHannaTodayAt_13_30.startsAt
       render(<AppointmentForm {...appointmentFormDefaultProps} onAppointmentCreated={onAppointmentCreatedSpy} />)
       selectStylist("Hanna")
-      simulateChange(findTimeSlotRadioButton({ inputValue: aNewlySelectedTimeSlotStartsAtValue.toString() }))
+      simulateChange(findTimeSlotRadioButton({ inputValue: aNewlySelectedTimeSlotStartsAtValue }))
       simulateSubmit(findForm({ id: "appointment" }))
-      expect(onAppointmentCreatedSpy.mock.calls[0][0].startsAtDate.toString()).toEqual(
-        aNewlySelectedTimeSlotStartsAtValue.toString()
-      )
+      expect(onAppointmentCreatedSpy.mock.calls[0][0].startsAtDate).toEqual(aNewlySelectedTimeSlotStartsAtValue)
     })
 
     it("submits with a another newly selected value if a new value was selected.", () => {
       const onAppointmentCreatedSpy = jest.fn()
       render(<AppointmentForm {...appointmentFormDefaultProps} onAppointmentCreated={onAppointmentCreatedSpy} />)
       selectStylist("Hanna")
-      simulateChange(findTimeSlotRadioButton({ inputValue: aTimeSlotAtHannaTodayAt_13_30.startsAt.toString() }))
-      simulateChange(findTimeSlotRadioButton({ inputValue: aTimeSlotAtHannaIn6DaysAt_13_00.startsAt.toString() }))
+      simulateChange(findTimeSlotRadioButton({ inputValue: aTimeSlotAtHannaTodayAt_13_30.startsAt }))
+      simulateChange(findTimeSlotRadioButton({ inputValue: aTimeSlotAtHannaIn6DaysAt_13_00.startsAt }))
       selectStylist("Suzan")
-      simulateChange(findTimeSlotRadioButton({ inputValue: aTimeSlotAtSuzanTodayAt_12_00.startsAt.toString() }))
+      simulateChange(findTimeSlotRadioButton({ inputValue: aTimeSlotAtSuzanTodayAt_12_00.startsAt }))
       simulateSubmit(findForm({ id: "appointment" }))
-      expect(onAppointmentCreatedSpy.mock.calls[0][0].startsAtDate.toString()).toEqual(
-        aTimeSlotAtSuzanTodayAt_12_00.startsAt.toString()
-      )
+      expect(onAppointmentCreatedSpy.mock.calls[0][0].startsAtDate).toEqual(aTimeSlotAtSuzanTodayAt_12_00.startsAt)
     })
 
     it("renders input radio buttons as checked after click on them.", () => {
       render(<AppointmentForm {...appointmentFormDefaultProps} />)
 
       selectStylist("Suzan")
-      const radioButton1 = findTimeSlotRadioButton({ inputValue: aTimeSlotAtSuzanTodayAt_12_00.startsAt.toString() })
+      const radioButton1 = findTimeSlotRadioButton({ inputValue: aTimeSlotAtSuzanTodayAt_12_00.startsAt })
       const radioButton2 = findTimeSlotRadioButton({
-        inputValue: aTimeSlotAtSuzanInTwoDaysAt_12_00.startsAt.toString(),
+        inputValue: aTimeSlotAtSuzanInTwoDaysAt_12_00.startsAt,
       })
       expect(radioButton1.checked).toEqual(false)
       expect(radioButton2.checked).toEqual(false)
@@ -315,8 +311,8 @@ describe("AppointmentForm", () => {
       expect(radioButton2.checked).toEqual(true)
 
       selectStylist("Hanna")
-      const radioButton3 = findTimeSlotRadioButton({ inputValue: aTimeSlotAtHannaTodayAt_13_30.startsAt.toString() })
-      const radioButton4 = findTimeSlotRadioButton({ inputValue: aTimeSlotAtHannaIn6DaysAt_13_00.startsAt.toString() })
+      const radioButton3 = findTimeSlotRadioButton({ inputValue: aTimeSlotAtHannaTodayAt_13_30.startsAt })
+      const radioButton4 = findTimeSlotRadioButton({ inputValue: aTimeSlotAtHannaIn6DaysAt_13_00.startsAt })
       expect(radioButton3.checked).toEqual(false)
       expect(radioButton4.checked).toEqual(false)
       simulateChange(radioButton3)
@@ -332,7 +328,7 @@ describe("AppointmentForm", () => {
     render(<AppointmentForm {...appointmentFormDefaultProps} />)
     selectService("Cut")
     selectStylist("Hanna")
-    simulateChange(findTimeSlotRadioButton({ inputValue: aTimeSlotAtHannaIn6DaysAt_13_00.startsAt.toString() }))
+    simulateChange(findTimeSlotRadioButton({ inputValue: aTimeSlotAtHannaIn6DaysAt_13_00.startsAt }))
     simulateSubmit(findForm({ id: "appointment" }))
     expect(globalThis.fetch).toHaveBeenCalledWith(
       "/api/appointments",
@@ -345,7 +341,7 @@ describe("AppointmentForm", () => {
     const requestBody = JSON.parse((globalThis.fetch as jest.Mock).mock.calls[0][1].body)
     expect(requestBody).toMatchObject({
       serviceName: "Cut",
-      startsAtDate: aTimeSlotAtHannaIn6DaysAt_13_00.startsAt.toString(),
+      startsAtDate: aTimeSlotAtHannaIn6DaysAt_13_00.startsAt,
       stylistName: "Hanna",
     })
   })

@@ -17,7 +17,7 @@ export const AppointmentsDayView: React.FC<IAppointmentsDayViewProps> = ({ appoi
       <ol className="appointmentsDayView">
         {appointments.map((anAppointment, index) => {
           return (
-            <li key={anAppointment.timeSlot.startsAt.toString()}>
+            <li key={anAppointment.timeSlot.startsAt}>
               <button
                 className="border border-cyan-900 bg-cyan-500 hover:bg-cyan-600"
                 onClick={() => setSelectedAppointmentIndex(index)}

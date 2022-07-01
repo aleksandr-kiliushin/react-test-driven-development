@@ -1,54 +1,58 @@
 import { ITimeSlot } from "#types/ITimeSlot"
 
+const date1 = new Date()
+date1.setHours(12)
+date1.setMinutes(0)
+date1.setSeconds(0)
+date1.setMilliseconds(0)
 const aTimeSlotAtSuzanTodayAt_12_00: ITimeSlot = {
-  startsAt: new Date(),
+  startsAt: date1.toISOString(),
   stylist: {
     name: "Suzan",
     sertifiedServicesNames: ["Cut", "Blow-dry"],
   },
 }
-aTimeSlotAtSuzanTodayAt_12_00.startsAt.setHours(12)
-aTimeSlotAtSuzanTodayAt_12_00.startsAt.setMinutes(0)
-aTimeSlotAtSuzanTodayAt_12_00.startsAt.setSeconds(0)
-aTimeSlotAtSuzanTodayAt_12_00.startsAt.setMilliseconds(0)
 
+const date2 = new Date()
+date2.setHours(13)
+date2.setMinutes(30)
+date2.setSeconds(0)
+date2.setMilliseconds(0)
 const aTimeSlotAtHannaTodayAt_13_30: ITimeSlot = {
-  startsAt: new Date(),
+  startsAt: date2.toISOString(),
   stylist: {
     name: "Hanna",
     sertifiedServicesNames: ["Cut"],
   },
 }
-aTimeSlotAtHannaTodayAt_13_30.startsAt.setHours(13)
-aTimeSlotAtHannaTodayAt_13_30.startsAt.setMinutes(30)
-aTimeSlotAtHannaTodayAt_13_30.startsAt.setSeconds(0)
-aTimeSlotAtHannaTodayAt_13_30.startsAt.setMilliseconds(0)
 
+const date3 = new Date()
+date3.setDate(new Date().getDate() + 3)
+date3.setHours(12)
+date3.setMinutes(0)
+date3.setSeconds(0)
+date3.setMilliseconds(0)
 const aTimeSlotAtSuzanInTwoDaysAt_12_00: ITimeSlot = {
-  startsAt: new Date(),
+  startsAt: date3.toISOString(),
   stylist: {
     name: "Suzan",
     sertifiedServicesNames: ["Cut", "Blow-dry"],
   },
 }
-aTimeSlotAtSuzanInTwoDaysAt_12_00.startsAt.setDate(new Date().getDate() + 3)
-aTimeSlotAtSuzanInTwoDaysAt_12_00.startsAt.setHours(12)
-aTimeSlotAtSuzanInTwoDaysAt_12_00.startsAt.setMinutes(0)
-aTimeSlotAtSuzanInTwoDaysAt_12_00.startsAt.setSeconds(0)
-aTimeSlotAtSuzanInTwoDaysAt_12_00.startsAt.setMilliseconds(0)
 
+const date4 = new Date()
+date4.setDate(new Date().getDate() + 6)
+date4.setHours(13)
+date4.setMinutes(0)
+date4.setSeconds(0)
+date4.setMilliseconds(0)
 const aTimeSlotAtHannaIn6DaysAt_13_00: ITimeSlot = {
-  startsAt: new Date(),
+  startsAt: date4.toISOString(),
   stylist: {
     name: "Hanna",
     sertifiedServicesNames: ["Cut"],
   },
 }
-aTimeSlotAtHannaIn6DaysAt_13_00.startsAt.setDate(new Date().getDate() + 6)
-aTimeSlotAtHannaIn6DaysAt_13_00.startsAt.setHours(13)
-aTimeSlotAtHannaIn6DaysAt_13_00.startsAt.setMinutes(0)
-aTimeSlotAtHannaIn6DaysAt_13_00.startsAt.setSeconds(0)
-aTimeSlotAtHannaIn6DaysAt_13_00.startsAt.setMilliseconds(0)
 
 export {
   aTimeSlotAtSuzanTodayAt_12_00,

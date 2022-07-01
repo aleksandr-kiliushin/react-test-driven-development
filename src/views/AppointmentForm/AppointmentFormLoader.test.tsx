@@ -24,7 +24,7 @@ const availableTimeSlots = [
 ]
 
 const availableTimeSlotsServerResponse = availableTimeSlots.map((aTimeSlot) => ({
-  startsAt: aTimeSlot.startsAt.toString(),
+  startsAt: aTimeSlot.startsAt,
   stylist: aTimeSlot.stylist,
 }))
 

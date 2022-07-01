@@ -34,7 +34,7 @@ const appointmentsServerResponse = appointments.map((anAppointment) => ({
   ...anAppointment,
   timeSlot: {
     ...anAppointment.timeSlot,
-    startsAt: anAppointment.timeSlot.startsAt.toString(),
+    startsAt: anAppointment.timeSlot.startsAt,
   },
 }))
 

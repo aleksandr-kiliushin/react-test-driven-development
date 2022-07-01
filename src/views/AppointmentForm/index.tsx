@@ -57,7 +57,7 @@ export const AppointmentForm: React.FC<IAppointmentFormProps> = ({
             customerId: customer.id,
             serviceName: selectedServiceName,
             stylistName: selectedStylistName,
-            startsAtDate: selectedStartsAtDate ? selectedStartsAtDate.toString() : null,
+            startsAtDate: selectedStartsAtDate,
           }),
           credentials: "same-origin",
           headers: { "Content-Type": "application/json" },

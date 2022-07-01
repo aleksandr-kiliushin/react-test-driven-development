@@ -22,7 +22,7 @@ export const getARandomTimeSlot = (): ITimeSlot => {
   timeSlotStartsAt.setMinutes(randomMinutes)
 
   return {
-    startsAt: timeSlotStartsAt,
+    startsAt: randomMinutes.toString(),
     stylist: getARandomStylist(),
   }
 }
@@ -34,5 +34,5 @@ export const getRandomTimeSlots = (): ITimeSlot[] => {
     slots.push(getARandomTimeSlot())
   }
 
-  return uniqBy(slots, (aSlot) => aSlot.startsAt.toString() + aSlot.stylist.name)
+  return uniqBy(slots, (aSlot) => aSlot.startsAt + aSlot.stylist.name)
 }

@@ -40,7 +40,7 @@ const getRandomTimeSlots = () => {
     slots.push(getARandomTimeSlot())
   }
 
-  return uniqBy(slots, (aSlot) => aSlot.startsAt.toString() + aSlot.stylist.name)
+  return uniqBy(slots, (aSlot) => aSlot.startsAt.toISOString() + aSlot.stylist.name)
 }
 
 module.exports = { getRandomTimeSlots }

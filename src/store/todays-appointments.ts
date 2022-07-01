@@ -1,17 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
 import { IAppointment } from "#types/IAppointment"
-import { ITimeSlot } from "#types/ITimeSlot"
-
-interface IResponseAppointment {
-  customer: IAppointment["customer"]
-  notes: IAppointment["notes"]
-  serviceName: IAppointment["serviceName"]
-  timeSlot: {
-    startsAt: string
-    stylist: ITimeSlot["stylist"]
-  }
-}
 
 export interface IState {
   appointments: IAppointment[]
@@ -44,15 +33,6 @@ export const fetchAndSetTodaysAppointments = createAsyncThunk(
         headers: { "Content-Type": "application/json" },
       })
       .then((response) => response.json())
-      .then((appointments: IResponseAppointment[]) => {
-        return appointments.map((anAppointment) => ({
-          ...anAppointment,
-          timeSlot: {
-            ...anAppointment.timeSlot,
-            startsAt: new Date(anAppointment.timeSlot.startsAt),
-          },
-        }))
-      })
       .then((appointments) => {
         thunkApi.dispatch(todaysAppointmentsSlice.actions.setTodaysAppointments(appointments))
       })

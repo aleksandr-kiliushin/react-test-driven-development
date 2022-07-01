@@ -15,12 +15,12 @@ export const randomAppointmentsForToday: IAppointment[] = [10, 11, 12, 13, 14, 1
     firstName: faker.name.firstName(),
     id: parseFloat(faker.random.numeric()),
     lastName: faker.name.lastName(),
-    phoneNumber: faker.phone.phoneNumber(),
+    phoneNumber: faker.phone.number(),
   },
   notes: faker.lorem.sentence(10),
   serviceName: faker.word.noun(),
   timeSlot: {
-    startsAt: new Date(todayAt({ hours })),
+    startsAt: new Date(todayAt({ hours })).toISOString(),
     stylist: getARandomStylist(),
   },
 }))

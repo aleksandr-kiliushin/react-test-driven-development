@@ -31,12 +31,6 @@ export const fetchAndSetAvailableTimeSlots = createAsyncThunk(
       })
       .then((response) => response.json())
       .then((availableTimeSlots) => {
-        return availableTimeSlots.map((aTimeSlot: { startsAt: string; stylist: ITimeSlot["stylist"] }) => ({
-          startsAt: new Date(aTimeSlot.startsAt.toString()),
-          stylist: aTimeSlot.stylist,
-        }))
-      })
-      .then((availableTimeSlots) => {
         thunkApi.dispatch(appointmentCreationSlice.actions.setAvailableTimeSlots(availableTimeSlots))
       })
   }
