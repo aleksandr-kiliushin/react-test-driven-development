@@ -1,8 +1,8 @@
 import { combineReducers } from "redux"
 
-import { appointmentCreationSlice } from "./appointment-creation"
-import { customersSearchSlice } from "./customers-search"
-import { todaysAppointmentsSlice } from "./todays-appointments"
+import { appointmentCreationSlice } from "./salon/appointment-creation"
+import { customersSearchSlice } from "./salon/customers-search"
+import { todaysAppointmentsSlice } from "./salon/todays-appointments"
 
 export const rootReducer = combineReducers({
   appointmentCreation: appointmentCreationSlice.reducer,
