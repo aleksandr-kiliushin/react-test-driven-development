@@ -1,11 +1,9 @@
-import React from 'react';
+import React from "react"
 
 export const Turtle = ({ x, y, angle }) => {
-  const buildPoints = (x, y) =>
-    `${x - 5},${y + 5}, ${x},${y - 7}, ${x + 5},${y + 5}`;
+  const buildPoints = (x, y) => `${x - 5},${y + 5}, ${x},${y - 7}, ${x + 5},${y + 5}`
 
-  const buildRotation = (angle, x, y) =>
-    `${angle + 90}, ${x}, ${y}`;
+  const buildRotation = (angle, x, y) => `${angle + 90}, ${x}, ${y}`
 
   return (
     <polygon
@@ -15,5 +13,5 @@ export const Turtle = ({ x, y, angle }) => {
       stroke="black"
       transform={`rotate(${buildRotation(angle, x, y)})`}
     />
-  );
-};
+  )
+}

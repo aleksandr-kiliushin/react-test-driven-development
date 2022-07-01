@@ -1,10 +1,10 @@
 export const clearScreen = {
-  names: ['clearscreen', 'cs'],
+  names: ["clearscreen", "cs"],
   isWriteProtected: true,
   initial: { isComplete: true },
-  perform: state => ({
+  perform: (state) => ({
     ...state,
     drawCommands: [],
-    turtle: { x: 0, y: 0, angle: 0 }
-  })
-};
+    turtle: { x: 0, y: 0, angle: 0 },
+  }),
+}

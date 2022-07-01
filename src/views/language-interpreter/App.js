@@ -1,10 +1,11 @@
-import React from 'react';
-import { MenuButtons } from './MenuButtons';
-import { ScriptName } from './ScriptName';
-import { Drawing } from './Drawing';
-import { StatementHistory } from './StatementHistory';
-import { Prompt } from './Prompt';
-import { PromptError } from './PromptError';
+import React from "react"
+
+import { Drawing } from "./Drawing"
+import { MenuButtons } from "./MenuButtons"
+import { Prompt } from "./Prompt"
+import { PromptError } from "./PromptError"
+import { ScriptName } from "./ScriptName"
+import { StatementHistory } from "./StatementHistory"
 
 export const App = () => (
   <div id="mainWindow">
@@ -23,4 +24,4 @@ export const App = () => (
       </table>
     </div>
   </div>
-);
+)

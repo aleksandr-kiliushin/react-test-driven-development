@@ -1,14 +1,14 @@
 export const comment = {
-  names: [';'],
+  names: [";"],
   initial: {},
   isWriteProtected: true,
   parameters: [],
   parseToken: (state, token) => {
-    if (token.type === 'whitespace' && token.text === '\n') {
-      return { isComplete: true };
+    if (token.type === "whitespace" && token.text === "\n") {
+      return { isComplete: true }
     } else {
-      return { isComplete: false };
+      return { isComplete: false }
     }
   },
-  perform: state => state
-};
+  perform: (state) => state,
+}

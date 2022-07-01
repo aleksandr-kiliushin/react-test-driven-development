@@ -1,15 +1,16 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { configureStoreWithLocalStorage } from './store';
-import { App } from './App';
+import React from "react"
+import ReactDOM from "react-dom"
+import { Provider } from "react-redux"
 
-const store = configureStoreWithLocalStorage();
-store.dispatch({ type: 'TRY_START_WATCHING' });
+import { App } from "./App"
+import { configureStoreWithLocalStorage } from "./store"
+
+const store = configureStoreWithLocalStorage()
+store.dispatch({ type: "TRY_START_WATCHING" })
 
 ReactDOM.render(
   <Provider store={store}>
     <App />
   </Provider>,
-  document.getElementById('root')
-);
+  document.getElementById("root")
+)

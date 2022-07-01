@@ -1,51 +1,48 @@
-import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import React, { useState } from "react"
+import { connect } from "react-redux"
 
 const ifEnterKey = (e, func) => {
-  if (e.key === 'Enter') {
-    func();
+  if (e.key === "Enter") {
+    func()
   }
-};
+}
 
-const mapStateToProps = ({ script: { name } }) => ({ name });
+const mapStateToProps = ({ script: { name } }) => ({ name })
 const mapDispatchToProps = {
-  submitScriptName: text => ({ type: 'SUBMIT_SCRIPT_NAME', text }),
-  promptFocusRequest: () => ({ type: 'PROMPT_FOCUS_REQUEST' })
-};
+  submitScriptName: (text) => ({ type: "SUBMIT_SCRIPT_NAME", text }),
+  promptFocusRequest: () => ({ type: "PROMPT_FOCUS_REQUEST" }),
+}
 
 export const ScriptName = connect(
   mapStateToProps,
   mapDispatchToProps
 )(({ name, submitScriptName, promptFocusRequest }) => {
-  const [updatedScriptName, setScriptName] = useState(name);
-  const [editingScriptName, setEditingScriptName] = useState(
-    false
-  );
+  const [updatedScriptName, setScriptName] = useState(name)
+  const [editingScriptName, setEditingScriptName] = useState(false)
 
-  const toggleEditingScriptName = () =>
-    setEditingScriptName(!editingScriptName);
+  const toggleEditingScriptName = () => setEditingScriptName(!editingScriptName)
 
   const completeEditingScriptName = () => {
     if (editingScriptName) {
-      toggleEditingScriptName();
-      submitScriptName(updatedScriptName);
-      promptFocusRequest();
+      toggleEditingScriptName()
+      submitScriptName(updatedScriptName)
+      promptFocusRequest()
     }
-  };
+  }
 
   const beginEditingScriptName = () => {
-    toggleEditingScriptName();
-  };
+    toggleEditingScriptName()
+  }
 
   return (
     <input
       id="name"
-      className={editingScriptName ? 'isEditing' : null}
+      className={editingScriptName ? "isEditing" : null}
       value={updatedScriptName}
       onFocus={beginEditingScriptName}
-      onChange={e => setScriptName(e.target.value)}
-      onKeyPress={e => ifEnterKey(e, completeEditingScriptName)}
+      onChange={(e) => setScriptName(e.target.value)}
+      onKeyPress={(e) => ifEnterKey(e, completeEditingScriptName)}
       onBlur={completeEditingScriptName}
     />
-  );
-});
+  )
+})

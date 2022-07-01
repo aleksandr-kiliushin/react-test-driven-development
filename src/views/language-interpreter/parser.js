@@ -1,6 +1,6 @@
-import { builtInFunctions } from './language/functionTable';
-import { parseAndSaveStatement } from './language/parseCall';
-import initialText from '../examples/initialText.lgo';
+import initialText from "../examples/initialText.lgo"
+import { builtInFunctions } from "./language/functionTable"
+import { parseAndSaveStatement } from "./language/parseCall"
 
 export const emptyState = {
   pen: { down: true },
@@ -12,79 +12,76 @@ export const emptyState = {
   nextInstructionId: 0,
   nextDrawCommandId: 0,
   allFunctions: builtInFunctions,
-  name: 'Unnamed script'
-};
+  name: "Unnamed script",
+}
 
 export const initialState = {
   ...emptyState,
-  parsedTokens: tokenizeLine(initialText, 0)
-};
+  parsedTokens: tokenizeLine(initialText, 0),
+}
 
 function tokenizeLine(line, lastLineNumber) {
-  const tokenRegExp = new RegExp(/(\S+)|\n/gm);
-  const tokens = [];
-  let lastIndex = 0;
-  let match;
-  let lineNumber = lastLineNumber + 1;
+  const tokenRegExp = new RegExp(/(\S+)|\n/gm)
+  const tokens = []
+  let lastIndex = 0
+  let match
+  let lineNumber = lastLineNumber + 1
   while ((match = tokenRegExp.exec(line)) != null) {
     if (match.index > lastIndex) {
       tokens.push({
-        type: 'whitespace',
+        type: "whitespace",
         text: line.substring(lastIndex, match.index),
-        lineNumber: lineNumber
-      });
+        lineNumber: lineNumber,
+      })
     }
-    if (match[0] === '\n') {
+    if (match[0] === "\n") {
       tokens.push({
-        type: 'whitespace',
+        type: "whitespace",
         text: match[0],
-        lineNumber: lineNumber++
-      });
+        lineNumber: lineNumber++,
+      })
     } else {
       tokens.push({
-        type: 'token',
+        type: "token",
         text: match[0],
-        lineNumber: lineNumber
-      });
+        lineNumber: lineNumber,
+      })
     }
-    lastIndex = match.index + match[0].length;
+    lastIndex = match.index + match[0].length
   }
   if (lastIndex < line.length) {
     tokens.push({
-      type: 'whitespace',
+      type: "whitespace",
       text: line.substring(lastIndex),
-      lineNumber: lineNumber
-    });
+      lineNumber: lineNumber,
+    })
   }
-  return tokens;
+  return tokens
 }
 
 function lastLineNumber({ parsedTokens }) {
   return parsedTokens.reduce((highest, token) => {
     if (token.lineNumber > highest) {
-      return token.lineNumber;
+      return token.lineNumber
     } else {
-      return highest;
+      return highest
     }
-  }, 0);
+  }, 0)
 }
 
 export function parseStatement(line, state) {
   try {
-    return parseTokens(
-      tokenizeLine(line, lastLineNumber(state)),
-      state
-    );
+    return parseTokens(tokenizeLine(line, lastLineNumber(state)), state)
   } catch (e) {
-    return { ...state, error: { ...e, line } };
+    return { ...state, error: { ...e, line } }
   }
 }
 
 export function parseTokens(tokens, state) {
-  const updatedState = tokens.reduce(parseAndSaveStatement, state);
+  const updatedState = tokens.reduce(parseAndSaveStatement, state)
   if (!updatedState.currentInstruction) {
-    return updatedState;
+    return updatedState
   } else {
-    return state;
+    return state
   }
 }

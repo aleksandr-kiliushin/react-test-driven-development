@@ -1,30 +1,30 @@
-import React, { useState } from 'react';
-import { connect } from 'react-redux';
-import { Dialog } from './Dialog';
+import React, { useState } from "react"
+import { connect } from "react-redux"
+
+import { Dialog } from "./Dialog"
 
 const SharingUrl = ({ url }) => (
   <p>
-    You are now presenting your script.{' '}
-    <a href={url}>Here's the URL for sharing.</a>
+    You are now presenting your script. <a href={url}>Here's the URL for sharing.</a>
   </p>
-);
+)
 
 const mapStateToProps = ({ script, environment }) => ({
   script,
-  environment
-});
+  environment,
+})
 const mapDispatchToProps = {
-  reset: () => ({ type: 'RESET' }),
-  undo: () => ({ type: 'UNDO' }),
-  redo: () => ({ type: 'REDO' }),
-  skipAnimating: () => ({ type: 'SKIP_ANIMATING' }),
-  startSharing: () => ({ type: 'START_SHARING' }),
-  startSharing: button => ({
-    type: 'START_SHARING',
-    reset: button === 'reset'
+  reset: () => ({ type: "RESET" }),
+  undo: () => ({ type: "UNDO" }),
+  redo: () => ({ type: "REDO" }),
+  skipAnimating: () => ({ type: "SKIP_ANIMATING" }),
+  startSharing: () => ({ type: "START_SHARING" }),
+  startSharing: (button) => ({
+    type: "START_SHARING",
+    reset: button === "reset",
   }),
-  stopSharing: () => ({ type: 'STOP_SHARING' })
-};
+  stopSharing: () => ({ type: "STOP_SHARING" }),
+}
 
 export const MenuButtons = connect(
   mapStateToProps,
@@ -38,27 +38,19 @@ export const MenuButtons = connect(
     redo,
     skipAnimating,
     startSharing,
-    stopSharing
+    stopSharing,
   }) => {
-    const canReset = nextInstructionId !== 0;
+    const canReset = nextInstructionId !== 0
 
-    const [isSharingDialogOpen, setIsSharingDialogOpen] = useState(
-      false
-    );
+    const [isSharingDialogOpen, setIsSharingDialogOpen] = useState(false)
 
-    const openSharingDialog = () => setIsSharingDialogOpen(true);
+    const openSharingDialog = () => setIsSharingDialogOpen(true)
 
     return (
       <React.Fragment>
-        {environment.isSharing ? (
-          <SharingUrl url={environment.url} />
-        ) : null}
-        {environment.isWatching ? (
-          <p>You are now watching the session</p>
-        ) : null}
-        <button
-          onClick={skipAnimating}
-          disabled={!environment.shouldAnimate}>
+        {environment.isSharing ? <SharingUrl url={environment.url} /> : null}
+        {environment.isWatching ? <p>You are now watching the session</p> : null}
+        <button onClick={skipAnimating} disabled={!environment.shouldAnimate}>
           Skip animation
         </button>
         <button onClick={undo} disabled={!canUndo}>
@@ -85,12 +77,12 @@ export const MenuButtons = connect(
             onChoose={startSharing}
             message="Do you want to share your previous commands, or would you like to reset to a blank script?"
             buttons={[
-              { id: 'keep', text: 'Share previous' },
-              { id: 'reset', text: 'Reset' }
+              { id: "keep", text: "Share previous" },
+              { id: "reset", text: "Reset" },
             ]}
           />
         ) : null}
       </React.Fragment>
-    );
+    )
   }
-);
+)

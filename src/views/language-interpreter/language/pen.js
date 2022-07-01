@@ -1,17 +1,17 @@
-const changePen = option => state => ({
-  pen: { ...state.pen, ...option }
-});
+const changePen = (option) => (state) => ({
+  pen: { ...state.pen, ...option },
+})
 
 export const penup = {
-  names: ['penup', 'pu'],
+  names: ["penup", "pu"],
   isWriteProtected: true,
   initial: { isComplete: true },
-  perform: changePen({ down: false })
-};
+  perform: changePen({ down: false }),
+}
 
 export const pendown = {
-  names: ['pendown', 'pd'],
+  names: ["pendown", "pd"],
   isWriteProtected: true,
   initial: { isComplete: true },
-  perform: changePen({ down: true })
-};
+  perform: changePen({ down: true }),
+}

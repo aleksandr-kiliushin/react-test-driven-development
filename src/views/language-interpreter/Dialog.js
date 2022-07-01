@@ -1,11 +1,6 @@
-import React from 'react';
+import React from "react"
 
-export const Dialog = ({
-  message,
-  buttons,
-  onChoose,
-  onClose
-}) => {
+export const Dialog = ({ message, buttons, onChoose, onClose }) => {
   return (
     <div className="dialog">
       <p>{message}</p>
@@ -13,15 +8,16 @@ export const Dialog = ({
         {buttons.map(({ id, text }) => (
           <button
             onClick={() => {
-              onChoose(id);
-              onClose();
+              onChoose(id)
+              onClose()
             }}
             id={id}
-            key={id}>
+            key={id}
+          >
             {text}
           </button>
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
