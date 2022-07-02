@@ -1,4 +1,5 @@
-import { applyMiddleware, combineReducers, compose, createStore } from "redux"
+import { legacy_createStore } from "@reduxjs/toolkit"
+import { applyMiddleware, combineReducers, compose } from "redux"
 import createSagaMiddleware from "redux-saga"
 
 import { load, save } from "./middleware/localStorage"
@@ -9,7 +10,7 @@ import { withUndoRedo } from "./reducers/withUndoRedo"
 
 export const configureStore = (storeEnhancers = [], initialState = {}) => {
   const sagaMiddleware = createSagaMiddleware()
-  const store = createStore(
+  const store = legacy_createStore(
     combineReducers({
       script: withUndoRedo(scriptReducer),
       environment: environmentReducer,

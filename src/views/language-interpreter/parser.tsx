@@ -1,26 +1,27 @@
-import initialText from "../examples/initialText.lgo"
+import { IScript } from "#types/language-interpreter/IScript"
+
 import { builtInFunctions } from "./language/functionTable"
 import { parseAndSaveStatement } from "./language/parseCall"
+import initialText from "./other/code-examples/initial-text.lgo"
+
+interface IState {
+  parsedTokens: IScript["parsedTokens"]
+}
 
 export const emptyState = {
-  pen: { down: true },
-  turtle: { x: 0, y: 0, angle: 0 },
-  drawCommands: [],
+  allFunctions: builtInFunctions,
   collectedParameters: {},
+  drawCommands: [],
+  name: "Unnamed script",
+  nextDrawCommandId: 0,
+  nextInstructionId: 0,
   parsedStatements: [],
   parsedTokens: [],
-  nextInstructionId: 0,
-  nextDrawCommandId: 0,
-  allFunctions: builtInFunctions,
-  name: "Unnamed script",
+  pen: { down: true },
+  turtle: { x: 0, y: 0, angle: 0 },
 }
 
-export const initialState = {
-  ...emptyState,
-  parsedTokens: tokenizeLine(initialText, 0),
-}
-
-function tokenizeLine(line, lastLineNumber) {
+const tokenizeLine = (line: string, lastLineNumber: number) => {
   const tokenRegExp = new RegExp(/(\S+)|\n/gm)
   const tokens = []
   let lastIndex = 0
@@ -29,59 +30,63 @@ function tokenizeLine(line, lastLineNumber) {
   while ((match = tokenRegExp.exec(line)) != null) {
     if (match.index > lastIndex) {
       tokens.push({
-        type: "whitespace",
-        text: line.substring(lastIndex, match.index),
         lineNumber: lineNumber,
+        text: line.substring(lastIndex, match.index),
+        type: "whitespace",
       })
     }
     if (match[0] === "\n") {
       tokens.push({
-        type: "whitespace",
-        text: match[0],
         lineNumber: lineNumber++,
+        text: match[0],
+        type: "whitespace",
       })
     } else {
       tokens.push({
-        type: "token",
-        text: match[0],
         lineNumber: lineNumber,
+        text: match[0],
+        type: "token",
       })
     }
     lastIndex = match.index + match[0].length
   }
   if (lastIndex < line.length) {
     tokens.push({
-      type: "whitespace",
-      text: line.substring(lastIndex),
       lineNumber: lineNumber,
+      text: line.substring(lastIndex),
+      type: "whitespace",
     })
   }
   return tokens
 }
 
-function lastLineNumber({ parsedTokens }) {
+export const initialState = {
+  ...emptyState,
+  parsedTokens: tokenizeLine(initialText, 0),
+}
+
+const lastLineNumber = ({ parsedTokens }: IState) => {
   return parsedTokens.reduce((highest, token) => {
     if (token.lineNumber > highest) {
       return token.lineNumber
-    } else {
-      return highest
     }
+    return highest
   }, 0)
 }
 
-export function parseStatement(line, state) {
+export const parseStatement = (line: string, state: IState) => {
   try {
     return parseTokens(tokenizeLine(line, lastLineNumber(state)), state)
-  } catch (e) {
-    return { ...state, error: { ...e, line } }
+  } catch (error) {
+    // @ts-ignore
+    return { ...state, error: { ...error, line } }
   }
 }
 
-export function parseTokens(tokens, state) {
+export const parseTokens = (tokens: IScript["parsedTokens"], state: IState) => {
   const updatedState = tokens.reduce(parseAndSaveStatement, state)
-  if (!updatedState.currentInstruction) {
-    return updatedState
-  } else {
+  if (updatedState.currentInstruction) {
     return state
   }
+  return updatedState
 }

@@ -1,26 +1,33 @@
 import React, { useEffect, useState } from "react"
 import { connect } from "react-redux"
 
+import { IDrawCommand } from "#types/language-interpreter/IDrawCommand"
+
 import { AnimatedLine } from "./AnimatedLine"
 import { StaticLines } from "./StaticLines"
 import { Turtle } from "./Turtle"
 
-const isDrawLineCommand = (command) => command.drawCommand === "drawLine"
-const isRotateCommand = (command) => command.drawCommand === "rotate"
-const distance = ({ x1, y1, x2, y2 }) => Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
+interface ITurtle {
+  angle: number
+  x: number
+  y: number
+}
+
+const isDrawLineCommand = (command: IDrawCommand) => command.drawCommand === "drawLine"
+const isRotateCommand = (command: IDrawCommand) => command.drawCommand === "rotate"
+const distance = ({ x1, y1, x2, y2 }: { x1: number; y1: number; x2: number; y2: number }) => {
+  return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
+}
 const movementSpeed = 5
 const rotateSpeed = 1000 / 180
 
-const mapStateToProps = ({ environment: { shouldAnimate }, script: { drawCommands, turtle } }) => ({
-  drawCommands,
-  shouldAnimate,
-  finalTurtle: turtle,
-})
-const mapDispatchToProps = () => ({})
-export const Drawing = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(({ drawCommands, shouldAnimate, finalTurtle }) => {
+interface IDrawingProps {
+  drawCommands: IDrawCommand[]
+  finalTurtle: ITurtle
+  shouldAnimate: boolean
+}
+
+const _Drawing: React.FC<IDrawingProps> = ({ drawCommands, finalTurtle, shouldAnimate }) => {
   const [animatingCommandIndex, setAnimatingCommandIndex] = useState(0)
   const [turtle, setTurtle] = useState({ x: 0, y: 0, angle: 0 })
 
@@ -31,8 +38,8 @@ export const Drawing = connect(
 
   if (!shouldAnimate && animatingCommandIndex < drawCommands.length) {
     setAnimatingCommandIndex(drawCommands.length)
-    const lastCommand = drawCommands[drawCommands.length - 1]
-    setTurtle((turtle) => finalTurtle)
+    // const lastCommand = drawCommands[drawCommands.length - 1]
+    setTurtle(() => finalTurtle)
   }
 
   const lineCommands = drawCommands.slice(0, animatingCommandIndex).filter(isDrawLineCommand)
@@ -42,9 +49,11 @@ export const Drawing = connect(
   const isRotating = commandToAnimate && isRotateCommand(commandToAnimate)
 
   useEffect(() => {
-    let start, duration, cancelToken
+    let start: number
+    let duration: number
+    let cancelToken: number
 
-    const handleDrawLineFrame = (time) => {
+    const handleDrawLineFrame = (time: number) => {
       if (start === undefined) start = time
       if (time < start + duration) {
         const elapsed = time - start
@@ -60,7 +69,7 @@ export const Drawing = connect(
       }
     }
 
-    const handleRotationFrame = (time) => {
+    const handleRotationFrame = (time: number) => {
       if (start === undefined) start = time
       if (time < start + duration) {
         const elapsed = time - start
@@ -103,4 +112,19 @@ export const Drawing = connect(
       </svg>
     </div>
   )
+}
+
+const mapStateToProps = ({
+  environment: { shouldAnimate },
+  script: { drawCommands, turtle },
+}: {
+  environment: { shouldAnimate: boolean }
+  script: { drawCommands: IDrawCommand[]; turtle: ITurtle }
+}) => ({
+  drawCommands,
+  finalTurtle: turtle,
+  shouldAnimate,
 })
+const mapDispatchToProps = () => ({})
+
+export const Drawing = connect(mapStateToProps, mapDispatchToProps)(_Drawing)
